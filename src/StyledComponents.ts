@@ -1,5 +1,13 @@
 import styled from "@emotion/styled";
 
+const ThreeContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+`;
+
 const Overlay = styled.div`
   position: absolute;
   top: 0;
@@ -27,4 +35,4 @@ const HeroBanner = styled.div`
   pointer-events: auto; // This allows interaction with the banner
 `;
 
-export { Overlay, HeroBanner };
+export { ThreeContainer, Overlay, HeroBanner };
