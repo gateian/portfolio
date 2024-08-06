@@ -11,4 +11,12 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: {
+      three: "three/src/Three",
+    },
+  },
+  optimizeDeps: {
+    include: ["three"],
+  },
 });
