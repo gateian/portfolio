@@ -1,7 +1,10 @@
 import { useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, extend, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { FlyControls, Stats } from "@react-three/drei";
+import { ColorShiftMaterial } from "./materials/ColorShiftMaterial";
+
+extend({ ColorShiftMaterial });
 
 interface BoxGridProps {
   width: number;
@@ -13,11 +16,14 @@ function BoxGrid({ width, depth }: BoxGridProps) {
   const tempObject = useMemo(() => new THREE.Object3D(), []);
   const count = width * depth;
 
+  const positions = new Float32Array(count * 3);
+
   const yScales = useMemo(() => {
     return Array.from({ length: count }, () => Math.random() * 2 + 0.5); // Random height between 0.5 and 2.5
   }, [count]);
 
-  useFrame((state, delta) => {
+  /*
+  useFrame(() => {
     let i = 0;
     for (let x = 0; x < width; x++) {
       for (let z = 0; z < depth; z++) {
@@ -34,6 +40,19 @@ function BoxGrid({ width, depth }: BoxGridProps) {
     }
     instancedMeshRef.current.instanceMatrix.needsUpdate = true;
   });
+*/
+
+  let i = 0;
+  for (let x = 0; x < width; x++) {
+    for (let z = 0; z < depth; z++) {
+      const id = i++;
+      // tempObject.position.set(
+      positions.set(
+        [x - width / 2 + 0.5, yScales[id] / 2, z - depth / 2 + 0.5],
+        id
+      );
+    }
+  }
 
   return (
     <instancedMesh
@@ -43,12 +62,19 @@ function BoxGrid({ width, depth }: BoxGridProps) {
       receiveShadow
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshPhongMaterial color="purple" />
+      <colorShiftMaterial color="magenta" time={1} />
+      <instancedBufferAttribute
+        //attachObject={['attributes', 'instancePosition']}
+        attach="attributes-instancePosition"
+        args={[positions, 3]}
+      />
+      {/* <instancedBufferAttribute attachObject={['attributes', 'instanceQuaternion']} args={[rotations, 4]} /> */}
     </instancedMesh>
   );
 }
 
 export default function ThreeScene() {
+  extend({ ColorShiftMaterial });
   return (
     <Canvas camera={{ position: [10, 10, 10], fov: 50 }} shadows>
       <ambientLight intensity={0.8} />
@@ -66,18 +92,19 @@ export default function ThreeScene() {
       />
       <pointLight position={[10, 10, 10]} />
       <BoxGrid width={5} depth={5} />
+
+      <gridHelper args={[10, 10]} />
+      <axesHelper args={[5]} />
+      <FlyControls movementSpeed={10} rollSpeed={0.5} dragToLook={true} />
+      <Stats />
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, -0.5, 0]}
         receiveShadow
       >
         <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#cccccc" />
+        <colorShiftMaterial color="grey" time={1} />
       </mesh>
-      <gridHelper args={[10, 10]} />
-      <axesHelper args={[5]} />
-      <FlyControls movementSpeed={10} rollSpeed={0.5} dragToLook={true} />
-      <Stats />
     </Canvas>
   );
 }
