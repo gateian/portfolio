@@ -102,7 +102,7 @@ export default function ThreeScene() {
         receiveShadow
       >
         <planeGeometry args={[20, 20]} />
-        <colorShiftMaterial color="grey" time={1} />
+        <meshPhongMaterial color="gray" />
       </mesh>
     </Canvas>
   );
