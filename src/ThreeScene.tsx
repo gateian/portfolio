@@ -1,9 +1,8 @@
 import { useMemo, useRef } from "react";
-import { Canvas, extend, useFrame } from "@react-three/fiber";
+import { Canvas, extend } from "@react-three/fiber";
 import * as THREE from "three";
-import { FlyControls, Stats } from "@react-three/drei";
 import { ColorShiftMaterial } from "./materials/ColorShiftMaterial";
-import { InstancedMeshWithShader } from "./InstancedMeshWithShader";
+import { Grass } from "./entities/grass/Grass";
 
 extend({ ColorShiftMaterial });
 
@@ -63,13 +62,16 @@ function BoxGrid({ width, depth }: BoxGridProps) {
       receiveShadow
     >
       <boxGeometry args={[1, 1, 1]} />
-      <colorShiftMaterial color="magenta" time={1} />
-      <instancedBufferAttribute
-        //attachObject={['attributes', 'instancePosition']}
-        attach="attributes-instancePosition"
-        args={[positions, 3]}
+      <meshPhongMaterial
+        color="purple"
+        onBeforeCompile={(shader: THREE.WebGLProgramParametersWithUniforms) =>
+          console.log(
+            "shader compiling",
+            shader.fragmentShader,
+            shader.vertexShader
+          )
+        }
       />
-      {/* <instancedBufferAttribute attachObject={['attributes', 'instanceQuaternion']} args={[rotations, 4]} /> */}
     </instancedMesh>
   );
 }
@@ -93,11 +95,7 @@ export default function ThreeScene() {
       />
       <pointLight position={[10, 10, 10]} />
       {/* <BoxGrid width={5} depth={5} /> */}
-      <InstancedMeshWithShader count={5} />
-      <gridHelper args={[10, 10]} />
-      <axesHelper args={[5]} />
-      <FlyControls movementSpeed={10} rollSpeed={0.5} dragToLook={true} />
-      <Stats />
+      <Grass />
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, -0.5, 0]}
