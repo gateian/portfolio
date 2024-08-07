@@ -3,6 +3,7 @@ import { Canvas, extend, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { FlyControls, Stats } from "@react-three/drei";
 import { ColorShiftMaterial } from "./materials/ColorShiftMaterial";
+import { InstancedMeshWithShader } from "./InstancedMeshWithShader";
 
 extend({ ColorShiftMaterial });
 
@@ -91,8 +92,8 @@ export default function ThreeScene() {
         shadow-camera-bottom={-10}
       />
       <pointLight position={[10, 10, 10]} />
-      <BoxGrid width={5} depth={5} />
-
+      {/* <BoxGrid width={5} depth={5} /> */}
+      <InstancedMeshWithShader count={5} />
       <gridHelper args={[10, 10]} />
       <axesHelper args={[5]} />
       <FlyControls movementSpeed={10} rollSpeed={0.5} dragToLook={true} />
