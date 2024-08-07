@@ -2,6 +2,7 @@ import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { FlyControls, Stats } from "@react-three/drei";
+import { Grass } from "./entities/grass/Grass";
 
 interface BoxGridProps {
   width: number;
@@ -43,7 +44,16 @@ function BoxGrid({ width, depth }: BoxGridProps) {
       receiveShadow
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshPhongMaterial color="purple" />
+      <meshPhongMaterial
+        color="purple"
+        onBeforeCompile={(shader: THREE.WebGLProgramParametersWithUniforms) =>
+          console.log(
+            "shader compiling",
+            shader.fragmentShader,
+            shader.vertexShader
+          )
+        }
+      />
     </instancedMesh>
   );
 }
@@ -65,7 +75,8 @@ export default function ThreeScene() {
         shadow-camera-bottom={-10}
       />
       <pointLight position={[10, 10, 10]} />
-      <BoxGrid width={5} depth={5} />
+      {/* <BoxGrid width={5} depth={5} /> */}
+      <Grass />
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, -0.5, 0]}
