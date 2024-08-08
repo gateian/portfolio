@@ -9,22 +9,41 @@ export const Grass = () => {
   const instancedMeshRef = useRef<THREE.InstancedMesh>(null!);
   const dummy = new THREE.Object3D();
 
-  const [clock, setClock] = useState(new THREE.Clock());
+  const clock = useRef(new THREE.Clock());
+  const [initialised, setInitialised] = useState(false);
 
-  useFrame((state, delta) => {
+  useFrame(() => {
+    let nowInitialised = false;
+
     for (let i = 0; i < 5000; i++) {
-      dummy.position.set(
-        (Math.random() - 0.5) * 10,
-        0,
-        (Math.random() - 0.5) * 10
-      );
+      if (!initialised && instancedMeshRef.current) {
+        dummy.position.set(
+          (Math.random() - 0.5) * 10,
+          0,
+          (Math.random() - 0.5) * 10
+        );
 
-      dummy.scale.setScalar(0.5 + Math.random() * 0.5);
+        dummy.scale.setScalar(0.5 + Math.random() * 0.5);
+        dummy.rotation.y = Math.random() * Math.PI;
+        dummy.updateMatrix();
 
-      dummy.rotation.y = Math.random() * Math.PI;
+        instancedMeshRef.current.setMatrixAt(i, dummy.matrix);
 
-      dummy.updateMatrix();
-      instancedMeshRef.current?.setMatrixAt(i, dummy.matrix);
+        if (i === 5000 - 1) {
+          nowInitialised = true;
+        }
+      }
+
+      if (instancedMeshRef.current) {
+        (
+          instancedMeshRef.current.material as THREE.ShaderMaterial
+        ).uniforms.time.value = clock.current.getElapsedTime() * 0.5;
+      }
+    }
+
+    if (!initialised && nowInitialised) {
+      instancedMeshRef.current.instanceMatrix.needsUpdate = true;
+      setInitialised(true);
     }
   });
 
@@ -36,7 +55,7 @@ export const Grass = () => {
       receiveShadow
     >
       <planeGeometry args={[0.1, 1, 1, 4]} />
-      <grassMaterial time={clock.getElapsedTime()} />
+      <grassMaterial time={0} />
     </instancedMesh>
   );
 };
