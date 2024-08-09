@@ -1,14 +1,8 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -18,22 +12,18 @@ permissions:
   pages: write
   id-token: write
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     environment:
       name: demo
       url: ${{ steps.deploy_to_pages.outputs.github_pages_url }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Vite Github Pages Deployer
         # You may pin to the exact commit or the version.
         # uses: skywarth/vite-github-pages-deployer@894ef807567d82fa238bd3d47009bd360910e11a
@@ -42,7 +32,7 @@ jobs:
         with:
           # Public base path string for vite, this affects the routing, history and asset links. Make sure to provide appropriately since Github Pages stores your app in a directory under a subdomain.
           public_base_path: "" # optional, default is ""
-          # Which folder do you want your Github Page to use as root directory. Usually it is your build output directory such as ./dist 
+          # Which folder do you want your Github Page to use as root directory. Usually it is your build output directory such as ./dist
           build_path: "./dist" # optional, default is ./dist
           # Node env that will be used for the installation of dependencies. It is imperative you use an environment that has 'vite' as dependency. Commonly, that is 'dev'.
           #install_phase_node_env: "dev" # optional, default is dev
@@ -54,4 +44,3 @@ jobs:
           #artifact_name: "github-pages" # optional, default is github-pages
           # Controls the debug mode, boolean, true is for on. When turned on, it'll output certain information on certain steps. Mainly used for development, but use it as you please to inspect your env and variables.
           #debug_mode: "false" # optional, default is false
-          
