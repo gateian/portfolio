@@ -28,15 +28,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: List files in the current directory
-        run: ls -la
-
-      - name: List files in the root directory
-        run: ls -la ../
-
-      - name: Print current working directory
-        run: pwd
         
       - name: Vite Github Pages Deployer
         # You may pin to the exact commit or the version.
