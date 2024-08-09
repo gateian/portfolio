@@ -1,5 +1,5 @@
 import { MaterialNode, MaterialProps } from "@react-three/fiber";
-import { ShaderMaterial, Material } from "three";
+import { ShaderMaterial } from "three";
 
 interface GrassMaterialProps extends MaterialProps {
   time?: number;

@@ -2,6 +2,8 @@ import { shaderMaterial } from "@react-three/drei";
 import { MaterialNode } from "@react-three/fiber";
 import { ShaderMaterial } from "three";
 
+type GrassMaterialType = ShaderMaterial & { key: string; time: number };
+
 const GrassMaterial: typeof ShaderMaterial & { key: string } = shaderMaterial(
   { time: 0 },
   // vertex shader
@@ -48,13 +50,11 @@ const GrassMaterial: typeof ShaderMaterial & { key: string } = shaderMaterial(
 `
 );
 
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      grassMaterial: MaterialNode<
-        any, // TODO - what should this be?
-        typeof GrassMaterial
-      >;
+      grassMaterial: MaterialNode<GrassMaterialType, typeof GrassMaterial>;
     }
   }
 }
