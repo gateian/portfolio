@@ -7,17 +7,20 @@ type LandscapeMaterialType = ShaderMaterial & {
   colors: Float32Array;
 };
 
+export const LANDSCAPE_GRID_WIDTH = 50;
+export const LANDSCAPE_GRID_DEPTH = 50;
+
 const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
   shaderMaterial(
     { colors: new Float32Array() },
     // vertex shader
     /*glsl*/ `
-    #define INSTANCE_COUNT 25
+    #define INSTANCE_COUNT ${LANDSCAPE_GRID_WIDTH * LANDSCAPE_GRID_DEPTH}
 
   varying vec2 vUv;
   varying vec3 vInstanceColor;
   uniform float time;
-  uniform vec3 colors[INSTANCE_COUNT]; // Define INSTANCE_COUNT based on your needs
+  uniform vec3 colors[INSTANCE_COUNT];
   
 	void main() {
 
@@ -28,7 +31,7 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     vec4 mvPosition = vec4( position, 1.0 );
     #ifdef USE_INSTANCING
     	mvPosition = instanceMatrix * mvPosition;
-        vInstanceColor = colors[gl_InstanceID]; // Pass the color to the fragment shader
+      vInstanceColor = colors[gl_InstanceID]; // Pass the color to the fragment shader
     #endif
     
     // DISPLACEMENT
@@ -37,7 +40,7 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     float dispPower = 1.0 - cos( uv.y * 3.1416 / 2.0 );
     
     float displacement = sin( mvPosition.z + time * 10.0 ) * ( 0.1 * dispPower );
-    mvPosition.z += displacement;
+    //mvPosition.z += displacement;
     
     //
     

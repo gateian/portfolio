@@ -1,19 +1,18 @@
 import { extend, useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
-import { LandscapeMaterial } from "./LandscapeMaterial";
-
-interface BoxGridProps {
-  width: number;
-  depth: number;
-}
+import {
+  LANDSCAPE_GRID_WIDTH,
+  LANDSCAPE_GRID_DEPTH,
+  LandscapeMaterial,
+} from "./LandscapeMaterial";
 
 extend({ LandscapeMaterial });
 
-function Landscape({ width, depth }: BoxGridProps) {
+function Landscape() {
   const instancedMeshRef = useRef<THREE.InstancedMesh>(null!);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
-  const count = width * depth;
+  const count = LANDSCAPE_GRID_WIDTH * LANDSCAPE_GRID_DEPTH;
 
   const positions = new Float32Array(count * 3);
 
@@ -31,13 +30,13 @@ function Landscape({ width, depth }: BoxGridProps) {
 
   useFrame(() => {
     let i = 0;
-    for (let x = 0; x < width; x++) {
-      for (let z = 0; z < depth; z++) {
+    for (let x = 0; x < LANDSCAPE_GRID_WIDTH; x++) {
+      for (let z = 0; z < LANDSCAPE_GRID_DEPTH; z++) {
         const id = i++;
         tempObject.position.set(
-          x - width / 2 + 0.5,
+          x - LANDSCAPE_GRID_WIDTH / 2 + 0.5,
           yScales[id] / 2,
-          z - depth / 2 + 0.5
+          z - LANDSCAPE_GRID_DEPTH / 2 + 0.5
         );
         tempObject.scale.set(1, yScales[id], 1);
         tempObject.updateMatrix();
@@ -48,12 +47,16 @@ function Landscape({ width, depth }: BoxGridProps) {
   });
 
   let i = 0;
-  for (let x = 0; x < width; x++) {
-    for (let z = 0; z < depth; z++) {
+  for (let x = 0; x < LANDSCAPE_GRID_WIDTH; x++) {
+    for (let z = 0; z < LANDSCAPE_GRID_DEPTH; z++) {
       const id = i++;
       // tempObject.position.set(
       positions.set(
-        [x - width / 2 + 0.5, yScales[id] / 2, z - depth / 2 + 0.5],
+        [
+          x - LANDSCAPE_GRID_WIDTH / 2 + 0.5,
+          yScales[id] / 2,
+          z - LANDSCAPE_GRID_DEPTH / 2 + 0.5,
+        ],
         id
       );
     }
@@ -67,16 +70,6 @@ function Landscape({ width, depth }: BoxGridProps) {
       receiveShadow
     >
       <boxGeometry args={[1, 1, 1]} />
-      {/* <meshPhongMaterial
-        color="purple"
-        onBeforeCompile={(shader: THREE.WebGLProgramParametersWithUniforms) =>
-          console.log(
-            "shader compiling",
-            shader.fragmentShader,
-            shader.vertexShader
-          )
-        }
-      /> */}
       <landscapeMaterial colors={colors} />
     </instancedMesh>
   );
