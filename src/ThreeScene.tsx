@@ -18,7 +18,6 @@ export default function ThreeScene() {
         shadow-camera-bottom={-10}
       />
       <pointLight position={[10, 10, 10]} />
-      {/* <BoxGrid width={5} depth={5} /> */}
       <Landscape />
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
