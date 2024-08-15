@@ -8,8 +8,6 @@ import {
 } from "./LandscapeMaterial";
 import { useTexture } from "@react-three/drei";
 
-const MAX_HEIGHT = 1000;
-
 extend({ LandscapeMaterial });
 
 function Landscape() {
@@ -22,6 +20,7 @@ function Landscape() {
   const dataTexture = useMemo(() => {
     if (!heightmap) return null;
 
+    console.log("Creating data texture");
     const canvas = document.createElement("canvas");
     canvas.width = heightmap.image.width;
     canvas.height = heightmap.image.height;
@@ -35,12 +34,23 @@ function Landscape() {
     context.drawImage(heightmap.image, 0, 0);
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-    return new THREE.DataTexture(
-      imageData.data,
+    // Create a new array with only the red channel data
+    const redChannelData = new Uint8Array(imageData.width * imageData.height);
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      redChannelData[i / 4] = imageData.data[i];
+    }
+
+    const texture = new THREE.DataTexture(
+      redChannelData,
       imageData.width,
       imageData.height,
-      THREE.RGBAFormat
+      THREE.RedFormat,
+      THREE.UnsignedByteType
     );
+
+    texture.needsUpdate = true;
+
+    return texture;
   }, [heightmap]);
 
   const sampleHeight = (x: number, z: number) => {
@@ -50,24 +60,28 @@ function Landscape() {
     const pixelZ = Math.floor(z * (dataTexture.image.height - 1));
 
     const index = (pixelZ * dataTexture.image.width + pixelX) * 4;
-    const height = dataTexture.image.data[index] / 255.0; // Assuming grayscale image
+    const height = dataTexture.image.data[index]; // Assuming grayscale image
 
     return height;
   };
 
-  const positions = new Float32Array(GRID_SIZE * 3);
-
-  const yScales = useMemo(() => {
-    return Array.from({ length: GRID_SIZE }, () => Math.random() * 2 + 0.5); // Random height between 0.5 and 2.5
-  }, [GRID_SIZE]);
-
   const colors = useMemo(() => {
     const temp = new Float32Array(GRID_SIZE * 3);
-    for (let i = 0; i < GRID_SIZE; i++) {
-      temp.set([Math.random(), Math.random(), Math.random()], i * 3);
+
+    let i = 0;
+
+    for (let x = 0; x < LANDSCAPE_GRID_WIDTH; x++) {
+      for (let z = 0; z < LANDSCAPE_GRID_DEPTH; z++) {
+        const normalizedX = x / (LANDSCAPE_GRID_WIDTH * 4 - 1);
+        const normalizedZ = z / (LANDSCAPE_GRID_DEPTH * 4 - 1);
+        const height = sampleHeight(normalizedX, normalizedZ) * 0.01;
+        temp.set([height, height, height], i * 3);
+        i++;
+      }
     }
+
     return temp;
-  }, [GRID_SIZE]);
+  }, [GRID_SIZE, sampleHeight]);
 
   useFrame(() => {
     if (!initialized && instancedMeshRef.current) {
@@ -75,9 +89,9 @@ function Landscape() {
       let i = 0;
       for (let x = 0; x < LANDSCAPE_GRID_WIDTH; x++) {
         for (let z = 0; z < LANDSCAPE_GRID_DEPTH; z++) {
-          const normalizedX = x / (GRID_SIZE - 1);
-          const normalizedZ = z / (GRID_SIZE - 1);
-          const height = sampleHeight(normalizedX, normalizedZ) * MAX_HEIGHT;
+          const normalizedX = x / (LANDSCAPE_GRID_WIDTH * 4 - 1);
+          const normalizedZ = z / (LANDSCAPE_GRID_DEPTH * 4 - 1);
+          const height = sampleHeight(normalizedX, normalizedZ) * 0.1;
 
           const id = i++;
           tempObject.position.set(
@@ -97,31 +111,26 @@ function Landscape() {
     }
   });
 
-  let i = 0;
-  for (let x = 0; x < LANDSCAPE_GRID_WIDTH; x++) {
-    for (let z = 0; z < LANDSCAPE_GRID_DEPTH; z++) {
-      const id = i++;
-      positions.set(
-        [
-          x - LANDSCAPE_GRID_WIDTH / 2 + 0.5,
-          yScales[id] / 2,
-          z - LANDSCAPE_GRID_DEPTH / 2 + 0.5,
-        ],
-        id
-      );
-    }
-  }
-
   return (
-    <instancedMesh
-      ref={instancedMeshRef}
-      args={[undefined, undefined, GRID_SIZE]}
-      castShadow
-      receiveShadow
-    >
-      <boxGeometry args={[1, 1, 1]} />
-      <landscapeMaterial colors={colors} />
-    </instancedMesh>
+    <>
+      <instancedMesh
+        ref={instancedMeshRef}
+        args={[undefined, undefined, GRID_SIZE]}
+        castShadow
+        receiveShadow
+      >
+        <boxGeometry args={[1, 1, 1]} />
+        <landscapeMaterial colors={colors} />
+      </instancedMesh>
+
+      <mesh
+        position={new THREE.Vector3(0, 2, 0)}
+        rotation={[-Math.PI / 2, 0, 0]}
+      >
+        <planeGeometry args={[20, 20]} />
+        <meshBasicMaterial map={dataTexture} />
+      </mesh>
+    </>
   );
 }
 
