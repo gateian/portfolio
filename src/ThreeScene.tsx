@@ -3,7 +3,7 @@ import Landscape from "./entities/landscape/Landscape";
 
 export default function ThreeScene() {
   return (
-    <Canvas camera={{ position: [20, 20, 20], fov: 50 }} shadows>
+    <Canvas camera={{ position: [50, 50, 50], fov: 50 }} shadows>
       <ambientLight intensity={0.8} />
       <directionalLight
         position={[-3, 5, 5]}
@@ -18,7 +18,6 @@ export default function ThreeScene() {
         shadow-camera-bottom={-10}
       />
       <pointLight position={[10, 10, 10]} />
-      {/* <BoxGrid width={5} depth={5} /> */}
       <Landscape />
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}

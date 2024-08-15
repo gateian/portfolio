@@ -56,8 +56,9 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
 
   void main() {
   	vec3 baseColor = vInstanceColor;
-    float clarity = ( vUv.y * 0.5 ) + 0.5;
-    gl_FragColor = vec4( baseColor * clarity, 1 );
+    //float clarity = ( vUv.y * 0.5 ) + 0.5;
+    //gl_FragColor = vec4( baseColor * clarity, 1 );
+    gl_FragColor = vec4( baseColor, 1 );
   }
 `
   );
