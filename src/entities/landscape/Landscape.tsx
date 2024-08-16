@@ -53,46 +53,12 @@ function Landscape() {
     return texture;
   }, [heightmap]);
 
-  const sampleHeight = (x: number, z: number) => {
-    if (!dataTexture) return 0;
-
-    const pixelX = Math.floor(x * (dataTexture.image.width - 1));
-    const pixelZ = Math.floor(z * (dataTexture.image.height - 1));
-
-    const index = (pixelZ * dataTexture.image.width + pixelX) * 4;
-    const height = dataTexture.image.data[index]; // Assuming grayscale image
-
-    return height;
-  };
-
-  const colors = useMemo(() => {
-    const temp = new Float32Array(GRID_SIZE * 3);
-
-    let i = 0;
-
-    for (let x = 0; x < LANDSCAPE_GRID_WIDTH; x++) {
-      for (let z = 0; z < LANDSCAPE_GRID_DEPTH; z++) {
-        const normalizedX = x / (LANDSCAPE_GRID_WIDTH * 4 - 1);
-        const normalizedZ = z / (LANDSCAPE_GRID_DEPTH * 4 - 1);
-        const height = sampleHeight(normalizedX, normalizedZ) * 0.01;
-        temp.set([height, height, height], i * 3);
-        i++;
-      }
-    }
-
-    return temp;
-  }, [GRID_SIZE, sampleHeight]);
-
   useFrame(() => {
     if (!initialized && instancedMeshRef.current) {
       console.log("Initializing landscape");
       let i = 0;
       for (let x = 0; x < LANDSCAPE_GRID_WIDTH; x++) {
         for (let z = 0; z < LANDSCAPE_GRID_DEPTH; z++) {
-          // const normalizedX = x / (LANDSCAPE_GRID_WIDTH * 4 - 1);
-          // const normalizedZ = z / (LANDSCAPE_GRID_DEPTH * 4 - 1);
-          // const height = sampleHeight(normalizedX, normalizedZ) * 0.1;
-
           const id = i++;
           tempObject.position.set(
             x - LANDSCAPE_GRID_WIDTH / 2 + 0.5,
