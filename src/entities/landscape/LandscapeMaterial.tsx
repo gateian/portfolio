@@ -8,8 +8,8 @@ type LandscapeMaterialType = ShaderMaterial & {
   heightmap: THREE.DataTexture;
 };
 
-export const LANDSCAPE_GRID_WIDTH = 50;
-export const LANDSCAPE_GRID_DEPTH = 50;
+export const LANDSCAPE_GRID_WIDTH = 100;
+export const LANDSCAPE_GRID_DEPTH = 100;
 
 const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
   shaderMaterial(
@@ -28,6 +28,7 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
 
   varying vec2 vUv;
   varying vec2 instanceUv;
+  varying float vLocalY;
   uniform float time;
   uniform sampler2D heightMap;
   
@@ -72,13 +73,14 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     #endif
 
     // Determine the local y position of the vertex
-    float localY = position.y; // Assuming localY is between 0 and 1 (top vertex is 1, bottom is 0)
+    float localY = (position.y + 1.0) * 0.5;
+    vLocalY = localY; // Normalize localY to be between 0 and 1
 
     // Apply the max height to top vertices and min height to bottom vertices
     float finalHeight = mix(minHeight, maxHeight, localY);
     
-    mvPosition.y = mix(0.0, finalHeight * 25.0, localY);
-    
+    mvPosition.y = mix(0.0, finalHeight * 10.0, localY);
+
     vec4 modelViewPosition = modelViewMatrix * mvPosition;
     gl_Position = projectionMatrix * modelViewPosition;
 
@@ -88,10 +90,11 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     /*glsl*/ `
   varying vec2 vUv;
   varying vec2 instanceUv;
+  varying float vLocalY;
   uniform sampler2D heightMap;
   
   void main() {
-  	float baseColor = texture2D(heightMap, instanceUv).r;
+  	float baseColor = (vLocalY) * (texture2D(heightMap, instanceUv).r + 0.5);
     gl_FragColor = vec4( baseColor, baseColor, baseColor, 1 );
   }
 `
