@@ -45,6 +45,23 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     float v = float(row) / float(gridDepth);
 
     instanceUv = vec2(u, v);
+
+    // Determine the adjacent UVs for the top face of the cube
+    vec2 uvTopLeft = vec2(u - 1.0 / float(gridWidth), v);
+    vec2 uvTopRight = vec2(u + 1.0 / float(gridWidth), v);
+    vec2 uvBottomLeft = vec2(u, v - 1.0 / float(gridDepth));
+    vec2 uvBottomRight = vec2(u, v + 1.0 / float(gridDepth));
+
+    // Sample the heightmap at these UVs
+    float heightTL = texture2D(heightMap, uvTopLeft).r;
+    float heightTR = texture2D(heightMap, uvTopRight).r;
+    float heightBL = texture2D(heightMap, uvBottomLeft).r;
+    float heightBR = texture2D(heightMap, uvBottomRight).r;
+
+    // Compute min and max heights
+    float minHeight = min(min(heightTL, heightTR), min(heightBL, heightBR));
+    float maxHeight = max(max(heightTL, heightTR), max(heightBL, heightBR));
+
     vUv = uv;
     
     // VERTEX POSITION
@@ -53,9 +70,15 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     #ifdef USE_INSTANCING
     	mvPosition = instanceMatrix * mvPosition;
     #endif
+
+    // Determine the local y position of the vertex
+    float localY = position.y; // Assuming localY is between 0 and 1 (top vertex is 1, bottom is 0)
+
+    // Apply the max height to top vertices and min height to bottom vertices
+    float finalHeight = mix(minHeight, maxHeight, localY);
     
-    float localY = clamp(0.0, 1.0, mvPosition.y);
-    mvPosition.y = mix(0.0, texture2D(heightMap, instanceUv).r * 25.0, localY);
+    mvPosition.y = mix(0.0, finalHeight * 25.0, localY);
+    
     vec4 modelViewPosition = modelViewMatrix * mvPosition;
     gl_Position = projectionMatrix * modelViewPosition;
 
