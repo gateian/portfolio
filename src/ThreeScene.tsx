@@ -1,9 +1,11 @@
 import { Canvas } from "@react-three/fiber";
 import Landscape from "./entities/landscape/Landscape";
+import { OrbitControls } from "@react-three/drei";
 
 export default function ThreeScene() {
   return (
     <Canvas camera={{ position: [50, 50, 50], fov: 50 }} shadows>
+      <OrbitControls />
       <ambientLight intensity={0.8} />
       <directionalLight
         position={[-3, 5, 5]}
