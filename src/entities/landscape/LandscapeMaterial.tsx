@@ -94,8 +94,8 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
   uniform sampler2D heightMap;
   
   void main() {
-  	float baseColor = (vLocalY) * (texture2D(heightMap, instanceUv).r + 0.5);
-    gl_FragColor = vec4( baseColor, baseColor, baseColor, 1 );
+  	vec3 baseColor = vec3(0.792, 0.2, 0.91) * (vLocalY * 2.0) * (texture2D(heightMap, instanceUv).r + 0.2);
+    gl_FragColor = vec4( baseColor, 1 );
   }
 `
   );
