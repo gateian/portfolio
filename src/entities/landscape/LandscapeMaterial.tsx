@@ -79,7 +79,7 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     // Apply the max height to top vertices and min height to bottom vertices
     float finalHeight = mix(minHeight, maxHeight, localY);
     
-    mvPosition.y = mix(0.0, finalHeight * 10.0, localY);
+    mvPosition.y = mix(0.0, finalHeight * 50.0, localY);
 
     vec4 modelViewPosition = modelViewMatrix * mvPosition;
     gl_Position = projectionMatrix * modelViewPosition;
@@ -94,7 +94,7 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
   uniform sampler2D heightMap;
   
   void main() {
-  	vec3 baseColor = vec3(0.792, 0.2, 0.91) * (vLocalY * 2.0) * (texture2D(heightMap, instanceUv).r + 0.2);
+  	vec3 baseColor = vec3(0.792, 0.2, 0.91) * (vLocalY);// * (texture2D(heightMap, instanceUv).r + 0.1);
     gl_FragColor = vec4( baseColor, 1 );
   }
 `

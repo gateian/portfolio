@@ -11,7 +11,7 @@ import { useTexture } from "@react-three/drei";
 extend({ LandscapeMaterial });
 
 function Landscape() {
-  const heightmap = useTexture("./heightmap.png");
+  const heightmap = useTexture("./heightmapErosion.png");
   const instancedMeshRef = useRef<THREE.InstancedMesh>(null!);
   const [initialized, setInitialized] = useState(false);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
