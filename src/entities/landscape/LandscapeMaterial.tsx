@@ -8,8 +8,8 @@ type LandscapeMaterialType = ShaderMaterial & {
   heightmap: THREE.DataTexture;
 };
 
-export const LANDSCAPE_GRID_WIDTH = 100;
-export const LANDSCAPE_GRID_DEPTH = 100;
+export const LANDSCAPE_GRID_WIDTH = 20;
+export const LANDSCAPE_GRID_DEPTH = 20;
 
 const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
   shaderMaterial(
@@ -28,6 +28,9 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
 
   varying vec2 vUv;
   varying vec2 instanceUv;
+  varying float instanceID;
+  varying vec2 vUvTopLeft;
+  varying vec2 vUvBottomRight;
   varying float vLocalY;
   uniform float time;
   uniform sampler2D heightMap;
@@ -41,6 +44,8 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     int row = gl_InstanceID / gridWidth;    // Calculate row (z-coordinate)
     int col = gl_InstanceID % gridWidth;    // Calculate column (x-coordinate)
 
+    instanceID = float(gl_InstanceID);
+
     // Normalizing to get UV coordinates within the grid
     float u = float(col) / float(gridWidth);
     float v = float(row) / float(gridDepth);
@@ -52,6 +57,9 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     vec2 uvTopRight = vec2(u + 1.0 / float(gridWidth), v);
     vec2 uvBottomLeft = vec2(u, v - 1.0 / float(gridDepth));
     vec2 uvBottomRight = vec2(u, v + 1.0 / float(gridDepth));
+
+    vUvTopLeft = uvTopLeft;
+    vUvBottomRight = uvBottomRight;
 
     // Sample the heightmap at these UVs
     float heightTL = texture2D(heightMap, uvTopLeft).r;
@@ -79,7 +87,7 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     // Apply the max height to top vertices and min height to bottom vertices
     float finalHeight = mix(minHeight, maxHeight, localY);
     
-    mvPosition.y = mix(0.0, finalHeight * 10.0, localY);
+    mvPosition.y = finalHeight * 10.0;// maxHeight;// mix(0.0, finalHeight * 10.0, localY);
 
     vec4 modelViewPosition = modelViewMatrix * mvPosition;
     gl_Position = projectionMatrix * modelViewPosition;
@@ -90,11 +98,31 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     /*glsl*/ `
   varying vec2 vUv;
   varying vec2 instanceUv;
+  varying float instanceID;
+  varying vec2 vUvTopLeft;
+  varying vec2 vUvBottomRight;
   varying float vLocalY;
   uniform sampler2D heightMap;
   
   void main() {
-  	vec3 baseColor = vec3(0.792, 0.2, 0.91) * (vLocalY * 2.0) * (texture2D(heightMap, instanceUv).r + 0.2);
+
+  int gridWidth = int(${LANDSCAPE_GRID_WIDTH});
+    int gridDepth = int(${LANDSCAPE_GRID_DEPTH});
+
+    int row = int(instanceID) / gridWidth;    // Calculate row (z-coordinate)
+    int col = int(instanceID) % gridWidth;    // Calculate column (x-coordinate)
+
+    float u = instanceUv.x;
+    float v = instanceUv.y;
+    
+    vec2 uvTopLeft = vec2(u - 1.0 / float(gridWidth), v);
+    vec2 uvTopRight = vec2(u + 1.0 / float(gridWidth), v);
+    vec2 uvBottomLeft = vec2(u, v - 1.0 / float(gridDepth));
+    vec2 uvBottomRight = vec2(u, v + 1.0 / float(gridDepth));
+
+  	vec3 baseColor = vec3(0.792, 0.2, 0.91) * instanceUv.x;// * (vLocalY * 2.0) * (texture2D(heightMap, instanceUv).r + 0.2);
+    baseColor = mix(baseColor, vec3(1.0), distance(instanceUv.x, vUvTopLeft.x));
+    // baseColor.rgb = vec3(instanceUv.x);
     gl_FragColor = vec4( baseColor, 1 );
   }
 `
