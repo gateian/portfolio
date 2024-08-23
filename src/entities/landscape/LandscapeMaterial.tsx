@@ -8,8 +8,8 @@ type LandscapeMaterialType = ShaderMaterial & {
   heightmap: THREE.DataTexture;
 };
 
-export const LANDSCAPE_GRID_WIDTH = 20;
-export const LANDSCAPE_GRID_DEPTH = 20;
+export const LANDSCAPE_GRID_WIDTH = 50;
+export const LANDSCAPE_GRID_DEPTH = 50;
 
 const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
   shaderMaterial(
@@ -41,31 +41,38 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     int gridWidth = int(${LANDSCAPE_GRID_WIDTH});
     int gridDepth = int(${LANDSCAPE_GRID_DEPTH});
 
-    int row = gl_InstanceID / gridWidth;    // Calculate row (z-coordinate)
-    int col = gl_InstanceID % gridWidth;    // Calculate column (x-coordinate)
+    // Calculate row (z-coordinate) and column (x-coordinate) in the grid
+    int row = gl_InstanceID / gridWidth;
+    int col = gl_InstanceID % gridWidth;
 
-    instanceID = float(gl_InstanceID);
+    vec3 localPos = position; 
 
-    // Normalizing to get UV coordinates within the grid
-    float u = float(col) / float(gridWidth);
-    float v = float(row) / float(gridDepth);
+    // Normalize to get local UVs within the cube's unit space
+    // Assume the cube is from (-0.5, -0.5, -0.5) to (0.5, 0.5, 0.5)
+    float localU = (localPos.z + 0.5);
+    float localV = (localPos.x + 0.5);
 
+    // Calculate global UVs by combining instance position and local UVs
+    float u = (localU + float(col)) / float(gridWidth);
+    float v = (localV + float(row)) / float(gridDepth);
+
+    // Set the UV coordinates for this vertex
     instanceUv = vec2(u, v);
 
     // Determine the adjacent UVs for the top face of the cube
-    vec2 uvTopLeft = vec2(u - 1.0 / float(gridWidth), v);
-    vec2 uvTopRight = vec2(u + 1.0 / float(gridWidth), v);
-    vec2 uvBottomLeft = vec2(u, v - 1.0 / float(gridDepth));
-    vec2 uvBottomRight = vec2(u, v + 1.0 / float(gridDepth));
+    float left = float(col) / float(gridWidth);
+    float right = float(col + 1) / float(gridWidth);
+    float top = float(row) / float(gridDepth);
+    float bottom = float(row + 1) / float(gridDepth);
 
-    vUvTopLeft = uvTopLeft;
-    vUvBottomRight = uvBottomRight;
+    vUvTopLeft = vec2(left, top);
+    vUvBottomRight = vec2(right, bottom);
 
     // Sample the heightmap at these UVs
-    float heightTL = texture2D(heightMap, uvTopLeft).r;
-    float heightTR = texture2D(heightMap, uvTopRight).r;
-    float heightBL = texture2D(heightMap, uvBottomLeft).r;
-    float heightBR = texture2D(heightMap, uvBottomRight).r;
+    float heightTL = texture2D(heightMap, vec2(left, top)).r;
+    float heightTR = texture2D(heightMap, vec2(right, top)).r;
+    float heightBL = texture2D(heightMap, vec2(left, bottom)).r;
+    float heightBR = texture2D(heightMap, vec2(right, bottom)).r;
 
     // Compute min and max heights
     float minHeight = min(min(heightTL, heightTR), min(heightBL, heightBR));
@@ -81,13 +88,13 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     #endif
 
     // Determine the local y position of the vertex
-    float localY = (position.y + 1.0) * 0.5;
-    vLocalY = localY; // Normalize localY to be between 0 and 1
+    float localY = position.y + 0.5;
+    vLocalY = localY; 
 
     // Apply the max height to top vertices and min height to bottom vertices
     float finalHeight = mix(minHeight, maxHeight, localY);
     
-    mvPosition.y = finalHeight * 10.0;// maxHeight;// mix(0.0, finalHeight * 10.0, localY);
+    mvPosition.y = finalHeight * 10.0;
 
     vec4 modelViewPosition = modelViewMatrix * mvPosition;
     gl_Position = projectionMatrix * modelViewPosition;
@@ -106,23 +113,7 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
   
   void main() {
 
-  int gridWidth = int(${LANDSCAPE_GRID_WIDTH});
-    int gridDepth = int(${LANDSCAPE_GRID_DEPTH});
-
-    int row = int(instanceID) / gridWidth;    // Calculate row (z-coordinate)
-    int col = int(instanceID) % gridWidth;    // Calculate column (x-coordinate)
-
-    float u = instanceUv.x;
-    float v = instanceUv.y;
-    
-    vec2 uvTopLeft = vec2(u - 1.0 / float(gridWidth), v);
-    vec2 uvTopRight = vec2(u + 1.0 / float(gridWidth), v);
-    vec2 uvBottomLeft = vec2(u, v - 1.0 / float(gridDepth));
-    vec2 uvBottomRight = vec2(u, v + 1.0 / float(gridDepth));
-
-  	vec3 baseColor = vec3(0.792, 0.2, 0.91) * instanceUv.x;// * (vLocalY * 2.0) * (texture2D(heightMap, instanceUv).r + 0.2);
-    baseColor = mix(baseColor, vec3(1.0), distance(instanceUv.x, vUvTopLeft.x));
-    // baseColor.rgb = vec3(instanceUv.x);
+  	vec3 baseColor = vec3(0.792, 0.2, 0.91) * (vLocalY * 1.0) * (texture2D(heightMap, instanceUv).r + 0.3) * 1.2;
     gl_FragColor = vec4( baseColor, 1 );
   }
 `
