@@ -13,10 +13,24 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
   const { coords, triangles } = tin;
 
   const geometry = useMemo(() => {
+    // convert coords, which consits of only x and y values, to x, y, z values
+    // const convertedCoords: number[] = coords.flatMap((_coord, i) => {
+    //   if (i % 2 === 0) {
+    //     return [coords[i], 0, coords[i + 1]];
+    //   }
+    //   return [];
+    // });
+
+    const convertedCoords: number[] = [];
+
+    for (let i = 0; i < coords.length; i += 2) {
+      convertedCoords.push(coords[i] / dimension, 0, coords[i + 1] / dimension);
+    }
+
     const geom = new THREE.BufferGeometry();
 
     // Convert coords to Float32Array for positions
-    const positions = new Float32Array(coords);
+    const positions = new Float32Array(convertedCoords);
 
     // Convert triangles to Uint32Array for indices
     const indices = new Uint32Array(triangles);
@@ -25,7 +39,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
     geom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
     // Set the index attribute for triangles
-    geom.setIndex(new THREE.BufferAttribute(indices, 1));
+    geom.setIndex(new THREE.BufferAttribute(indices, 3));
 
     // Calculate normals for shading
     geom.computeVertexNormals();
@@ -36,8 +50,14 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
   useEffect(() => {
     console.log(coords, triangles);
   }, [coords, triangles]);
+
+  const scale = 50;
   return (
-    <mesh geometry={geometry}>
+    <mesh
+      geometry={geometry}
+      position={new THREE.Vector3(-scale * 0.5, 0, -scale * 0.5)}
+      scale={new THREE.Vector3(scale, scale, scale)}
+    >
       <meshStandardMaterial color="lightgray" wireframe={true} />
     </mesh>
   );

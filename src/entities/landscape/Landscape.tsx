@@ -37,7 +37,7 @@ function Landscape() {
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
     // Create a new array with only the red channel data
-    const newHeightField: number[] = [];
+    const newHeightField: number[] = []; // [0, 1, 0, 1];
     const redChannelData = new Uint8Array(imageData.width * imageData.height);
     for (let i = 0; i < imageData.data.length; i += 4) {
       redChannelData[i / 4] = imageData.data[i];
