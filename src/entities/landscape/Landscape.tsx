@@ -97,6 +97,9 @@ function Landscape() {
         <landscapeMaterial heightmap={dataTexture} />
       </instancedMesh>
       {heightField ? <DelatinTerrain heightField={heightField} /> : null}
+      {heightField ? (
+        <DelatinTerrain heightField={heightField} wireframe={true} />
+      ) : null}
     </>
   );
 }

@@ -1,26 +1,24 @@
 import { useEffect, useMemo } from "react";
 import Delatin from "delatin";
 import * as THREE from "three";
+import { extend } from "@react-three/fiber";
+import { DelatinTerrainMaterial } from "./DelatinTerrainMaterial";
+
+extend({ DelatinTerrainMaterial });
 
 interface DelatinTerrainProps {
   heightField: number[];
+  wireframe?: boolean;
 }
+
 export const DelatinTerrain = (props: DelatinTerrainProps) => {
-  const { heightField } = props;
+  const { heightField, wireframe } = props;
   const dimension = Math.sqrt(heightField.length);
   const tin = new Delatin(heightField, dimension, dimension);
-  tin.run(0.01);
+  tin.run(0.03);
   const { coords, triangles } = tin;
 
   const geometry = useMemo(() => {
-    // convert coords, which consits of only x and y values, to x, y, z values
-    // const convertedCoords: number[] = coords.flatMap((_coord, i) => {
-    //   if (i % 2 === 0) {
-    //     return [coords[i], 0, coords[i + 1]];
-    //   }
-    //   return [];
-    // });
-
     const convertedCoords: number[] = [];
 
     for (let i = 0; i < coords.length; i += 2) {
@@ -58,7 +56,11 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
       position={new THREE.Vector3(-scale * 0.5, 0, -scale * 0.5)}
       scale={new THREE.Vector3(scale, scale, scale)}
     >
-      <meshStandardMaterial color="lightgray" wireframe={true} />
+      {wireframe ? (
+        <meshStandardMaterial color="lightgray" wireframe={true} />
+      ) : (
+        <delatinTerrainMaterial />
+      )}
     </mesh>
   );
 };
