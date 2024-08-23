@@ -22,6 +22,7 @@ export default function ThreeScene() {
       />
       <pointLight position={[10, 10, 10]} />
       <Landscape />
+      <Landscape />
     </Canvas>
   );
 }
