@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import Delatin from "delatin";
 import * as THREE from "three";
 import { extend } from "@react-three/fiber";
@@ -26,27 +26,15 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
     }
 
     const geom = new THREE.BufferGeometry();
-
-    // Convert coords to Float32Array for positions
     const positions = new Float32Array(convertedCoords);
-
-    // Convert triangles to Uint32Array for indices
     const indices = new Uint32Array(triangles);
 
-    // Set the position attribute
     geom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geom.setIndex(new THREE.BufferAttribute(indices, 1));
 
-    // Set the index attribute for triangles
-    geom.setIndex(new THREE.BufferAttribute(indices, 3));
-
-    // Calculate normals for shading
     geom.computeVertexNormals();
 
     return geom;
-  }, [coords, triangles]);
-
-  useEffect(() => {
-    console.log(coords, triangles);
   }, [coords, triangles]);
 
   const scale = 50;
