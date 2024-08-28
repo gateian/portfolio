@@ -8,8 +8,8 @@ type LandscapeMaterialType = ShaderMaterial & {
   heightmap: THREE.DataTexture;
 };
 
-export const LANDSCAPE_GRID_WIDTH = 50;
-export const LANDSCAPE_GRID_DEPTH = 50;
+export const LANDSCAPE_GRID_WIDTH = 4;
+export const LANDSCAPE_GRID_DEPTH = 4;
 
 const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
   shaderMaterial(

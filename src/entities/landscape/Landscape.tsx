@@ -7,11 +7,13 @@ import {
   LandscapeMaterial,
 } from "./LandscapeMaterial";
 import { useTexture } from "@react-three/drei";
+import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
 
 extend({ LandscapeMaterial });
 
 function Landscape() {
   const heightmap = useTexture("./heightmap.png");
+  const [heightField, setHeightField] = useState<number[]>([]);
   const instancedMeshRef = useRef<THREE.InstancedMesh>(null!);
   const [initialized, setInitialized] = useState(false);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
@@ -35,9 +37,11 @@ function Landscape() {
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
     // Create a new array with only the red channel data
+    const newHeightField: number[] = []; // [0, 1, 0, 1];
     const redChannelData = new Uint8Array(imageData.width * imageData.height);
     for (let i = 0; i < imageData.data.length; i += 4) {
       redChannelData[i / 4] = imageData.data[i];
+      newHeightField.push(imageData.data[i] / 255);
     }
 
     const texture = new THREE.DataTexture(
@@ -50,6 +54,7 @@ function Landscape() {
 
     texture.needsUpdate = true;
 
+    setHeightField(newHeightField);
     return texture;
   }, [heightmap]);
 
@@ -91,6 +96,9 @@ function Landscape() {
         <boxGeometry args={[1, 1, 1]} />
         <landscapeMaterial heightmap={dataTexture} />
       </instancedMesh>
+      {heightField ? (
+        <DelatinTerrain heightField={heightField} heightMap={dataTexture} />
+      ) : null}
     </>
   );
 }
