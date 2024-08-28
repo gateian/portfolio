@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Delatin from "delatin";
 import * as THREE from "three";
 import { extend } from "@react-three/fiber";
@@ -8,14 +8,16 @@ extend({ DelatinTerrainMaterial });
 
 interface DelatinTerrainProps {
   heightField: number[];
+  heightMap?: THREE.DataTexture;
   wireframe?: boolean;
 }
 
 export const DelatinTerrain = (props: DelatinTerrainProps) => {
-  const { heightField, wireframe } = props;
+  const { heightField, wireframe, heightMap } = props;
+  const meshRef = useRef<THREE.Mesh>(null!);
   const dimension = Math.sqrt(heightField.length);
   const tin = new Delatin(heightField, dimension, dimension);
-  tin.run(0.03);
+  tin.run(0.01);
   const { coords, triangles } = tin;
 
   const geometry = useMemo(() => {
@@ -37,17 +39,26 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
     return geom;
   }, [coords, triangles]);
 
+  useEffect(() => {
+    if (heightMap && !wireframe && meshRef.current) {
+      const material = meshRef.current.material as THREE.ShaderMaterial;
+      material.uniforms.heightMap.value = heightMap;
+      material.needsUpdate = true;
+    }
+  }, [heightMap, meshRef]);
+
   const scale = 50;
   return (
     <mesh
+      ref={meshRef}
       geometry={geometry}
       position={new THREE.Vector3(-scale * 0.5, 0, -scale * 0.5)}
-      scale={new THREE.Vector3(scale, scale, scale)}
+      scale={new THREE.Vector3(scale, 1, scale)}
     >
       {wireframe ? (
         <meshStandardMaterial color="lightgray" wireframe={true} />
       ) : (
-        <delatinTerrainMaterial />
+        <delatinTerrainMaterial heightmap={heightMap} />
       )}
     </mesh>
   );

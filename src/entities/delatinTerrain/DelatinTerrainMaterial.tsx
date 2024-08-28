@@ -28,9 +28,9 @@ const DelatinTerrainMaterial: typeof ShaderMaterial & { key: string } =
 	void main() {
 
     vec3 localPos = position; 
-    vUv = vec2(localPos.x, localPos.y);
+    vUv = vec2(localPos.x, localPos.z);
     vec4 mvPosition = vec4( position, 1.0 );
-    mvPosition.y = texture2D(heightMap, vUv).r;
+    mvPosition.y = texture2D(heightMap, vUv).r * 10.0;
 
     vec4 modelViewPosition = modelViewMatrix * mvPosition;
     gl_Position = projectionMatrix * modelViewPosition;

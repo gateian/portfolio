@@ -96,9 +96,8 @@ function Landscape() {
         <boxGeometry args={[1, 1, 1]} />
         <landscapeMaterial heightmap={dataTexture} />
       </instancedMesh>
-      {heightField ? <DelatinTerrain heightField={heightField} /> : null}
       {heightField ? (
-        <DelatinTerrain heightField={heightField} wireframe={true} />
+        <DelatinTerrain heightField={heightField} heightMap={dataTexture} />
       ) : null}
     </>
   );
