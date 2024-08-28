@@ -37,7 +37,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
     geom.computeVertexNormals();
 
     return geom;
-  }, [coords, triangles]);
+  }, [coords, dimension, triangles]);
 
   useEffect(() => {
     if (heightMap && !wireframe && meshRef.current) {
@@ -45,7 +45,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
       material.uniforms.heightMap.value = heightMap;
       material.needsUpdate = true;
     }
-  }, [heightMap, meshRef]);
+  }, [heightMap, wireframe, meshRef]);
 
   const scale = 50;
   return (
