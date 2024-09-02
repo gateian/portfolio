@@ -9,15 +9,16 @@ extend({ DelatinTerrainMaterial });
 interface DelatinTerrainProps {
   heightField: number[];
   heightMap?: THREE.DataTexture;
+  albedoMap?: THREE.Texture;
   wireframe?: boolean;
 }
 
 export const DelatinTerrain = (props: DelatinTerrainProps) => {
-  const { heightField, wireframe, heightMap } = props;
+  const { heightField, wireframe, heightMap, albedoMap } = props;
   const meshRef = useRef<THREE.Mesh>(null!);
   const dimension = Math.sqrt(heightField.length);
   const tin = new Delatin(heightField, dimension, dimension);
-  tin.run(0.01);
+  tin.run(0.005);
   const { coords, triangles } = tin;
 
   const geometry = useMemo(() => {
@@ -47,6 +48,14 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
     }
   }, [heightMap, wireframe, meshRef]);
 
+  useEffect(() => {
+    if (albedoMap && !wireframe && meshRef.current) {
+      const material = meshRef.current.material as THREE.ShaderMaterial;
+      material.uniforms.albedoMap.value = albedoMap;
+      material.needsUpdate = true;
+    }
+  }, [albedoMap, wireframe, meshRef]);
+
   const scale = 50;
   return (
     <mesh
@@ -56,7 +65,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
       scale={new THREE.Vector3(scale, 1, scale)}
     >
       {wireframe ? (
-        <meshStandardMaterial color="lightgray" wireframe={true} />
+        <meshStandardMaterial color="black" wireframe={true} />
       ) : (
         <delatinTerrainMaterial heightmap={heightMap} />
       )}

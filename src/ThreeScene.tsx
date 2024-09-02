@@ -4,8 +4,8 @@ import { OrbitControls, Stats } from "@react-three/drei";
 
 export default function ThreeScene() {
   return (
-    <Canvas camera={{ position: [50, 50, 50], fov: 50 }} shadows>
-      <OrbitControls />
+    <Canvas camera={{ position: [10, 3, 7], fov: 50 }} shadows>
+      <OrbitControls autoRotateSpeed={0.1} autoRotate />
       <Stats />
       <ambientLight intensity={0.8} />
       <directionalLight

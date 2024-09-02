@@ -12,12 +12,14 @@ import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
 extend({ LandscapeMaterial });
 
 function Landscape() {
-  const heightmap = useTexture("./heightmap.png");
+  const heightmap = useTexture("./hires/heightmap.jpg");
+  const albedo = useTexture("./hires/albedo.jpg");
+  // const albedo = useTexture("./hires/lightmap.png");
   const [heightField, setHeightField] = useState<number[]>([]);
   const instancedMeshRef = useRef<THREE.InstancedMesh>(null!);
   const [initialized, setInitialized] = useState(false);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
-  const GRID_SIZE = LANDSCAPE_GRID_WIDTH * LANDSCAPE_GRID_DEPTH;
+  // const GRID_SIZE = LANDSCAPE_GRID_WIDTH * LANDSCAPE_GRID_DEPTH;
 
   const dataTexture = useMemo(() => {
     if (!heightmap) return undefined;
@@ -87,7 +89,7 @@ function Landscape() {
 
   return (
     <>
-      <instancedMesh
+      {/* <instancedMesh
         ref={instancedMeshRef}
         args={[undefined, undefined, GRID_SIZE]}
         castShadow
@@ -95,9 +97,21 @@ function Landscape() {
       >
         <boxGeometry args={[1, 1, 1]} />
         <landscapeMaterial heightmap={dataTexture} />
-      </instancedMesh>
-      {heightField ? (
-        <DelatinTerrain heightField={heightField} heightMap={dataTexture} />
+      </instancedMesh> */}
+      {heightField && albedo ? (
+        <DelatinTerrain
+          albedoMap={albedo}
+          heightField={heightField}
+          heightMap={dataTexture}
+        />
+      ) : null}
+      {heightField && albedo ? (
+        <DelatinTerrain
+          albedoMap={albedo}
+          heightField={heightField}
+          heightMap={dataTexture}
+          wireframe={true}
+        />
       ) : null}
     </>
   );
