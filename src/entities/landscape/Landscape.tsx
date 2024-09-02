@@ -12,8 +12,8 @@ import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
 extend({ LandscapeMaterial });
 
 function Landscape() {
-  const heightmap = useTexture("./hires/heightmap.png");
-  const albedo = useTexture("./hires/TerrainAlbedo.png");
+  const heightmap = useTexture("./hires/heightmap.jpg");
+  const albedo = useTexture("./hires/albedo.jpg");
   // const albedo = useTexture("./hires/lightmap.png");
   const [heightField, setHeightField] = useState<number[]>([]);
   const instancedMeshRef = useRef<THREE.InstancedMesh>(null!);
