@@ -26,7 +26,6 @@ const Overlay = styled.div`
 `;
 
 const HeroBanner = styled.div`
-  background-color: rgba(0, 0, 0, 0.5); // Semi-transparent background
   color: white;
   padding: 20px;
   border-radius: 10px;
