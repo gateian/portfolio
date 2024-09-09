@@ -1,6 +1,7 @@
 import "./App.css";
 import { Overlay, HeroBanner, ThreeContainer } from "./StyledComponents";
 import ThreeScene from "./ThreeScene";
+import TitleBanner from "./UI/Debug/TitleBanner";
 
 function App() {
   return (
@@ -10,8 +11,7 @@ function App() {
       </ThreeContainer>
       <Overlay>
         <HeroBanner>
-          <h1>Title</h1>
-          <p>3D Specialist | Realtime Developer</p>
+          <TitleBanner />
         </HeroBanner>
       </Overlay>
     </div>
