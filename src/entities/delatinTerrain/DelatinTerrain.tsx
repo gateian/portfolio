@@ -18,7 +18,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
   const meshRef = useRef<THREE.Mesh>(null!);
   const dimension = Math.sqrt(heightField.length);
   const tin = new Delatin(heightField, dimension, dimension);
-  tin.run(0.005);
+  tin.run(0.02);
   const { coords, triangles } = tin;
 
   const geometry = useMemo(() => {
