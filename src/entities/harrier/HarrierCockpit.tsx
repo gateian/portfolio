@@ -1,6 +1,5 @@
 import { useLoader } from "@react-three/fiber";
 import { DRACOLoader } from "../../libs/three/loaders/DRACOLoader";
-// import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { GLTFLoader } from "../../libs/three/loaders/GLTFLoader";
 
 const HarrierCockpit = () => {
