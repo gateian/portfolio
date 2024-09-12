@@ -5,7 +5,7 @@ import HarrierCockpit from "./entities/harrier/HarrierCockpit";
 
 export default function ThreeScene() {
   return (
-    <Canvas camera={{ position: [10, 3, 7], fov: 50 }} shadows>
+    <Canvas camera={{ position: [40, 40, 42], fov: 50 }} shadows>
       <OrbitControls autoRotateSpeed={0.1} autoRotate />
       <Stats />
       <ambientLight intensity={0.8} />

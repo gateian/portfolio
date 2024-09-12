@@ -105,14 +105,6 @@ function Landscape() {
           heightMap={dataTexture}
         />
       ) : null}
-      {/* {heightField && albedo ? (
-        <DelatinTerrain
-          albedoMap={albedo}
-          heightField={heightField}
-          heightMap={dataTexture}
-          wireframe={true}
-        />
-      ) : null} */}
     </>
   );
 }
