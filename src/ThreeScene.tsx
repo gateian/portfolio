@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import Landscape from "./entities/landscape/Landscape";
 import { OrbitControls, Stats } from "@react-three/drei";
+import HarrierCockpit from "./entities/harrier/HarrierCockpit";
 
 export default function ThreeScene() {
   return (
@@ -22,7 +23,7 @@ export default function ThreeScene() {
       />
       <pointLight position={[10, 10, 10]} />
       <Landscape />
-      {/* <Landscape /> */}
+      <HarrierCockpit />
     </Canvas>
   );
 }
