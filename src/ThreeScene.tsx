@@ -2,12 +2,14 @@ import { Canvas } from "@react-three/fiber";
 import Landscape from "./entities/landscape/Landscape";
 import { OrbitControls, Stats } from "@react-three/drei";
 import HarrierCockpit from "./entities/harrier/HarrierCockpit";
+import { isDebugMode } from "./utils/generalUtils";
 
 export default function ThreeScene() {
+  const debug = isDebugMode();
   return (
     <Canvas camera={{ position: [10, 3, 7], fov: 50 }} shadows>
       <OrbitControls autoRotateSpeed={0.1} autoRotate />
-      <Stats />
+      {debug ? <Stats /> : null}
       <ambientLight intensity={0.8} />
       <directionalLight
         position={[-3, 5, 5]}
