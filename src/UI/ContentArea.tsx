@@ -44,13 +44,22 @@ interface ContentAreaProps {
 }
 
 const ContentArea: React.FC<ContentAreaProps> = ({ children }) => {
-  const { selectedObject, setSelectedObject } = useAppState();
+  const { selectedObject, setSelectedObject, objectCount } = useAppState();
 
   const arrowClickHander = useCallback(
     (direction: "left" | "right") => {
-      setSelectedObject(
-        direction === "left" ? selectedObject - 1 : selectedObject + 1
-      );
+      let newSelectedObject = 0;
+
+      const operation = direction === "left" ? -1 : 1;
+
+      newSelectedObject = selectedObject + operation;
+      if (newSelectedObject < 0) {
+        newSelectedObject = objectCount - 1;
+      } else if (newSelectedObject >= objectCount) {
+        newSelectedObject = 0;
+      }
+
+      setSelectedObject(newSelectedObject);
     },
     [selectedObject, setSelectedObject]
   );
