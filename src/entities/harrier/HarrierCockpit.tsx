@@ -13,7 +13,14 @@ const HarrierCockpit = () => {
     }
   );
 
-  return <primitive object={gltf.scene} />;
+  return (
+    <primitive
+      object={gltf.scene}
+      position={[0, 5, -40]}
+      rotation={[0, Math.PI, 0]}
+      scale={[10, 10, 10]}
+    />
+  );
 };
 
 export default HarrierCockpit;
