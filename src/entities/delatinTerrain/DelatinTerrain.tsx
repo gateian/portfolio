@@ -17,9 +17,12 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
   const { heightField, wireframe, heightMap, albedoMap } = props;
   const meshRef = useRef<THREE.Mesh>(null!);
   const dimension = Math.sqrt(heightField.length);
-  const tin = new Delatin(heightField, dimension, dimension);
-  tin.run(0.02);
-  const { coords, triangles } = tin;
+
+  const { coords, triangles } = useMemo(() => {
+    const tin = new Delatin(heightField, dimension, dimension);
+    tin.run(0.02);
+    return tin;
+  }, [heightField, dimension]);
 
   const geometry = useMemo(() => {
     const convertedCoords: number[] = [];

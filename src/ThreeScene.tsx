@@ -5,11 +5,19 @@ import HarrierCockpit from "./entities/harrier/HarrierCockpit";
 import { isDebugMode } from "./utils/generalUtils";
 import MeshPositioner from "./MeshPositioner";
 import Debug from "./debug/Debug";
+import { useAppState } from "./StateProvider";
+import { useEffect } from "react";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
 
   const displayObjects = [<Landscape />, <HarrierCockpit />];
+
+  const { setObjectCount } = useAppState();
+
+  useEffect(() => {
+    setObjectCount(displayObjects.length);
+  }, [displayObjects.length, setObjectCount]);
 
   return (
     <Canvas camera={{ position: [0, 40, 42], fov: 50 }} shadows>

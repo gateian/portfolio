@@ -1,7 +1,8 @@
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 import styled from "@emotion/styled";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useCallback } from "react";
+import { useAppState } from "../StateProvider";
 
 const ContentWrapper = styled.div`
   width: 100vw;
@@ -43,11 +44,22 @@ interface ContentAreaProps {
 }
 
 const ContentArea: React.FC<ContentAreaProps> = ({ children }) => {
+  const { selectedObject, setSelectedObject } = useAppState();
+
+  const arrowClickHander = useCallback(
+    (direction: "left" | "right") => {
+      setSelectedObject(
+        direction === "left" ? selectedObject - 1 : selectedObject + 1
+      );
+    },
+    [selectedObject, setSelectedObject]
+  );
+
   return (
     <ContentWrapper>
-      <ArrowLeft />
+      <ArrowLeft onClick={() => arrowClickHander("left")} />
       <CentreSpace>{children}</CentreSpace>
-      <ArrowRight />
+      <ArrowRight onClick={() => arrowClickHander("right")} />
     </ContentWrapper>
   );
 };
