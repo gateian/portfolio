@@ -16,11 +16,12 @@ export default function ThreeScene() {
   const { setObjectCount } = useAppState();
 
   useEffect(() => {
+    console.log("Setting object count:", displayObjects.length);
     setObjectCount(displayObjects.length);
   }, [displayObjects.length, setObjectCount]);
 
   return (
-    <Canvas camera={{ position: [0, 40, 42], fov: 50 }} shadows>
+    <Canvas camera={{ position: [-30, 30, 42], fov: 50 }} shadows>
       {debug ? <Debug /> : null}
       <OrbitControls autoRotateSpeed={0} autoRotate />
       <ambientLight intensity={0.8} />

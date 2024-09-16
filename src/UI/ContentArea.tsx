@@ -61,7 +61,7 @@ const ContentArea: React.FC<ContentAreaProps> = ({ children }) => {
 
       setSelectedObject(newSelectedObject);
     },
-    [selectedObject, setSelectedObject]
+    [selectedObject, setSelectedObject, objectCount]
   );
 
   return (
