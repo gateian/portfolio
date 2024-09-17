@@ -7,11 +7,16 @@ import MeshPositioner from "./MeshPositioner";
 import Debug from "./debug/Debug";
 import { useAppState } from "./StateProvider";
 import { useEffect } from "react";
+import QueensUniversity from "./entities/queens/QueensUniversity";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
 
-  const displayObjects = [<Landscape />, <HarrierCockpit />];
+  const displayObjects = [
+    <Landscape />,
+    <HarrierCockpit />,
+    <QueensUniversity />,
+  ];
 
   const { setObjectCount } = useAppState();
 
