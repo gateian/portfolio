@@ -1,25 +1,27 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect } from "react";
+import { Color, Mesh, MeshStandardMaterial } from "three";
 
 const QueensUniversity = () => {
   const { scene, materials } = useGLTF("./3d/QueensUniversity.glb");
 
   useEffect(() => {
-    // Assuming your material has an emissiveMap (from Blender lightmap)
-    const material = materials["Material #15.001"] as any;
+    if (scene) {
+      scene.children.forEach((group) => {
+        group.traverse((child) => {
+          if (child instanceof Mesh) {
+            const material = child.material as MeshStandardMaterial;
 
-    console.log(materials);
-    if (material && material.emissiveMap) {
-      console.log("Setting lightMap");
-      // Assign emissiveMap as the lightMap
-      //material.lightMap = material.emissiveMap;
-      material.emissiveMap = undefined;
-      material.lightMapIntensity = 0.5; // Adjust if needed
-
-      // Ensure the material updates
-      material.needsUpdate = true;
+            material.lightMap = material.emissiveMap;
+            material.emissive = new Color(0x000000);
+            material.lightMapIntensity = 20;
+            material.metalness = 0.1;
+            material.needsUpdate = true;
+          }
+        });
+      });
     }
-  }, [materials]);
+  }, [materials, scene]);
 
   return (
     <primitive

@@ -8,6 +8,7 @@ import Debug from "./debug/Debug";
 import { useAppState } from "./StateProvider";
 import { useEffect } from "react";
 import QueensUniversity from "./entities/queens/QueensUniversity";
+import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -30,7 +31,8 @@ export default function ThreeScene() {
       {debug ? <Debug /> : null}
       <OrbitControls autoRotateSpeed={0} autoRotate />
       <ambientLight intensity={0.8} />
-      <directionalLight
+      {/* <directionalLight
+        ref={lightRef}
         position={[-3, 5, 5]}
         intensity={1}
         castShadow
@@ -41,7 +43,8 @@ export default function ThreeScene() {
         shadow-camera-right={10}
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
-      />
+      /> */}
+      <DirectionalLightWithHelper />
       <pointLight position={[10, 10, 10]} />
       {displayObjects.map((obj, index) => (
         <MeshPositioner key={index} order={index}>

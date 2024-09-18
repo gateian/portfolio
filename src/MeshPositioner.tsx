@@ -12,7 +12,7 @@ type MeshPositionerProps = {
 
 const MeshPositioner: React.FC<MeshPositionerProps> = ({
   order,
-  spacing = 100,
+  spacing = 500,
   animationDuration = 5, // Duration of animation in seconds
   children,
 }) => {
