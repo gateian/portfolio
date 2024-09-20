@@ -1,12 +1,14 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect } from "react";
 import { Color, Mesh, MeshStandardMaterial } from "three";
+import { useAppState } from "../../StateProvider";
 
 const QueensUniversity = () => {
   const { scene, materials } = useGLTF("./3d/QueensUniversity.glb");
+  const { environmentMap } = useAppState();
 
   useEffect(() => {
-    if (scene) {
+    if (scene && environmentMap) {
       scene.children.forEach((group) => {
         group.traverse((child) => {
           if (child instanceof Mesh) {
@@ -14,14 +16,19 @@ const QueensUniversity = () => {
 
             material.lightMap = material.emissiveMap;
             material.emissive = new Color(0x000000);
+            material.envMap = environmentMap;
+            material.envMapIntensity = 1;
+            material.color = new Color(0xcccccc);
             material.lightMapIntensity = 20;
-            material.metalness = 0.1;
+            material.metalness = 0.7;
             material.needsUpdate = true;
+            material.vertexColors = false;
+            material.roughness = 0.3;
           }
         });
       });
     }
-  }, [materials, scene]);
+  }, [materials, scene, environmentMap]);
 
   return (
     <primitive

@@ -9,6 +9,7 @@ import { useAppState } from "./StateProvider";
 import { useEffect } from "react";
 import QueensUniversity from "./entities/queens/QueensUniversity";
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
+import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -29,8 +30,9 @@ export default function ThreeScene() {
   return (
     <Canvas camera={{ position: [-30, 30, 42], fov: 50 }} shadows>
       {debug ? <Debug /> : null}
+      <EnvironmentMapLoader />
       <OrbitControls autoRotateSpeed={0} autoRotate />
-      <ambientLight intensity={0.8} />
+      <ambientLight intensity={2} />
       {/* <directionalLight
         ref={lightRef}
         position={[-3, 5, 5]}
