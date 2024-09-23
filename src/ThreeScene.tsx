@@ -10,17 +10,19 @@ import { useEffect } from "react";
 import QueensUniversity from "./entities/queens/QueensUniversity";
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
 import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
+import ReflectiveCube from "./entities/reflectiveCube/ReflectiveCube";
+import EnvironmentMapQuad from "./entities/environmentMapQuad/EnvironmentMapQuad";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
 
   const displayObjects = [
     <Landscape />,
-    <HarrierCockpit />,
-    <QueensUniversity />,
+    // <HarrierCockpit />,
+    // <QueensUniversity />,
   ];
 
-  const { setObjectCount } = useAppState();
+  const { setObjectCount, environmentMap } = useAppState();
 
   useEffect(() => {
     console.log("Setting object count:", displayObjects.length);
@@ -30,6 +32,8 @@ export default function ThreeScene() {
   return (
     <Canvas camera={{ position: [-30, 30, 42], fov: 50 }} shadows>
       {debug ? <Debug /> : null}
+      <ReflectiveCube />
+      <EnvironmentMapQuad envMap={environmentMap} />
       <EnvironmentMapLoader />
       <OrbitControls autoRotateSpeed={0} autoRotate />
       <ambientLight intensity={2} />

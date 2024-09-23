@@ -24,7 +24,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      three: "three/src/Three",
+      three: "three",
+      "three/examples/jsm/loaders/RGBELoader":
+        "three/examples/jsm/loaders/RGBELoader.js",
     },
   },
   optimizeDeps: {
