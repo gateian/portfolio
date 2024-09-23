@@ -60,9 +60,19 @@ const EnvironmentMapLoader: React.FC<EnvironmentMapLoaderProps> = ({
 
   useEffect(() => {
     scene.environment = new RGBELoader().load(
-      "textures/equirectangular/venice_sunset_1k.hdr"
+      "3d/envMap/venice_sunset_1k.hdr",
+      (texture: Texture) => {
+        texture.mapping = EquirectangularReflectionMapping;
+        scene.background = texture;
+        // const envMap = new PMREMGenerator(texture).fromEquirectangular(texture)
+        //   .texture;
+        // setEnvironmentMap(envMap);
+        // if (onLoad) {
+        //   onLoad(envMap);
+        // }
+      }
     );
-    scene.environment.mapping = EquirectangularReflectionMapping;
+    //scene.environment.mapping = EquirectangularReflectionMapping;
   }, [scene]);
 
   return null;

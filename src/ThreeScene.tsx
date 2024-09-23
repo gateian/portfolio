@@ -16,11 +16,19 @@ import EnvironmentMapQuad from "./entities/environmentMapQuad/EnvironmentMapQuad
 export default function ThreeScene() {
   const debug = isDebugMode();
 
-  const displayObjects = [
-    <Landscape />,
-    // <HarrierCockpit />,
-    // <QueensUniversity />,
-  ];
+  const setupObjects = () => {
+    const objects = [
+      <Landscape />,
+      <HarrierCockpit />,
+      <QueensUniversity />,
+      <ReflectiveCube />,
+    ];
+    const debugObjects = [<ReflectiveCube />];
+
+    return [...objects, ...(debug ? debugObjects : [])];
+  };
+
+  const displayObjects = setupObjects();
 
   const { setObjectCount, environmentMap } = useAppState();
 
@@ -32,7 +40,6 @@ export default function ThreeScene() {
   return (
     <Canvas camera={{ position: [-30, 30, 42], fov: 50 }} shadows>
       {debug ? <Debug /> : null}
-      <ReflectiveCube />
       <EnvironmentMapQuad envMap={environmentMap} />
       <EnvironmentMapLoader />
       <OrbitControls autoRotateSpeed={0} autoRotate />
