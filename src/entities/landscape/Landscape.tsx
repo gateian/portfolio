@@ -4,10 +4,11 @@ import * as THREE from "three";
 import { LandscapeMaterial } from "./LandscapeMaterial";
 import { useTexture } from "@react-three/drei";
 import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
+import MapMarker from "../mapMarker/MapMarker";
 
 extend({ LandscapeMaterial });
 
-function Landscape() {
+function Landscape({ offset }: { offset: number }) {
   const heightmap = useTexture("./hires/heightmap.jpg");
   const albedo = useTexture("./hires/albedo.jpg");
   const [heightField, setHeightField] = useState<number[]>([]);
@@ -59,6 +60,9 @@ function Landscape() {
           heightField={heightField}
           heightMap={dataTexture}
         />
+      ) : null}
+      {offset < 1 && offset > -1 ? (
+        <MapMarker position={new THREE.Vector3(0, 10, 0)} />
       ) : null}
     </>
   );
