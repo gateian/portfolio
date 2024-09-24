@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import "./App.css";
-import { StateProvider } from "./StateProvider";
+import { StateProvider } from "./StateContext";
 import { Overlay, HeroBanner, ThreeContainer } from "./StyledComponents";
 import ThreeScene from "./ThreeScene";
 import ContentArea from "./UI/ContentArea";

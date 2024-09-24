@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useAppState } from "./StateProvider";
+import { useAppState } from "./hooks/useAppState";
 
 type MeshPositionerProps = {
   order: number;

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Texture, EquirectangularReflectionMapping } from "three";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
-import { useAppState } from "../StateProvider";
+import { useAppState } from "../hooks/useAppState";
 import { useThree } from "@react-three/fiber";
 
 const EnvironmentMapLoader: React.FC = () => {
@@ -17,7 +17,7 @@ const EnvironmentMapLoader: React.FC = () => {
         setEnvironmentMap(texture);
       }
     );
-  }, [scene]);
+  }, [scene, setEnvironmentMap]);
 
   return null;
 };

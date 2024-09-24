@@ -5,7 +5,7 @@ import HarrierCockpit from "./entities/harrier/HarrierCockpit";
 import { isDebugMode } from "./utils/generalUtils";
 import MeshPositioner from "./MeshPositioner";
 import Debug from "./debug/Debug";
-import { useAppState } from "./StateProvider";
+import { useAppState } from "./hooks/useAppState";
 import { useEffect } from "react";
 import QueensUniversity from "./entities/queens/QueensUniversity";
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
