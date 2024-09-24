@@ -1,7 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 
 const HarrierCockpit = () => {
-  const { scene, materials } = useGLTF("./3d/QueensUniversity.glb");
+  const { scene } = useGLTF("./3d/HarrierPortfolioExport.glb");
 
   return (
     <primitive

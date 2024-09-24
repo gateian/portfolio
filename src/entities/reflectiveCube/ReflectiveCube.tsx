@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useAppState } from "../../StateProvider";
@@ -15,12 +15,6 @@ const ReflectiveCube: React.FC<ReflectiveCubeProps> = ({
   const meshRef = useRef<THREE.Mesh>(null);
   const { environmentMap } = useAppState();
 
-  useEffect(() => {
-    if (environmentMap) {
-      console.log("Environment map loaded");
-    }
-  }, [environmentMap]);
-
   useFrame((_state, delta) => {
     if (meshRef.current) {
       meshRef.current.rotation.x += delta * 0.5;
@@ -33,8 +27,9 @@ const ReflectiveCube: React.FC<ReflectiveCubeProps> = ({
       <boxGeometry args={[size, size, size]} />
       <meshPhysicalMaterial
         envMap={environmentMap}
-        metalness={1}
-        roughness={0}
+        color={0x444444}
+        metalness={0.3}
+        roughness={1}
         envMapIntensity={1}
         reflectivity={1}
       />
