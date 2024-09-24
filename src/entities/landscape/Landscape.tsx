@@ -13,6 +13,8 @@ function Landscape({ offset }: { offset: number }) {
   const albedo = useTexture("./hires/albedo.jpg");
   const [heightField, setHeightField] = useState<number[]>([]);
 
+  const queensImage = useTexture("/icons/queens.png");
+
   const dataTexture = useMemo(() => {
     if (!heightmap) return undefined;
 
@@ -62,7 +64,7 @@ function Landscape({ offset }: { offset: number }) {
         />
       ) : null}
       {offset < 1 && offset > -1 ? (
-        <MapMarker position={new THREE.Vector3(0, 10, 0)} />
+        <MapMarker position={new THREE.Vector3(0, 10, 0)} image={queensImage} />
       ) : null}
     </>
   );
