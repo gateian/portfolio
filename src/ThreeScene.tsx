@@ -5,13 +5,24 @@ import HarrierCockpit from "./entities/harrier/HarrierCockpit";
 import { isDebugMode } from "./utils/generalUtils";
 import MeshPositioner from "./MeshPositioner";
 import Debug from "./debug/Debug";
-import { useAppState } from "./StateProvider";
+import { useAppState } from "./hooks/useAppState";
 import { useEffect } from "react";
+import QueensUniversity from "./entities/queens/QueensUniversity";
+import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
+import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
+import ReflectiveCube from "./entities/reflectiveCube/ReflectiveCube";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
 
-  const displayObjects = [<Landscape />, <HarrierCockpit />];
+  const setupObjects = () => {
+    const objects = [<Landscape />, <HarrierCockpit />, <QueensUniversity />];
+    const debugObjects = [<ReflectiveCube />];
+
+    return [...objects, ...(debug ? debugObjects : [])];
+  };
+
+  const displayObjects = setupObjects();
 
   const { setObjectCount } = useAppState();
 
@@ -23,9 +34,11 @@ export default function ThreeScene() {
   return (
     <Canvas camera={{ position: [-30, 30, 42], fov: 50 }} shadows>
       {debug ? <Debug /> : null}
+      <EnvironmentMapLoader />
       <OrbitControls autoRotateSpeed={0} autoRotate />
-      <ambientLight intensity={0.8} />
-      <directionalLight
+      <ambientLight intensity={1} />
+      {/* <directionalLight
+        ref={lightRef}
         position={[-3, 5, 5]}
         intensity={1}
         castShadow
@@ -36,7 +49,8 @@ export default function ThreeScene() {
         shadow-camera-right={10}
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
-      />
+      /> */}
+      <DirectionalLightWithHelper />
       <pointLight position={[10, 10, 10]} />
       {displayObjects.map((obj, index) => (
         <MeshPositioner key={index} order={index}>

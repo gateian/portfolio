@@ -2,7 +2,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 import styled from "@emotion/styled";
 import React, { ReactNode, useCallback } from "react";
-import { useAppState } from "../StateProvider";
+import { useAppState } from "../hooks/useAppState";
 
 const ContentWrapper = styled.div`
   width: 100vw;
