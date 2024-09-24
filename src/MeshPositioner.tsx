@@ -13,7 +13,7 @@ type MeshPositionerProps = {
 const MeshPositioner: React.FC<MeshPositionerProps> = ({
   order,
   spacing = 500,
-  animationDuration = 5, // Duration of animation in seconds
+  animationDuration = 30, // Duration of animation in seconds
   children,
 }) => {
   const { selectedObject } = useAppState();
