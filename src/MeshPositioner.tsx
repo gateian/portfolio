@@ -7,13 +7,13 @@ type MeshPositionerProps = {
   order: number;
   spacing?: number;
   animationDuration?: number;
-  children: React.ReactNode;
+  children: React.ReactNode | ((currentPosition: number) => React.ReactNode);
 };
 
 const MeshPositioner: React.FC<MeshPositionerProps> = ({
   order,
   spacing = 500,
-  animationDuration = 5, // Duration of animation in seconds
+  animationDuration = 30, // Duration of animation in seconds
   children,
 }) => {
   const { selectedObject } = useAppState();
@@ -51,7 +51,13 @@ const MeshPositioner: React.FC<MeshPositionerProps> = ({
 
   return (
     <group ref={meshRef} position={[currentPosition, 0, 0]}>
-      {children}
+      {typeof children === "function"
+        ? children(currentPosition)
+        : React.Children.map(children, (child) =>
+            React.cloneElement(child as React.ReactElement, {
+              currentPosition,
+            })
+          )}
     </group>
   );
 };

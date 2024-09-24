@@ -4,13 +4,18 @@ import * as THREE from "three";
 import { LandscapeMaterial } from "./LandscapeMaterial";
 import { useTexture } from "@react-three/drei";
 import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
+import MapMarker from "../mapMarker/MapMarker";
+import { useAppState } from "../../hooks/useAppState";
 
 extend({ LandscapeMaterial });
 
-function Landscape() {
+function Landscape({ offset }: { offset: number }) {
   const heightmap = useTexture("./hires/heightmap.jpg");
   const albedo = useTexture("./hires/albedo.jpg");
   const [heightField, setHeightField] = useState<number[]>([]);
+  const { setSelectedObject } = useAppState();
+
+  const queensImage = useTexture("/icons/queens.png");
 
   const dataTexture = useMemo(() => {
     if (!heightmap) return undefined;
@@ -58,6 +63,13 @@ function Landscape() {
           albedoMap={albedo}
           heightField={heightField}
           heightMap={dataTexture}
+        />
+      ) : null}
+      {offset < 1 && offset > -1 ? (
+        <MapMarker
+          position={new THREE.Vector3(0, 10, 0)}
+          image={queensImage}
+          onClick={() => setSelectedObject(2)}
         />
       ) : null}
     </>

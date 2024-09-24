@@ -16,7 +16,11 @@ export default function ThreeScene() {
   const debug = isDebugMode();
 
   const setupObjects = () => {
-    const objects = [<Landscape />, <HarrierCockpit />, <QueensUniversity />];
+    const objects = [
+      (currentPosition: number) => <Landscape offset={currentPosition} />,
+      <HarrierCockpit />,
+      <QueensUniversity />,
+    ];
     const debugObjects = [<ReflectiveCube />];
 
     return [...objects, ...(debug ? debugObjects : [])];
