@@ -11,6 +11,8 @@ import QueensUniversity from "./entities/queens/QueensUniversity";
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
 import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 import ReflectiveCube from "./entities/reflectiveCube/ReflectiveCube";
+import MapMarker from "./entities/mapMarker/MapMarker";
+import { Vector3 } from "three";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -52,6 +54,7 @@ export default function ThreeScene() {
       /> */}
       <DirectionalLightWithHelper />
       <pointLight position={[10, 10, 10]} />
+      <MapMarker position={new Vector3(0, 10, 0)} />
       {displayObjects.map((obj, index) => (
         <MeshPositioner key={index} order={index}>
           {obj}

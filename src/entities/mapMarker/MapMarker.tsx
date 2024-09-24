@@ -1,13 +1,33 @@
 import { Billboard, useTexture } from "@react-three/drei";
+import { Vector3 } from "three";
 
-const Marker = ({ position }: { position: [number, number, number] }) => {
+interface MarkerProps {
+  position: Vector3;
+  onClick: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+}
+const Marker = ({ position }: { position: Vector3 }) => {
   const texture = useTexture("/icons/mapMarker.png");
 
+  const mouseEnterHandler = () => {
+    console.log("Marker mouse enter");
+  };
+
+  const mouseLeaveHandler = () => {
+    console.log("Marker mouse leave");
+  };
+
   return (
-    <Billboard position={position}>
-      <mesh>
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial map={texture} transparent={true} />
+    <Billboard>
+      <mesh
+        position={position}
+        onClick={() => console.log("Billboard clicked!")}
+        onPointerEnter={mouseEnterHandler}
+        onPointerLeave={mouseLeaveHandler}
+      >
+        <planeGeometry args={[5, 5]} />
+        <meshBasicMaterial map={texture} transparent={true} depthTest={false} />
       </mesh>
     </Billboard>
   );
