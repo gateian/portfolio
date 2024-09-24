@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { LandscapeMaterial } from "./LandscapeMaterial";
 import { useTexture } from "@react-three/drei";
 import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
+import MapMarker from "../mapMarker/MapMarker";
 
 extend({ LandscapeMaterial });
 
@@ -60,6 +61,7 @@ function Landscape() {
           heightMap={dataTexture}
         />
       ) : null}
+      <MapMarker position={[0, 0, 0]} />
     </>
   );
 }
