@@ -11,6 +11,7 @@ import QueensUniversity from "./entities/queens/QueensUniversity";
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
 import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 import ReflectiveCube from "./entities/reflectiveCube/ReflectiveCube";
+import { MOUSE } from "three";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -36,10 +37,19 @@ export default function ThreeScene() {
   }, [displayObjects.length, setObjectCount]);
 
   return (
-    <Canvas camera={{ position: [-30, 30, 42], fov: 50 }} shadows>
+    <Canvas camera={{ position: [-500, 500, 500], fov: 20 }} shadows>
       {debug ? <Debug /> : null}
       <EnvironmentMapLoader />
-      <OrbitControls autoRotateSpeed={0} autoRotate />
+      <OrbitControls
+        enableRotate={false}
+        screenSpacePanning={false}
+        maxDistance={700}
+        minDistance={50}
+        mouseButtons={{
+          LEFT: MOUSE.PAN,
+          RIGHT: MOUSE.PAN,
+        }}
+      />
       <ambientLight intensity={1} />
       {/* <directionalLight
         ref={lightRef}
