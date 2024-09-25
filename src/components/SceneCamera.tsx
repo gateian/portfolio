@@ -2,6 +2,7 @@ import { PerspectiveCamera } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { PerspectiveCamera as THREEPerspectiveCamera, Vector3 } from "three";
+import { useAppState } from "../hooks/useAppState";
 
 const SceneCamera = () => {
   const ref = useRef<THREEPerspectiveCamera>(null!);
@@ -9,8 +10,17 @@ const SceneCamera = () => {
   const isDraggingRef = useRef(false);
   const startMousePosRef = useRef<{ x: number; y: number } | null>(null);
   const distanceRef = useRef(0);
+  const targetPositionRef = useRef<Vector3 | null>(null);
 
   const dragSensitivity = 0.5;
+  const autoMoveSpeed = 100;
+
+  const { cameraTarget } = useAppState();
+
+  useEffect(() => {
+    targetPositionRef.current = cameraTarget;
+    console.log("Setting camera target:", cameraTarget);
+  }, [cameraTarget]);
 
   const handleMouseDown = (event: MouseEvent) => {
     isDraggingRef.current = true;
@@ -90,8 +100,62 @@ const SceneCamera = () => {
     distanceRef.current = ref.current.position.distanceTo(lookAtRef.current);
   };
 
-  useFrame(() => {
+  const moveTowardsTarget = (deltaTime: number) => {
+    if (targetPositionRef.current && ref.current && lookAtRef.current) {
+      const target = targetPositionRef.current;
+
+      // Calculate direction vector from current lookAt position to the target
+      const direction = new Vector3()
+        .subVectors(target, lookAtRef.current)
+        .normalize();
+
+      // Calculate the distance between current lookAt position and the target
+      const distance = lookAtRef.current.distanceTo(target);
+
+      // If the distance is small enough, stop moving
+      if (distance > 0.01) {
+        // Move lookAt position towards the target by speed factor (scaled by deltaTime)
+        const moveAmount = Math.min(autoMoveSpeed * deltaTime, distance); // Avoid overshooting
+        const newLookAt = lookAtRef.current
+          .clone()
+          .add(direction.multiplyScalar(moveAmount));
+        lookAtRef.current.copy(newLookAt);
+
+        // Calculate the same movement delta in XZ plane for the camera's position
+        const cameraDirection = new Vector3()
+          .subVectors(ref.current.position, lookAtRef.current)
+          .normalize();
+        const newCameraPosition = ref.current.position
+          .clone()
+          .add(direction.multiplyScalar(moveAmount));
+        ref.current.position.copy(newCameraPosition);
+        console.log(
+          "Moving towards target",
+          lookAtRef.current,
+          ref.current.position
+        );
+      } else {
+        // Once close enough, set the lookAt to the exact target and stop
+        lookAtRef.current.copy(target);
+        targetPositionRef.current = null; // Stop updating
+      }
+    }
+  };
+
+  //   useFrame(() => {
+  //     if (ref.current && lookAtRef.current) {
+  //       ref.current.lookAt(lookAtRef.current);
+  //     }
+  //   });
+
+  useFrame((_state, delta) => {
     if (ref.current && lookAtRef.current) {
+      // Move towards the target position if it's set
+      if (targetPositionRef.current) {
+        moveTowardsTarget(delta);
+      }
+
+      // Make the camera look at the updated lookAt position
       ref.current.lookAt(lookAtRef.current);
     }
   });

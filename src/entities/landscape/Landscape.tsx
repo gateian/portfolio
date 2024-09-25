@@ -13,7 +13,7 @@ function Landscape({ offset }: { offset: number }) {
   const heightmap = useTexture("./hires/heightmap.jpg");
   const albedo = useTexture("./hires/albedo.jpg");
   const [heightField, setHeightField] = useState<number[]>([]);
-  const { setSelectedObject } = useAppState();
+  const { setSelectedObject, setCameraTarget } = useAppState();
 
   const queensImage = useTexture("/icons/queens.png");
 
@@ -69,7 +69,7 @@ function Landscape({ offset }: { offset: number }) {
         <MapMarker
           position={new THREE.Vector3(0, 10, 0)}
           image={queensImage}
-          onClick={() => setSelectedObject(2)}
+          onClick={() => setCameraTarget(new THREE.Vector3(300, 0, 0))}
         />
       ) : null}
     </>
