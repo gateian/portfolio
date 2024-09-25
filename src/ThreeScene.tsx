@@ -1,6 +1,6 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import Landscape from "./entities/landscape/Landscape";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import HarrierCockpit from "./entities/harrier/HarrierCockpit";
 import { isDebugMode } from "./utils/generalUtils";
 import MeshPositioner from "./MeshPositioner";
@@ -11,7 +11,7 @@ import QueensUniversity from "./entities/queens/QueensUniversity";
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
 import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 import ReflectiveCube from "./entities/reflectiveCube/ReflectiveCube";
-import { MOUSE } from "three";
+import SceneCamera from "./components/SceneCamera";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -37,10 +37,12 @@ export default function ThreeScene() {
   }, [displayObjects.length, setObjectCount]);
 
   return (
-    <Canvas camera={{ position: [-500, 500, 500], fov: 20 }} shadows>
+    // <Canvas camera={{ position: [-500, 500, 500], fov: 20 }} shadows>
+    <Canvas shadows>
+      <SceneCamera />
       {debug ? <Debug /> : null}
       <EnvironmentMapLoader />
-      <OrbitControls
+      {/* <OrbitControls
         enableRotate={false}
         screenSpacePanning={false}
         maxDistance={700}
@@ -49,7 +51,7 @@ export default function ThreeScene() {
           LEFT: MOUSE.PAN,
           RIGHT: MOUSE.PAN,
         }}
-      />
+      /> */}
       <ambientLight intensity={1} />
       {/* <directionalLight
         ref={lightRef}
