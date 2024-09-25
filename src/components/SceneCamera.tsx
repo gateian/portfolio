@@ -1,6 +1,6 @@
 import { PerspectiveCamera } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { PerspectiveCamera as THREEPerspectiveCamera, Vector3 } from "three";
 
 const SceneCamera = () => {
@@ -8,6 +8,7 @@ const SceneCamera = () => {
   const lookAtRef = useRef<Vector3>(new Vector3(0, 0, 0));
   const isDraggingRef = useRef(false);
   const startMousePosRef = useRef<{ x: number; y: number } | null>(null);
+  const distanceRef = useRef(0);
 
   const dragSensitivity = 0.5;
 
@@ -48,7 +49,10 @@ const SceneCamera = () => {
       const deltaX = event.clientX - startMousePosRef.current.x;
       const deltaY = event.clientY - startMousePosRef.current.y;
 
-      const movement = projectScreenDeltaToXZPlane(deltaX, deltaY);
+      const movement = projectScreenDeltaToXZPlane(
+        deltaX,
+        deltaY
+      ).multiplyScalar(distanceRef.current / 500);
 
       const newLookAtTarget = lookAtRef.current.clone().add(movement);
       lookAtRef.current = newLookAtTarget;
@@ -62,15 +66,49 @@ const SceneCamera = () => {
     }
   };
 
+  const zoomSpeed = 0.05;
+
+  const handleWheel = (event: WheelEvent) => {
+    if (!ref.current) return;
+
+    const direction = new Vector3()
+      .subVectors(lookAtRef.current, ref.current.position)
+      .normalize();
+
+    const distance = ref.current.position.distanceTo(lookAtRef.current);
+
+    const zoomAmount = -event.deltaY * zoomSpeed;
+    const newPosition = ref.current.position
+      .clone()
+      .add(direction.multiplyScalar(zoomAmount));
+    console.log("Wheel event", zoomAmount, distance - zoomAmount);
+
+    if (distance - zoomAmount > 50 && distance - zoomAmount < 1000) {
+      ref.current.position.copy(newPosition);
+    }
+
+    distanceRef.current = ref.current.position.distanceTo(lookAtRef.current);
+  };
+
   useFrame(() => {
     if (ref.current && lookAtRef.current) {
       ref.current.lookAt(lookAtRef.current);
     }
   });
 
-  window.addEventListener("mousedown", handleMouseDown);
-  window.addEventListener("mouseup", handleMouseUp);
-  window.addEventListener("mousemove", handleMouseMove);
+  useEffect(() => {
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("wheel", handleWheel);
+
+    return () => {
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   return (
     <PerspectiveCamera
