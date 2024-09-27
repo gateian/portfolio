@@ -6,28 +6,55 @@ import { isDebugMode } from "./utils/generalUtils";
 import MeshPositioner from "./MeshPositioner";
 import Debug from "./debug/Debug";
 import { useAppState } from "./hooks/useAppState";
-import { useEffect } from "react";
+import { Component, useEffect } from "react";
 import QueensUniversity from "./entities/queens/QueensUniversity";
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
 import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 import ReflectiveCube from "./entities/reflectiveCube/ReflectiveCube";
 import SceneCamera from "./components/SceneCamera";
+import GridPositioner from "./GridPositioner";
+import TileBase from "./entities/tileBase/TileBase";
+import City from "./entities/city/City";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
 
-  const setupObjects = () => {
+  const initialiseObjects = () => {
     const objects = [
-      (currentPosition: number) => <Landscape offset={currentPosition} />,
-      <HarrierCockpit />,
-      <QueensUniversity />,
+      // {
+      //   gridX: 0,
+
+      //   gridZ: 0,
+      //   component: <Landscape />,
+      // },
+      {
+        gridX: 1,
+        gridZ: 0,
+        component: <HarrierCockpit />,
+      },
+      // {
+      //   gridX: 0,
+      //   gridZ: -1,
+      //   component: <QueensUniversity />,
+      // },
+      // {
+      //   gridX: 1,
+      //   gridZ: 0,
+      //   component: <TileBase />,
+      // },
     ];
-    const debugObjects = [<ReflectiveCube />];
+    const debugObjects = [
+      {
+        gridX: 0,
+        gridZ: 1,
+        component: <ReflectiveCube />,
+      },
+    ];
 
     return [...objects, ...(debug ? debugObjects : [])];
   };
 
-  const displayObjects = setupObjects();
+  const displayObjects = initialiseObjects();
 
   const { setObjectCount } = useAppState();
 
@@ -42,17 +69,9 @@ export default function ThreeScene() {
       <SceneCamera />
       {debug ? <Debug /> : null}
       <EnvironmentMapLoader />
-      {/* <OrbitControls
-        enableRotate={false}
-        screenSpacePanning={false}
-        maxDistance={700}
-        minDistance={50}
-        mouseButtons={{
-          LEFT: MOUSE.PAN,
-          RIGHT: MOUSE.PAN,
-        }}
-      /> */}
+      {/*  */}
       <ambientLight intensity={1} />
+      <City />
       {/* <directionalLight
         ref={lightRef}
         position={[-3, 5, 5]}
@@ -69,9 +88,10 @@ export default function ThreeScene() {
       <DirectionalLightWithHelper />
       <pointLight position={[10, 10, 10]} />
       {displayObjects.map((obj, index) => (
-        <MeshPositioner key={index} order={index}>
-          {obj}
-        </MeshPositioner>
+        <GridPositioner key={index} gridX={obj.gridX} gridZ={obj.gridZ}>
+          {obj.component}
+          {/* <TileBase /> */}
+        </GridPositioner>
       ))}
     </Canvas>
   );

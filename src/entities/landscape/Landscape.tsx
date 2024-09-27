@@ -9,7 +9,7 @@ import { useAppState } from "../../hooks/useAppState";
 
 extend({ LandscapeMaterial });
 
-function Landscape({ offset }: { offset: number }) {
+function Landscape() {
   const heightmap = useTexture("./hires/heightmap.jpg");
   const albedo = useTexture("./hires/albedo.jpg");
   const [heightField, setHeightField] = useState<number[]>([]);
@@ -65,13 +65,13 @@ function Landscape({ offset }: { offset: number }) {
           heightMap={dataTexture}
         />
       ) : null}
-      {offset < 1 && offset > -1 ? (
-        <MapMarker
-          position={new THREE.Vector3(0, 10, 0)}
-          image={queensImage}
-          onClick={() => setCameraTarget(new THREE.Vector3(300, 0, 0))}
-        />
-      ) : null}
+      {/* {position < 1 && position > -1 ? ( */}
+      <MapMarker
+        position={new THREE.Vector3(0, 10, 0)}
+        image={queensImage}
+        onClick={() => setCameraTarget(new THREE.Vector3(300, 0, 0))}
+      />
+      {/* ) : null} */}
     </>
   );
 }

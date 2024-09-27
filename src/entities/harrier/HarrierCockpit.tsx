@@ -6,7 +6,7 @@ const HarrierCockpit = () => {
   return (
     <primitive
       object={scene}
-      position={[0, 5, -40]}
+      position={[0, 20, -40]}
       rotation={[0, Math.PI, 0]}
       scale={[10, 10, 10]}
     />

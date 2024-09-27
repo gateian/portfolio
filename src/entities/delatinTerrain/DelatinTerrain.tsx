@@ -59,12 +59,12 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
     }
   }, [albedoMap, wireframe, meshRef]);
 
-  const scale = 150;
+  const scale = 110;
   return (
     <mesh
       ref={meshRef}
       geometry={geometry}
-      position={new THREE.Vector3(-scale * 0.5, 0, -scale * 0.5)}
+      position={new THREE.Vector3(-scale * 0.5, 1, -scale * 0.5)}
       scale={new THREE.Vector3(scale, scale * 0.03, scale)}
     >
       {wireframe ? (

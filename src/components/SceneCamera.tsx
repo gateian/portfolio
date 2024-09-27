@@ -3,8 +3,11 @@ import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { PerspectiveCamera as THREEPerspectiveCamera, Vector3 } from "three";
 import { useAppState } from "../hooks/useAppState";
+import { isDebugMode } from "../utils/generalUtils";
 
 const SceneCamera = () => {
+  const debug = isDebugMode();
+
   const ref = useRef<THREEPerspectiveCamera>(null!);
   const lookAtRef = useRef<Vector3>(new Vector3(0, 0, 0));
   const isDraggingRef = useRef(false);
@@ -13,7 +16,7 @@ const SceneCamera = () => {
   const targetPositionRef = useRef<Vector3 | null>(null);
 
   const dragSensitivity = 0.5;
-  const autoMoveSpeed = 100;
+  const autoMoveSpeed = 500;
 
   const { cameraTarget } = useAppState();
 
@@ -79,7 +82,7 @@ const SceneCamera = () => {
   const zoomSpeed = 0.05;
 
   const handleWheel = (event: WheelEvent) => {
-    if (!ref.current) return;
+    if (!ref.current && targetPositionRef.current != null) return;
 
     const direction = new Vector3()
       .subVectors(lookAtRef.current, ref.current.position)
@@ -104,73 +107,56 @@ const SceneCamera = () => {
     if (targetPositionRef.current && ref.current && lookAtRef.current) {
       const target = targetPositionRef.current;
 
-      // Calculate direction vector from current lookAt position to the target
       const direction = new Vector3()
         .subVectors(target, lookAtRef.current)
         .normalize();
 
-      // Calculate the distance between current lookAt position and the target
       const distance = lookAtRef.current.distanceTo(target);
 
-      // If the distance is small enough, stop moving
-      if (distance > 0.01) {
-        // Move lookAt position towards the target by speed factor (scaled by deltaTime)
-        const moveAmount = Math.min(autoMoveSpeed * deltaTime, distance); // Avoid overshooting
-        const newLookAt = lookAtRef.current
-          .clone()
-          .add(direction.multiplyScalar(moveAmount));
+      if (distance > 0.1) {
+        const t = Math.min(1, distance / 100); // Normalize the distance (adjust the 100 to control easing range)
+        const easingFactor = Math.sin((t * Math.PI) / 2);
+
+        const moveAmount = direction.multiplyScalar(
+          easingFactor * autoMoveSpeed * deltaTime
+        );
+
+        const newLookAt = lookAtRef.current.clone().add(moveAmount);
         lookAtRef.current.copy(newLookAt);
 
-        // Calculate the same movement delta in XZ plane for the camera's position
-        const cameraDirection = new Vector3()
-          .subVectors(ref.current.position, lookAtRef.current)
-          .normalize();
-        const newCameraPosition = ref.current.position
-          .clone()
-          .add(direction.multiplyScalar(moveAmount));
+        const newCameraPosition = ref.current.position.clone().add(moveAmount);
         ref.current.position.copy(newCameraPosition);
-        console.log(
-          "Moving towards target",
-          lookAtRef.current,
-          ref.current.position
-        );
       } else {
-        // Once close enough, set the lookAt to the exact target and stop
         lookAtRef.current.copy(target);
-        targetPositionRef.current = null; // Stop updating
+        targetPositionRef.current = null;
       }
     }
   };
 
-  //   useFrame(() => {
-  //     if (ref.current && lookAtRef.current) {
-  //       ref.current.lookAt(lookAtRef.current);
-  //     }
-  //   });
-
   useFrame((_state, delta) => {
-    if (ref.current && lookAtRef.current) {
-      // Move towards the target position if it's set
+    if (ref.current && lookAtRef.current && !debug) {
       if (targetPositionRef.current) {
         moveTowardsTarget(delta);
       }
 
-      // Make the camera look at the updated lookAt position
       ref.current.lookAt(lookAtRef.current);
     }
   });
 
   useEffect(() => {
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("wheel", handleWheel);
-
+    if (!debug) {
+      window.addEventListener("mousedown", handleMouseDown);
+      window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("wheel", handleWheel);
+    }
     return () => {
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("wheel", handleWheel);
+      if (!debug) {
+        window.removeEventListener("mousedown", handleMouseDown);
+        window.removeEventListener("mouseup", handleMouseUp);
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("wheel", handleWheel);
+      }
     };
   }, []);
 
