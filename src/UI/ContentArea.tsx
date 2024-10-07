@@ -15,7 +15,8 @@ const ContentWrapper = styled.div`
 
 const CentreSpace = styled.div`
   flex-grow: 1;
-  align-self: flex-end;
+  align-self: flex-start;
+  height: 100%;
 `;
 
 const arrowStyle = `
