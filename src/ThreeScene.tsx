@@ -15,6 +15,9 @@ import SceneCamera from "./components/SceneCamera";
 import GridPositioner from "./GridPositioner";
 import TileBase from "./entities/tileBase/TileBase";
 import City from "./entities/city/City";
+import River from "./entities/city/River";
+import Roads from "./entities/city/Roads";
+import WorldUnitLine from "./entities/city/WorldUnitLine";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -72,6 +75,9 @@ export default function ThreeScene() {
       {/*  */}
       <ambientLight intensity={1} />
       <City />
+      <River />
+      <Roads />
+      {/* <WorldUnitLine /> */}
       {/* <directionalLight
         ref={lightRef}
         position={[-3, 5, 5]}
