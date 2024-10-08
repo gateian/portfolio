@@ -11,8 +11,8 @@ const TitleBannerWrapper = styled.div`
   backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.01);
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
-  height: 250px;
   display: flex;
+  height: 100%;
   flex-direction: column;
   justify-content: center;
   width: 100%;
