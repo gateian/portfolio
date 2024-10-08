@@ -181,30 +181,6 @@ const CV = () => {
               <SubTitle>3D</SubTitle>
               Modelling / Rendering / PBR Materials / Texturing / UV Unwrapping
             </SkillsBox>
-            <Title>Software / Disciplines</Title>
-            <Row>
-              <Column>
-                <List>
-                  <li>3ds Max</li>
-                  <li>Photoshop</li>
-                  <li>Blender</li>
-                  <li>World Machine</li>
-                  <li>Shader Map Pro</li>
-                  <li>Marmoset Toolbag</li>
-                </List>
-              </Column>
-              <Column>
-                <List>
-                  <li>VS Code</li>
-                  <li>Visual Studio</li>
-                  <li>Unity</li>
-                  <li>Android Studio</li>
-                  <li>Git, Bitbucket, Github</li>
-                  <li>Docker / Docker Compose</li>
-                  <li>Ubuntu Linux</li>
-                </List>
-              </Column>
-            </Row>
           </Column>
           <Column>
             <Title>About Me</Title>
@@ -230,6 +206,35 @@ const CV = () => {
             </p>
           </Column>
         </Row>
+      </Section>
+      <Section>
+        <Column>
+          <Title>Software / Disciplines</Title>
+          <Row>
+            <Column>
+              <List>
+                <li>VS Code</li>
+                <li>Visual Studio</li>
+                <li>Unity</li>
+                <li>Android Studio</li>
+                <li>Git, Bitbucket, Github</li>
+                <li>Docker / Docker Compose</li>
+                <li>Ubuntu Linux</li>
+              </List>
+            </Column>
+            <Column>
+              <List>
+                <li>3ds Max</li>
+                <li>Photoshop</li>
+                <li>Blender</li>
+                <li>World Machine</li>
+                <li>Shader Map Pro</li>
+                <li>Marmoset Toolbag</li>
+              </List>
+            </Column>
+            <Column>Software Logos</Column>
+          </Row>
+        </Column>
       </Section>
       <Section>
         <Title>Employment History</Title>
