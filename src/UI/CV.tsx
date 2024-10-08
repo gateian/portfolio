@@ -43,6 +43,10 @@ const SubTitle = styled.h3`
   color: white;
 `;
 
+const List = styled.ul`
+  list-style-type: square;
+`;
+
 const CV = () => {
   return (
     <CVWrapper>
@@ -50,6 +54,32 @@ const CV = () => {
         <Column>
           <Title>Technical Skills</Title>
           <SubTitle>Web</SubTitle>
+          <List>
+            <li>Typescript / React / Sass / Emotion / MUI / Apollo</li>
+            <li>Three.js / React Three Fiber / Mapbox / Cesium</li>
+            <li>AWS / Graphql / git / CI / CD / Docker / Nginx / apache</li>
+          </List>
+          <SubTitle>Apps and Games</SubTitle>
+          <List>
+            <li>AR / VR / Unity c# / Android Java / Kotlin / ios</li>
+          </List>
+          <SubTitle>3D</SubTitle>
+          <List>
+            <li>
+              Modelling / Rendering / PBR Materials / Texturing / UV Unwrapping
+            </li>
+          </List>
+          <Title>Software / Disciplines</Title>
+          <Row>
+            <Column>
+              <List>
+                <li>3ds Max</li>
+                <li>Photoshop</li>
+                <li>Blender</li>
+              </List>
+            </Column>
+            <Column>2</Column>
+          </Row>
         </Column>
         <Column>
           <Title>About Me</Title>
