@@ -13,13 +13,16 @@ const CVWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  corner-radius: 10px;
+  border-radius: 20px;
+  font-family: "Kanit", sans-serif;
+  font-weight: 200;
 `;
 
 const Section = styled.div`
-  width: 100%;
+  width: calc(100% - 60px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   margin: 0 30px;
+  box-sizing: border-box;
 `;
 
 export const Row = styled(Section)`
@@ -39,15 +42,40 @@ export const Column = styled(Section)`
 
 const Title = styled.h2`
   color: black;
+  font-family: "Kanit", sans-serif;
+  font-weight: 200;
+  margin: 20px 0;
 `;
 
 const SubTitle = styled.h3`
   color: black;
   margin: 0;
+  font-family: "Kanit", sans-serif;
 `;
 
 export const List = styled.ul`
   list-style-type: square;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1rem;
+  & li {
+    margin: 0;
+  }
+`;
+
+const SkillsBox = styled.div`
+  background-color: #333333;
+  color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  font-family: "Kanit", sans-serif;
+  font-weight: 100;
+
+  margin-bottom: 1rem;
+  & h3 {
+    color: white;
+    text-transform: uppercase;
+  }
 `;
 
 export interface EmploymentHistoryItem {
@@ -137,23 +165,22 @@ const CV = () => {
         <Row>
           <Column>
             <Title>Technical Skills</Title>
-            <SubTitle>Web</SubTitle>
-            <List>
-              <li>Typescript / React / Sass / Emotion / MUI / Apollo</li>
-              <li>Three.js / React Three Fiber / Mapbox / Cesium</li>
-              <li>AWS / Graphql / git / CI / CD / Docker / Nginx / apache</li>
-            </List>
-            <SubTitle>Apps and Games</SubTitle>
-            <List>
-              <li>AR / VR / Unity c# / Android Java / Kotlin / ios</li>
-            </List>
-            <SubTitle>3D</SubTitle>
-            <List>
-              <li>
-                Modelling / Rendering / PBR Materials / Texturing / UV
-                Unwrapping
-              </li>
-            </List>
+            <SkillsBox>
+              <SubTitle>Web</SubTitle>
+              <div>
+                Typescript / React / Sass / Emotion / MUI / Apollo Three.js /
+                React Three Fiber / Mapbox / Cesium AWS / Graphql / git / CI /
+                CD / Docker / Nginx / apache
+              </div>
+            </SkillsBox>
+            <SkillsBox>
+              <SubTitle>Apps and Games</SubTitle>
+              AR / VR / Unity c# / Android Java / Kotlin / ios
+            </SkillsBox>
+            <SkillsBox>
+              <SubTitle>3D</SubTitle>
+              Modelling / Rendering / PBR Materials / Texturing / UV Unwrapping
+            </SkillsBox>
             <Title>Software / Disciplines</Title>
             <Row>
               <Column>
