@@ -19,25 +19,29 @@ const CVWrapper = styled.div`
 `;
 
 const Section = styled.div`
-  width: calc(100% - 60px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  margin: 0 30px;
+  width: 100%;
+  padding: 0 30px;
   box-sizing: border-box;
 `;
 
 export const Row = styled(Section)`
   display: flex;
   flex-direction: row;
-  align-items: top;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 0;
+  margin: 0;
 `;
 
-export const Column = styled(Section)`
-  border: 1px solid rgba(255, 255, 255, 0.4);
+export const SubRow = styled(Row)`
+  margin: 0.5rem 0;
+`;
+
+export const Column = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: top;
-  justify-content: top;
+  margin: 0;
+  flex-grow: 1;
 `;
 
 const Title = styled.h2`
@@ -56,8 +60,8 @@ const SubTitle = styled.h3`
 export const List = styled.ul`
   list-style-type: square;
   padding: 0;
-  margin: 0;
-  margin-bottom: 1rem;
+  margin: 2rem;
+  margin-top: 0;
   & li {
     margin: 0;
   }
@@ -237,27 +241,37 @@ const CV = () => {
         </Column>
       </Section>
       <Section>
-        <Title>Employment History</Title>
-        {employmentHistory.map((employment) => (
-          <CVEmploymentBox key={employment.company} employment={employment} />
-        ))}
+        <Column>
+          <Title>Employment History</Title>
+          {employmentHistory.map((employment) => (
+            <CVEmploymentBox key={employment.company} employment={employment} />
+          ))}
+        </Column>
       </Section>
       <Section>
         <Row>
           <Column>
             <Title>Education</Title>
-            <div>2004</div>
-            <div>BA Hons in Creative Visualisation University of Teesside</div>
-            <div>1999</div>
-            <div>
-              A Levels in Maths, Physics and Technology, St John Fisher Sixth
-              Form
-            </div>
-            <div>1997</div>
-            <div>
-              GCSE's including Science, Technology and Art, St John Fisher High
-              School
-            </div>
+            <SubRow>
+              <SkillsBox>2004</SkillsBox>
+              <div>
+                BA Hons in Creative Visualisation University of Teesside
+              </div>
+            </SubRow>
+            <SubRow>
+              <SkillsBox>1999</SkillsBox>
+              <div>
+                A Levels in Maths, Physics and Technology, St John Fisher Sixth
+                Form
+              </div>
+            </SubRow>
+            <SubRow>
+              <SkillsBox>1997</SkillsBox>
+              <div>
+                GCSE's including Science, Technology and Art, St John Fisher
+                High School
+              </div>
+            </SubRow>
           </Column>
           <Column>
             <Title>Interests and Achievements</Title>
