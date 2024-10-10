@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Column, EmploymentHistoryItem, List, Row } from "./CV";
+import { Column, EmploymentHistoryItem, Row } from "./CV";
 
 const TitleBanner = styled.div`
   display: flex;

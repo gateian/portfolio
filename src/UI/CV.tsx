@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
 import CVEmploymentBox from "./CVEmploymentBox";
+import { useCallback, useRef } from "react";
+import html2pdf from "html2pdf.js";
 
 const CVWrapper = styled.div`
   margin: 0;
@@ -22,6 +24,10 @@ const Section = styled.div`
   width: 100%;
   padding: 0 30px;
   box-sizing: border-box;
+`;
+
+const SectionRight = styled(Section)`
+  text-align: right;
 `;
 
 export const Row = styled(Section)`
@@ -79,6 +85,25 @@ const SkillsBox = styled.div`
   & h3 {
     color: white;
     text-transform: uppercase;
+  }
+`;
+
+const DownloadButton = styled.button`
+  background-color: #333333;
+  color: white;
+  padding: 1rem;
+  border-radius: 0px 0px 10px 10px;
+  font-family: "Kanit", sans-serif;
+  font-weight: 100;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  position: absolute;
+  top: 0;
+  right: 50px;
+  pointer-events: auto;
+  &:hover {
+    background-color: #444444;
   }
 `;
 
@@ -180,85 +205,108 @@ const education = [
 ];
 
 const CV = () => {
+  const cvWrapperRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = useCallback(() => {
+    if (cvWrapperRef.current) {
+      const options = {
+        filename: "Ian_Hamblin_CV.pdf",
+      };
+
+      html2pdf().set(options).from(cvWrapperRef.current).save();
+    }
+  }, []);
+
   return (
-    <CVWrapper>
-      <Section>
-        <Row>
+    <>
+      <CVWrapper ref={cvWrapperRef}>
+        <SectionRight></SectionRight>
+        <Section>
+          <Row>
+            <Column>
+              <Title>Technical Skills</Title>
+              <SkillsBox>
+                <SubTitle>Web</SubTitle>
+                <div>
+                  Typescript / React / Sass / Emotion / MUI / Apollo Three.js /
+                  React Three Fiber / Mapbox / Cesium AWS / Graphql / git / CI /
+                  CD / Docker / Nginx / apache
+                </div>
+              </SkillsBox>
+              <SkillsBox>
+                <SubTitle>Apps and Games</SubTitle>
+                AR / VR / Unity c# / Android Java / Kotlin / ios
+              </SkillsBox>
+              <SkillsBox>
+                <SubTitle>3D</SubTitle>
+                Modelling / Rendering / PBR Materials / Texturing / UV
+                Unwrapping
+              </SkillsBox>
+            </Column>
+            <Column>
+              <Title>About Me</Title>
+              <p>
+                Hi, I'm Ian and i'm a devloper with a passion for visualisation
+                and user experience. I have a strong background in 3D
+                visualisation and have worked on a wide range of projects from
+                educational games to web based terrain analysis platforms.
+              </p>
+              <p>
+                My 20 year career has seen me work with a variety of platforms
+                and technologies. Working in startups has taught me to be
+                versatile, efficient and adaptable. I am passionate about
+                learning and helping others achieve their goals.
+              </p>
+              <p>
+                I view myself as a highliy motivated, sociable, fast working and
+                adaptable individual. I have ocassionally taken responsibility
+                as a leader (like the time I captained my own dodgeball team!).
+              </p>
+              <p>
+                Outside of work I like to keep fit with cycling, walking,
+                spending time with my family, reading, gardening and building
+                Lego!
+              </p>
+            </Column>
+          </Row>
+        </Section>
+        <Section>
           <Column>
-            <Title>Technical Skills</Title>
-            <SkillsBox>
-              <SubTitle>Web</SubTitle>
-              <div>
-                Typescript / React / Sass / Emotion / MUI / Apollo Three.js /
-                React Three Fiber / Mapbox / Cesium AWS / Graphql / git / CI /
-                CD / Docker / Nginx / apache
-              </div>
-            </SkillsBox>
-            <SkillsBox>
-              <SubTitle>Apps and Games</SubTitle>
-              AR / VR / Unity c# / Android Java / Kotlin / ios
-            </SkillsBox>
-            <SkillsBox>
-              <SubTitle>3D</SubTitle>
-              Modelling / Rendering / PBR Materials / Texturing / UV Unwrapping
-            </SkillsBox>
-          </Column>
-          <Column>
-            <Title>About Me</Title>
-            <p>
-              Hi, I'm Ian and i'm a devloper with a passion for visualisation
-              and user experience. I have a strong background in 3D
-              visualisation and have worked on a wide range of projects from
-              educational games to web based terrain analysis platforms.
-            </p>
-            <p>
-              My 20 year career has seen me work with a variety of platforms and
-              technologies. Working in startups has taught me to be versatile,
-              efficient and adaptable. I am passionate about learning and
-              helping others achieve their goals.
-            </p>
-            <p>
-              I view myself as a highliy motivated, sociable, fast working and
-              adaptable individual. I have ocassionally taken responsibility as
-              a leader (like the time I captained my own dodgeball team!).
-            </p>
-            <p>
-              Outside of work I like to keep fit with cycling, walking, spending
-              time with my family, reading, gardening and building Lego!
-            </p>
-          </Column>
-        </Row>
-      </Section>
-      <Section>
-        <Column>
-          <Title>Employment History</Title>
-          {employmentHistory.map((employment) => (
-            <CVEmploymentBox key={employment.company} employment={employment} />
-          ))}
-        </Column>
-      </Section>
-      <Section>
-        <Row>
-          <Column>
-            <Title>Education</Title>
-            {education.map((edu) => (
-              <SubRow key={edu.date}>
-                <SkillsBox>{edu.date}</SkillsBox>
-                <div>{edu.description}</div>
-              </SubRow>
+            <Title>Employment History</Title>
+            {employmentHistory.map((employment) => (
+              <CVEmploymentBox
+                key={employment.company}
+                employment={employment}
+              />
             ))}
           </Column>
-          <Column>
-            <Title>Interests and Achievements</Title>
-            <List>
-              {interestsAndAchievements.map((desc, index) => (
-                <li key={index}>{desc}</li>
+        </Section>
+        <Section>
+          <Row>
+            <Column>
+              <Title>Education</Title>
+              {education.map((edu) => (
+                <SubRow key={edu.date}>
+                  <SkillsBox>{edu.date}</SkillsBox>
+                  <div>{edu.description}</div>
+                </SubRow>
               ))}
-            </List>
-          </Column>
-        </Row>
-      </Section>
-    </CVWrapper>
+            </Column>
+            <Column>
+              <Title>Interests and Achievements</Title>
+              <List>
+                {interestsAndAchievements.map((desc, index) => (
+                  <li key={index}>{desc}</li>
+                ))}
+              </List>
+            </Column>
+          </Row>
+        </Section>
+      </CVWrapper>
+      <DownloadButton onClick={handleDownload}>
+        Download PDF Version
+      </DownloadButton>
+    </>
   );
 };
 
