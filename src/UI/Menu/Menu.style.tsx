@@ -4,6 +4,7 @@ export const MenuWrapper = styled.div`
   padding: 1rem;
   z-index: 100;
   pointer-events: auto;
+  position: relative;
 `;
 
 export const MenuIcon = styled.img`
@@ -11,4 +12,13 @@ export const MenuIcon = styled.img`
   height: auto;
   cursor: pointer;
   fill: white;
+`;
+
+export const MenuPopout = styled.div`
+  width: 200px;
+  min-height: 50px;
+  background-color: white;
+  color: black;
+  position: absolute;
+  right: 0;
 `;
