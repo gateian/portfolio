@@ -6,16 +6,20 @@ import { useAppState } from "../hooks/useAppState";
 
 const ContentWrapper = styled.div`
   width: 100vw;
-  height: 100vh;
   border: 1px solid rgba(255, 255, 255, 0.4);
+  position: relative;
   display: flex;
+  flex-basis: 75vh;
   flex-direction: row;
   align-items: center;
 `;
 
 const CentreSpace = styled.div`
   flex-grow: 1;
-  align-self: flex-end;
+  align-self: flex-start;
+  height: 75vh;
+  overflow-y: auto;
+  position: relative;
 `;
 
 const arrowStyle = `

@@ -5,6 +5,8 @@ import { Overlay, HeroBanner, ThreeContainer } from "./StyledComponents";
 import ThreeScene from "./ThreeScene";
 import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
+import { isCVTestMode } from "./utils/generalUtils";
+import CVMain from "./UI/CV/CVMain";
 
 const AppWrapper = styled.div`
   margin: 0;
@@ -18,6 +20,8 @@ const AppWrapper = styled.div`
 `;
 
 function App() {
+  const isCVTest = isCVTestMode();
+
   return (
     <StateProvider>
       <AppWrapper>
@@ -28,7 +32,7 @@ function App() {
           <HeroBanner>
             <TitleBanner />
           </HeroBanner>
-          <ContentArea />
+          <ContentArea>{isCVTest ? <CVMain /> : null}</ContentArea>
         </Overlay>
       </AppWrapper>
     </StateProvider>
