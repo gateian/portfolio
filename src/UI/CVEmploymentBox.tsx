@@ -20,7 +20,14 @@ const Role = styled.div`
   font-size: 1.5rem;
 `;
 
-const SubList = styled(List)`
+const SubList = styled.ul`
+  list-style-type: square;
+  padding: 0;
+  margin: 2rem;
+  margin-top: 0;
+  & li {
+    margin: 0;
+  }
   margin-top: 2rem;
 `;
 

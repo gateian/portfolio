@@ -162,6 +162,23 @@ const interestsAndAchievements = [
   "Love Motorsport and Formula 1",
 ];
 
+const education = [
+  {
+    date: "2004",
+    description: "BA Hons in Creative Visualisation University of Teesside",
+  },
+  {
+    date: "1999",
+    description:
+      "A Levels in Maths, Physics and Technology, St John Fisher Sixth Form",
+  },
+  {
+    date: "1997",
+    description:
+      "GCSE's including Science, Technology and Art, St John Fisher High School",
+  },
+];
+
 const CV = () => {
   return (
     <CVWrapper>
@@ -189,56 +206,28 @@ const CV = () => {
           <Column>
             <Title>About Me</Title>
             <p>
-              Hi, I'm Ian and i'm a visual engineer who specialises in 3D
-              realtime graphics. I also have a passion for web development, and
-              have experience working with game engines on desktop and mobile.
+              Hi, I'm Ian and i'm a devloper with a passion for visualisation
+              and user experience. I have a strong background in 3D
+              visualisation and have worked on a wide range of projects from
+              educational games to web based terrain analysis platforms.
             </p>
             <p>
-              With a 20 year career in 3D visuaisation, I have seen all aspects
-              of bringing rich and engaging content to the screen, from
-              modelling and animation to coding and writing shaders.
+              My 20 year career has seen me work with a variety of platforms and
+              technologies. Working in startups has taught me to be versatile,
+              efficient and adaptable. I am passionate about learning and
+              helping others achieve their goals.
             </p>
             <p>
-              I view myself as a highliy motivated, fast working and adaptable
-              individual that thrives best in teams. I have ocassionally taken
-              responsibility as a leader (like the time I captained my own
-              dodgeball team!).
+              I view myself as a highliy motivated, sociable, fast working and
+              adaptable individual. I have ocassionally taken responsibility as
+              a leader (like the time I captained my own dodgeball team!).
             </p>
             <p>
-              Outside of work I like to keep fit with cycling, walking and
-              spending time with my two young children.
+              Outside of work I like to keep fit with cycling, walking, spending
+              time with my family, reading, gardening and building Lego!
             </p>
           </Column>
         </Row>
-      </Section>
-      <Section>
-        <Column>
-          <Title>Software / Disciplines</Title>
-          <Row>
-            <Column>
-              <List>
-                <li>VS Code</li>
-                <li>Visual Studio</li>
-                <li>Unity</li>
-                <li>Android Studio</li>
-                <li>Git, Bitbucket, Github</li>
-                <li>Docker / Docker Compose</li>
-                <li>Ubuntu Linux</li>
-              </List>
-            </Column>
-            <Column>
-              <List>
-                <li>3ds Max</li>
-                <li>Photoshop</li>
-                <li>Blender</li>
-                <li>World Machine</li>
-                <li>Shader Map Pro</li>
-                <li>Marmoset Toolbag</li>
-              </List>
-            </Column>
-            <Column>Software Logos</Column>
-          </Row>
-        </Column>
       </Section>
       <Section>
         <Column>
@@ -252,26 +241,12 @@ const CV = () => {
         <Row>
           <Column>
             <Title>Education</Title>
-            <SubRow>
-              <SkillsBox>2004</SkillsBox>
-              <div>
-                BA Hons in Creative Visualisation University of Teesside
-              </div>
-            </SubRow>
-            <SubRow>
-              <SkillsBox>1999</SkillsBox>
-              <div>
-                A Levels in Maths, Physics and Technology, St John Fisher Sixth
-                Form
-              </div>
-            </SubRow>
-            <SubRow>
-              <SkillsBox>1997</SkillsBox>
-              <div>
-                GCSE's including Science, Technology and Art, St John Fisher
-                High School
-              </div>
-            </SubRow>
+            {education.map((edu) => (
+              <SubRow key={edu.date}>
+                <SkillsBox>{edu.date}</SkillsBox>
+                <div>{edu.description}</div>
+              </SubRow>
+            ))}
           </Column>
           <Column>
             <Title>Interests and Achievements</Title>
