@@ -56,6 +56,10 @@ function Landscape() {
     return texture;
   }, [heightmap]);
 
+  if (location.pathname !== "/terrain") {
+    return null;
+  }
+
   return (
     <>
       {heightField && albedo ? (

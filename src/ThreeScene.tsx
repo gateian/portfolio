@@ -76,18 +76,23 @@ export default function ThreeScene() {
 
       <ambientLight intensity={1} />
 
-      {(() => {
+      {/* {(() => {
         switch (location.pathname) {
           case "/terrain":
             return <Landscape />;
           case "/combat":
             return <HarrierCockpit />;
           case "/queens":
+            console.log("Queens University");
             return <QueensUniversity />;
           default:
             return <CityModel />;
         }
-      })()}
+      })()} */}
+      <Landscape />
+      <HarrierCockpit />
+      <QueensUniversity />
+      <CityModel />
 
       <DirectionalLightWithHelper />
       <pointLight position={[10, 10, 10]} />
