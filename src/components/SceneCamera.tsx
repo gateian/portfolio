@@ -1,6 +1,6 @@
 import { PerspectiveCamera } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { PerspectiveCamera as THREEPerspectiveCamera, Vector3 } from "three";
 import { useAppState } from "../hooks/useAppState";
 import { isDebugMode } from "../utils/generalUtils";
@@ -25,15 +25,15 @@ const SceneCamera = () => {
     console.log("Setting camera target:", cameraTarget);
   }, [cameraTarget]);
 
-  const handleMouseDown = (event: MouseEvent) => {
+  const handleMouseDown = useCallback((event: MouseEvent) => {
     isDraggingRef.current = true;
     startMousePosRef.current = { x: event.clientX, y: event.clientY };
-  };
+  }, []);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     isDraggingRef.current = false;
     startMousePosRef.current = null;
-  };
+  }, []);
 
   const projectScreenDeltaToXZPlane = (deltaX: number, deltaY: number) => {
     if (ref.current == null) return new Vector3();
@@ -57,7 +57,7 @@ const SceneCamera = () => {
     return movementX.add(movementZ);
   };
 
-  const handleMouseMove = (event: MouseEvent) => {
+  const handleMouseMove = useCallback((event: MouseEvent) => {
     if (isDraggingRef.current && startMousePosRef.current) {
       const deltaX = event.clientX - startMousePosRef.current.x;
       const deltaY = event.clientY - startMousePosRef.current.y;
@@ -77,11 +77,11 @@ const SceneCamera = () => {
 
       startMousePosRef.current = { x: event.clientX, y: event.clientY };
     }
-  };
+  }, []);
 
   const zoomSpeed = 0.05;
 
-  const handleWheel = (event: WheelEvent) => {
+  const handleWheel = useCallback((event: WheelEvent) => {
     if (!ref.current && targetPositionRef.current != null) return;
 
     const direction = new Vector3()
@@ -101,7 +101,7 @@ const SceneCamera = () => {
     }
 
     distanceRef.current = ref.current.position.distanceTo(lookAtRef.current);
-  };
+  }, []);
 
   const moveTowardsTarget = (deltaTime: number) => {
     if (targetPositionRef.current && ref.current && lookAtRef.current) {
@@ -158,7 +158,7 @@ const SceneCamera = () => {
         window.removeEventListener("wheel", handleWheel);
       }
     };
-  }, []);
+  }, [debug, handleMouseMove, handleMouseDown, handleMouseUp, handleWheel]);
 
   return (
     <PerspectiveCamera

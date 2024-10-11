@@ -13,7 +13,7 @@ function Landscape() {
   const heightmap = useTexture("./hires/heightmap.jpg");
   const albedo = useTexture("./hires/albedo.jpg");
   const [heightField, setHeightField] = useState<number[]>([]);
-  const { setSelectedObject, setCameraTarget } = useAppState();
+  const { setCameraTarget } = useAppState();
 
   const queensImage = useTexture("/icons/queens.png");
 
@@ -69,13 +69,11 @@ function Landscape() {
           heightMap={dataTexture}
         />
       ) : null}
-      {/* {position < 1 && position > -1 ? ( */}
       <MapMarker
         position={new THREE.Vector3(0, 10, 0)}
         image={queensImage}
         onClick={() => setCameraTarget(new THREE.Vector3(300, 0, 0))}
       />
-      {/* ) : null} */}
     </>
   );
 }

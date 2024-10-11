@@ -37,26 +37,29 @@ const useConvertGeojsonToExtrudedGeometry = (
       .catch((error) => console.error("Error loading GeoJSON:", error));
   }, [url]);
 
-  const geoJsonToShape = useCallback((geoJSON: GeoJSONFeature) => {
-    const shape = new Shape();
+  const geoJsonToShape = useCallback(
+    (geoJSON: GeoJSONFeature) => {
+      const shape = new Shape();
 
-    const coordinates = geoJSON.geometry.coordinates[0];
+      const coordinates = geoJSON.geometry.coordinates[0];
 
-    const scale = 25000;
+      const scale = 25000;
 
-    coordinates.forEach((coord, index) => {
-      const x = (coord[0] - lon) * scale * Math.cos((lat * Math.PI) / 180);
-      const y = (coord[1] - lat) * scale;
+      coordinates.forEach((coord, index) => {
+        const x = (coord[0] - lon) * scale * Math.cos((lat * Math.PI) / 180);
+        const y = (coord[1] - lat) * scale;
 
-      if (index === 0) {
-        shape.moveTo(x, y);
-      } else {
-        shape.lineTo(x, y);
-      }
-    });
+        if (index === 0) {
+          shape.moveTo(x, y);
+        } else {
+          shape.lineTo(x, y);
+        }
+      });
 
-    return { shape };
-  }, []);
+      return { shape };
+    },
+    [lat, lon]
+  );
 
   useEffect(() => {
     if (geojson) {

@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 interface GeoJSONLineFeature {
   type: "Feature";
-  properties: {};
+  properties: object;
   geometry: {
     type: "LineString";
     coordinates: number[][];
@@ -56,7 +56,7 @@ const useConvertGeojsonToLineGeometry = (
 
       return multiLinePoints;
     }
-  }, [geojson]);
+  }, [geojson, lat, lon]);
 
   const width = 1.2;
 

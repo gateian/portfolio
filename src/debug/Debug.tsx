@@ -1,5 +1,5 @@
 import { OrbitControls, Stats } from "@react-three/drei";
-import { AxesHelper, MOUSE } from "three";
+import { AxesHelper } from "three";
 
 const Debug = () => {
   return (
