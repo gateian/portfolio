@@ -15,6 +15,7 @@ import {
 import { html2pdf } from "html2pdf.js";
 import CVEmploymentBox from "./CVEmploymentBox";
 import { EmploymentHistoryItem } from "./CVInterfaces";
+import SubPage from "../../SubPage/SubPage";
 
 const CVMain = () => {
   const cvWrapperRef = useRef<HTMLDivElement>(null);
@@ -120,7 +121,7 @@ const CVMain = () => {
   }, []);
 
   return (
-    <>
+    <SubPage title="CV / Resume" modelView={false}>
       <CVWrapper ref={cvWrapperRef}>
         <SectionRight></SectionRight>
         <Section>
@@ -208,7 +209,7 @@ const CVMain = () => {
       <DownloadButton onClick={handleDownload}>
         Download PDF Version
       </DownloadButton>
-    </>
+    </SubPage>
   );
 };
 
