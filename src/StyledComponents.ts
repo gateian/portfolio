@@ -12,8 +12,8 @@ const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   display: flex;
   flex-direction: column;
@@ -23,9 +23,22 @@ const Overlay = styled.div`
 
 const HeroBanner = styled.div`
   color: white;
+  flex-basis: 25vh;
+  flex-shrink: 0;
   width: 100%;
-  text-align: center;
+  display: flex;
   pointer-events: auto;
+  backdrop-filter: blur(5px);
 `;
 
-export { ThreeContainer, Overlay, HeroBanner };
+const HeroBannerSideColumn = styled.div`
+  flex-basis: 25vh;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align: center;
+  flex-grow: 1;
+`;
+
+export { ThreeContainer, Overlay, HeroBanner, HeroBannerSideColumn };

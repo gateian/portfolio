@@ -1,10 +1,22 @@
 import styled from "@emotion/styled";
 import "./App.css";
 import { StateProvider } from "./StateContext";
-import { Overlay, HeroBanner, ThreeContainer } from "./StyledComponents";
+import {
+  Overlay,
+  HeroBanner,
+  ThreeContainer,
+  HeroBannerSideColumn,
+} from "./StyledComponents";
 import ThreeScene from "./ThreeScene";
 import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
+import CVMain from "./UI/pages/CV/CVMain";
+import MainMenu from "./UI/Menu/Menu";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import QueensUni from "./UI/pages/queens/queensUni";
+import CombatPage from "./UI/pages/combat/combatPage";
+import HomePage from "./UI/pages/home/homePage";
+import TerrainPage from "./UI/pages/terrain/terrainPage";
 
 const AppWrapper = styled.div`
   margin: 0;
@@ -19,19 +31,33 @@ const AppWrapper = styled.div`
 
 function App() {
   return (
-    <StateProvider>
-      <AppWrapper>
-        <ThreeContainer>
-          <ThreeScene />
-        </ThreeContainer>
-        <Overlay>
-          <HeroBanner>
-            <TitleBanner />
-          </HeroBanner>
-          <ContentArea />
-        </Overlay>
-      </AppWrapper>
-    </StateProvider>
+    <BrowserRouter>
+      <StateProvider>
+        <AppWrapper>
+          <ThreeContainer>
+            <ThreeScene />
+          </ThreeContainer>
+          <Overlay>
+            <HeroBanner>
+              <HeroBannerSideColumn />
+              <TitleBanner />
+              <HeroBannerSideColumn>
+                <MainMenu />
+              </HeroBannerSideColumn>
+            </HeroBanner>
+            <ContentArea>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/cv" element={<CVMain />} />
+                <Route path="/terrain" element={<TerrainPage />} />
+                <Route path="/queens" element={<QueensUni />} />
+                <Route path="/combat" element={<CombatPage />} />
+              </Routes>
+            </ContentArea>
+          </Overlay>
+        </AppWrapper>
+      </StateProvider>
+    </BrowserRouter>
   );
 }
 
