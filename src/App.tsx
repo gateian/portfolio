@@ -10,10 +10,12 @@ import {
 import ThreeScene from "./ThreeScene";
 import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
-import { isCVTestMode } from "./utils/generalUtils";
-import CVMain from "./UI/CV/CVMain";
+import CVMain from "./UI/pages/CV/CVMain";
 import MainMenu from "./UI/Menu/Menu";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import QueensUni from "./UI/pages/queens/queensUni";
+import CombatPage from "./UI/pages/combat/combatPage";
+import HomePage from "./UI/pages/home/homePage";
 
 const AppWrapper = styled.div`
   margin: 0;
@@ -27,8 +29,6 @@ const AppWrapper = styled.div`
 `;
 
 function App() {
-  const isCVTest = isCVTestMode();
-
   return (
     <BrowserRouter>
       <StateProvider>
@@ -46,8 +46,11 @@ function App() {
             </HeroBanner>
             <ContentArea>
               <Routes>
-                <Route path="/" element={null} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/cv" element={<CVMain />} />
+                <Route path="/terrain" element={null} />
+                <Route path="/queens" element={<QueensUni />} />
+                <Route path="/combat" element={<CombatPage />} />
               </Routes>
             </ContentArea>
           </Overlay>
