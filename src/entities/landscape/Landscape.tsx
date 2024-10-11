@@ -9,11 +9,11 @@ import { useAppState } from "../../hooks/useAppState";
 
 extend({ LandscapeMaterial });
 
-function Landscape({ offset }: { offset: number }) {
+function Landscape() {
   const heightmap = useTexture("./hires/heightmap.jpg");
   const albedo = useTexture("./hires/albedo.jpg");
   const [heightField, setHeightField] = useState<number[]>([]);
-  const { setSelectedObject } = useAppState();
+  const { setCameraTarget } = useAppState();
 
   const queensImage = useTexture("/icons/queens.png");
 
@@ -56,6 +56,10 @@ function Landscape({ offset }: { offset: number }) {
     return texture;
   }, [heightmap]);
 
+  if (location.pathname !== "/terrain") {
+    return null;
+  }
+
   return (
     <>
       {heightField && albedo ? (
@@ -65,13 +69,11 @@ function Landscape({ offset }: { offset: number }) {
           heightMap={dataTexture}
         />
       ) : null}
-      {offset < 1 && offset > -1 ? (
-        <MapMarker
-          position={new THREE.Vector3(0, 10, 0)}
-          image={queensImage}
-          onClick={() => setSelectedObject(2)}
-        />
-      ) : null}
+      <MapMarker
+        position={new THREE.Vector3(0, 10, 0)}
+        image={queensImage}
+        onClick={() => setCameraTarget(new THREE.Vector3(300, 0, 0))}
+      />
     </>
   );
 }

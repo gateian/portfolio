@@ -1,0 +1,15 @@
+Centre
+54.585742, -5.921845 (lat, lon)
+
+Bounds
+54.563354, -5.967121, 54.608117, -5.87657
+(south, west, north, east)
+
+Bounds (manually selected bbox)
+54.572306, -5.949011, 54.599165, -5.89468
+(south, west, north, east)
+
+Zoom
+14
+
+
