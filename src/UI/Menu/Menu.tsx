@@ -4,6 +4,7 @@ import Menu from "@mui/material/Menu";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { MenuOptions } from "./Menu.enums";
+import { useNavigate } from "react-router-dom";
 
 const MainMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -14,23 +15,33 @@ const MainMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const navigate = useNavigate();
 
   const MenuItems = [
     {
+      id: MenuOptions.Home,
+      title: "Home",
+      route: "/",
+    },
+    {
       id: MenuOptions.CV,
       title: "CV / Resume",
+      route: "/cv",
     },
     {
       id: MenuOptions.Terrain,
       title: "Terrain and Mapping",
+      route: "/terrain",
     },
     {
       id: MenuOptions.Queens,
       title: "Queens University 3D Model",
+      route: "/queens",
     },
     {
       id: MenuOptions.Combat,
       title: "Combat Air Patrol 2",
+      route: "/combat",
     },
   ];
 
@@ -38,6 +49,8 @@ const MainMenu = () => {
     console.log(
       `Menu item clicked: ${MenuItems.find((item) => item.id === id)?.title}`
     );
+    const menuItem = MenuItems.find((item) => item.id === id);
+    navigate(menuItem?.route || "/");
     handleClose();
   };
 

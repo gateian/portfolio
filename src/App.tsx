@@ -13,6 +13,7 @@ import TitleBanner from "./UI/TitleBanner";
 import { isCVTestMode } from "./utils/generalUtils";
 import CVMain from "./UI/CV/CVMain";
 import MainMenu from "./UI/Menu/Menu";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const AppWrapper = styled.div`
   margin: 0;
@@ -29,23 +30,30 @@ function App() {
   const isCVTest = isCVTestMode();
 
   return (
-    <StateProvider>
-      <AppWrapper>
-        <ThreeContainer>
-          <ThreeScene />
-        </ThreeContainer>
-        <Overlay>
-          <HeroBanner>
-            <HeroBannerSideColumn />
-            <TitleBanner />
-            <HeroBannerSideColumn>
-              <MainMenu />
-            </HeroBannerSideColumn>
-          </HeroBanner>
-          <ContentArea>{isCVTest ? <CVMain /> : null}</ContentArea>
-        </Overlay>
-      </AppWrapper>
-    </StateProvider>
+    <BrowserRouter>
+      <StateProvider>
+        <AppWrapper>
+          <ThreeContainer>
+            <ThreeScene />
+          </ThreeContainer>
+          <Overlay>
+            <HeroBanner>
+              <HeroBannerSideColumn />
+              <TitleBanner />
+              <HeroBannerSideColumn>
+                <MainMenu />
+              </HeroBannerSideColumn>
+            </HeroBanner>
+            <ContentArea>
+              <Routes>
+                <Route path="/" element={null} />
+                <Route path="/cv" element={<CVMain />} />
+              </Routes>
+            </ContentArea>
+          </Overlay>
+        </AppWrapper>
+      </StateProvider>
+    </BrowserRouter>
   );
 }
 
