@@ -12,7 +12,7 @@ import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
 import { isCVTestMode } from "./utils/generalUtils";
 import CVMain from "./UI/CV/CVMain";
-import Menu from "./UI/Menu/Menu";
+import MainMenu from "./UI/Menu/Menu";
 
 const AppWrapper = styled.div`
   margin: 0;
@@ -39,7 +39,7 @@ function App() {
             <HeroBannerSideColumn />
             <TitleBanner />
             <HeroBannerSideColumn>
-              <Menu />
+              <MainMenu />
             </HeroBannerSideColumn>
           </HeroBanner>
           <ContentArea>{isCVTest ? <CVMain /> : null}</ContentArea>
