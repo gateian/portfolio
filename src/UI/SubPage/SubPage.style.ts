@@ -24,7 +24,7 @@ export const PageWrapper = styled.div<PageWrapperProps>`
   border-bottom-right-radius: 0;
   font-family: "Kanit", sans-serif;
   font-weight: 200;
-  margin-top: ${({ modelView }) => (modelView ? "65vh" : "50px")};
+  margin-top: ${({ modelView }) => (modelView ? "85vh" : "50px")};
   min-height: 10vh;
 
   & h1 {

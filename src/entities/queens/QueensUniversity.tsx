@@ -55,6 +55,7 @@ const QueensUniversity = () => {
   }, [materials, scene, environmentMap, findMesh]);
 
   if (location.pathname !== "/queens") {
+    console.log("Not rendering Queens University");
     return null;
   }
 
