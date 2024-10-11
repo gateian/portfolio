@@ -8,14 +8,12 @@ const TitleBannerWrapper = styled.div`
   font-family: "Kanit", sans-serif;
   letter-spacing: 0.5em;
   text-transform: uppercase;
-  backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.01);
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
   display: flex;
   height: 100%;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
 `;
 
 const NamePlate = styled.div`

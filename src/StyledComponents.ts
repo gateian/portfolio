@@ -26,8 +26,19 @@ const HeroBanner = styled.div`
   flex-basis: 25vh;
   flex-shrink: 0;
   width: 100%;
-  text-align: center;
+  display: flex;
   pointer-events: auto;
+  backdrop-filter: blur(5px);
 `;
 
-export { ThreeContainer, Overlay, HeroBanner };
+const HeroBannerSideColumn = styled.div`
+  flex-basis: 25vh;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align: center;
+  flex-grow: 1;
+`;
+
+export { ThreeContainer, Overlay, HeroBanner, HeroBannerSideColumn };
