@@ -16,6 +16,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import QueensUni from "./UI/pages/queens/queensUni";
 import CombatPage from "./UI/pages/combat/combatPage";
 import HomePage from "./UI/pages/home/homePage";
+import TerrainPage from "./UI/pages/terrain/terrainPage";
 
 const AppWrapper = styled.div`
   margin: 0;
@@ -48,7 +49,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/cv" element={<CVMain />} />
-                <Route path="/terrain" element={null} />
+                <Route path="/terrain" element={<TerrainPage />} />
                 <Route path="/queens" element={<QueensUni />} />
                 <Route path="/combat" element={<CombatPage />} />
               </Routes>

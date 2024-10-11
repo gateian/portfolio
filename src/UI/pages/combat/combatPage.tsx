@@ -1,18 +1,7 @@
-import { useEffect } from "react";
-import { useAppState } from "../../../hooks/useAppState";
+import SubPage from "../../SubPage";
 
 const CombatPage = () => {
-  const { setSelectedObject } = useAppState();
-
-  useEffect(() => {
-    setSelectedObject(1);
-  }, [setSelectedObject]);
-
-  return (
-    <div>
-      <h1>Combat Page</h1>
-    </div>
-  );
+  return <SubPage title="Harrier Cockpit" objectIndex={1} />;
 };
 
 export default CombatPage;

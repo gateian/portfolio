@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAppState } from "../../../hooks/useAppState";
+import SubPage from "../../SubPage";
 
 const QueensUni = () => {
   const { setSelectedObject } = useAppState();
@@ -9,10 +10,9 @@ const QueensUni = () => {
   }, [setSelectedObject]);
 
   return (
-    <div>
-      <h1>Queens University Belfast</h1>
+    <SubPage title="Queens University Belfast" objectIndex={2}>
       <p>description</p>
-    </div>
+    </SubPage>
   );
 };
 

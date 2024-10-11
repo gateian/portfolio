@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAppState } from "../../../hooks/useAppState";
+import SubPage from "../../SubPage";
 
 const HomePage = () => {
   const { setSelectedObject } = useAppState();
@@ -8,7 +9,7 @@ const HomePage = () => {
     setSelectedObject(0);
   }, [setSelectedObject]);
 
-  return <div>&nbsp;</div>;
+  return <SubPage title="Home" />;
 };
 
 export default HomePage;
