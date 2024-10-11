@@ -13,11 +13,11 @@ import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 import ReflectiveCube from "./entities/reflectiveCube/ReflectiveCube";
 import SceneCamera from "./components/SceneCamera";
 import GridPositioner from "./GridPositioner";
-import TileBase from "./entities/tileBase/TileBase";
 import City from "./entities/city/City";
 import River from "./entities/city/River";
 import Roads from "./entities/city/Roads";
-import WorldUnitLine from "./entities/city/WorldUnitLine";
+import { useLocation } from "react-router-dom";
+import CityModel from "./entities/city/CityModel";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -60,6 +60,7 @@ export default function ThreeScene() {
   const displayObjects = initialiseObjects();
 
   const { setObjectCount } = useAppState();
+  const location = useLocation();
 
   useEffect(() => {
     console.log("Setting object count:", displayObjects.length);
@@ -72,33 +73,30 @@ export default function ThreeScene() {
       <SceneCamera />
       {debug ? <Debug /> : null}
       <EnvironmentMapLoader />
-      {/*  */}
+
       <ambientLight intensity={1} />
-      <City />
-      <River />
-      <Roads />
-      {/* <WorldUnitLine /> */}
-      {/* <directionalLight
-        ref={lightRef}
-        position={[-3, 5, 5]}
-        intensity={1}
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-        shadow-camera-far={50}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
-      /> */}
+
+      {(() => {
+        switch (location.pathname) {
+          case "/terrain":
+            return <Landscape />;
+          case "/combat":
+            return <HarrierCockpit />;
+          case "/queens":
+            return <QueensUniversity />;
+          default:
+            return <CityModel />;
+        }
+      })()}
+
       <DirectionalLightWithHelper />
       <pointLight position={[10, 10, 10]} />
-      {displayObjects.map((obj, index) => (
+      {/* {displayObjects.map((obj, index) => (
         <GridPositioner key={index} gridX={obj.gridX} gridZ={obj.gridZ}>
           {obj.component}
-          {/* <TileBase /> */}
+          {/* <TileBase />}
         </GridPositioner>
-      ))}
+      ))} */}
     </Canvas>
   );
 }
