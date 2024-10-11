@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppState } from "../../hooks/useAppState";
-import { PageWrapper } from "./SubPage.style";
+import { ExpandMoreButton, PageWrapper } from "./SubPage.style";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export interface SubPageProps {
   title: string;
@@ -11,6 +12,11 @@ export interface SubPageProps {
 
 const SubPage = (props: SubPageProps) => {
   const { setSelectedObject } = useAppState();
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   useEffect(() => {
     if (props.objectIndex != null) {
@@ -19,10 +25,12 @@ const SubPage = (props: SubPageProps) => {
   }, [setSelectedObject, props.objectIndex]);
 
   return (
-    <PageWrapper modelView={props.modelView}>
+    <PageWrapper modelView={props.modelView} expanded={expanded}>
       <h1>{props.title}</h1>
-
       <div>{props.children}</div>
+      <ExpandMoreButton onClick={handleExpandClick} expanded={expanded}>
+        <ExpandMoreIcon />
+      </ExpandMoreButton>
     </PageWrapper>
   );
 };

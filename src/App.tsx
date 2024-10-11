@@ -46,7 +46,7 @@ function App() {
             </HeroBanner>
             <ContentArea>
               <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={null} />
                 <Route path="/cv" element={<CVMain />} />
                 <Route path="/terrain" element={<TerrainPage />} />
                 <Route path="/queens" element={<QueensUni />} />
