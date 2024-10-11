@@ -3,6 +3,7 @@ import { MenuIcon, MenuWrapper } from "./Menu.style";
 import Menu from "@mui/material/Menu";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
+import { MenuOptions } from "./Menu.enums";
 
 const MainMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -12,6 +13,32 @@ const MainMenu = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const MenuItems = [
+    {
+      id: MenuOptions.CV,
+      title: "CV / Resume",
+    },
+    {
+      id: MenuOptions.Terrain,
+      title: "Terrain and Mapping",
+    },
+    {
+      id: MenuOptions.Queens,
+      title: "Queens University 3D Model",
+    },
+    {
+      id: MenuOptions.Combat,
+      title: "Combat Air Patrol 2",
+    },
+  ];
+
+  const handleMenuItemClick = (id: MenuOptions) => {
+    console.log(
+      `Menu item clicked: ${MenuItems.find((item) => item.id === id)?.title}`
+    );
+    handleClose();
   };
 
   return (
@@ -34,9 +61,11 @@ const MainMenu = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        {MenuItems.map((item) => (
+          <MenuItem key={item.id} onClick={() => handleMenuItemClick(item.id)}>
+            {item.title}
+          </MenuItem>
+        ))}
       </Menu>
     </MenuWrapper>
   );
