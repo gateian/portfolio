@@ -47,4 +47,8 @@ export const GetMenuItem = (id: MenuOptions) => {
   return MenuItems.find((item) => item.id === id) || MenuItems[0];
 };
 
+export const GetMenuItemByPath = (path: string) => {
+  return MenuItems.find((item) => item.route === path) || MenuItems[0];
+};
+
 export default MenuItems;

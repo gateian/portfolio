@@ -1,8 +1,8 @@
 import { Vector3 } from "three";
 import MapMarker from "../mapMarker/MapMarker";
 import { useTexture } from "@react-three/drei";
-import { useNavigate } from "react-router-dom";
-import { GetMenuItem } from "../../UI/Menu/MenuItems";
+import { useLocation, useNavigate } from "react-router-dom";
+import { GetMenuItem, GetMenuItemByPath } from "../../UI/Menu/MenuItems";
 import { MenuOptions } from "../../UI/Menu/Menu.enums";
 
 const MarkerLayer = () => {
@@ -11,28 +11,55 @@ const MarkerLayer = () => {
   const combatImage = useTexture("/icons/combat.png");
   const navigate = useNavigate();
 
-  const markers = [
+  const pages = [
     {
-      position: new Vector3(-85, 10, 0),
-      image: queensImage,
-      onClick: () => navigate(GetMenuItem(MenuOptions.Queens).route),
+      id: MenuOptions.Home,
+      markers: [
+        {
+          id: MenuOptions.Queens,
+          position: new Vector3(-85, 10, 0),
+          image: queensImage,
+          onClick: () => navigate(GetMenuItem(MenuOptions.Queens).route),
+        },
+        {
+          id: MenuOptions.Terrain,
+          position: new Vector3(155, 10, 0),
+          image: terrainImage,
+          onClick: () => navigate(GetMenuItem(MenuOptions.Terrain).route),
+        },
+        {
+          id: MenuOptions.Combat,
+          position: new Vector3(-15, 10, 90),
+          image: combatImage,
+          onClick: () => navigate(GetMenuItem(MenuOptions.Combat).route),
+        },
+      ],
     },
     {
-      position: new Vector3(155, 10, 0),
-      image: terrainImage,
-      onClick: () => navigate(GetMenuItem(MenuOptions.Terrain).route),
+      id: MenuOptions.CV,
+      markers: [],
     },
     {
-      position: new Vector3(-15, 10, 90),
-      image: combatImage,
-      onClick: () => navigate(GetMenuItem(MenuOptions.Combat).route),
+      id: MenuOptions.Queens,
+      markers: [],
+    },
+    {
+      id: MenuOptions.Terrain,
+      markers: [],
+    },
+    {
+      id: MenuOptions.Combat,
+      markers: [],
     },
   ];
 
+  const location = useLocation();
+  const currentId = GetMenuItemByPath(location.pathname).id;
+  const currentPage = pages.find((page) => page.id === currentId);
   return (
     <>
       <group>
-        {markers.map((marker, index) => (
+        {currentPage?.markers.map((marker, index) => (
           <MapMarker
             key={index}
             position={marker.position}
