@@ -9,10 +9,12 @@ interface MarkerProps {
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  pointMode?: boolean;
 }
 const Marker = (props: MarkerProps) => {
   const markerRef = useRef<Group<Object3DEventMap>>(null);
-  const texture = useTexture("/icons/mapMarker.png");
+  const mapMarkerTex = useTexture("/icons/mapMarker.png");
+  const poiMarkerTex = useTexture("/icons/poiMarker.png");
   const { position, image, onClick } = props;
   const [scale, setScale] = useState(1);
   const meshRef = useRef<Group>(null);
@@ -48,14 +50,35 @@ const Marker = (props: MarkerProps) => {
       onPointerLeave={mouseLeaveHandler}
       scale={[scale, scale, scale]}
     >
-      <mesh renderOrder={100}>
-        <planeGeometry args={[20, 20]} />
-        <meshBasicMaterial depthTest={false} map={texture} transparent={true} />
-      </mesh>
-      <mesh renderOrder={101} position={new Vector3(0, 3, 0)}>
-        <circleGeometry args={[6, 32]} />
-        <meshBasicMaterial map={image} transparent={true} depthTest={false} />
-      </mesh>
+      {props.pointMode ? (
+        <mesh renderOrder={100}>
+          <planeGeometry args={[20, 20]} />
+          <meshBasicMaterial
+            depthTest={false}
+            map={poiMarkerTex}
+            transparent={true}
+          />
+        </mesh>
+      ) : (
+        <>
+          <mesh renderOrder={100}>
+            <planeGeometry args={[20, 20]} />
+            <meshBasicMaterial
+              depthTest={false}
+              map={mapMarkerTex}
+              transparent={true}
+            />
+          </mesh>
+          <mesh renderOrder={101} position={new Vector3(0, 3, 0)}>
+            <circleGeometry args={[6, 32]} />
+            <meshBasicMaterial
+              map={image}
+              transparent={true}
+              depthTest={false}
+            />
+          </mesh>
+        </>
+      )}
     </group>
   );
 };

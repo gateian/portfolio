@@ -11,7 +11,18 @@ const MarkerLayer = () => {
   const combatImage = useTexture("/icons/combat.png");
   const navigate = useNavigate();
 
-  const pages = [
+  interface PagesProps {
+    id: MenuOptions;
+    markers: {
+      id: MenuOptions;
+      position: Vector3;
+      image?: any;
+      pointMode?: boolean;
+      onClick: () => void;
+    }[];
+  }
+
+  const pages: PagesProps[] = [
     {
       id: MenuOptions.Home,
       markers: [
@@ -45,7 +56,15 @@ const MarkerLayer = () => {
     },
     {
       id: MenuOptions.Terrain,
-      markers: [],
+      markers: [
+        {
+          id: MenuOptions.Queens,
+          position: new Vector3(-35, 10, 0),
+          image: undefined,
+          pointMode: true,
+          onClick: () => navigate(GetMenuItem(MenuOptions.Queens).route),
+        },
+      ],
     },
     {
       id: MenuOptions.Combat,
@@ -64,6 +83,7 @@ const MarkerLayer = () => {
             key={index}
             position={marker.position}
             image={marker.image}
+            pointMode={marker?.pointMode || false}
             onClick={marker.onClick}
           />
         ))}
