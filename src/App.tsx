@@ -11,11 +11,9 @@ import ThreeScene from "./ThreeScene";
 import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
 import CVMain from "./UI/pages/CV/CVMain";
-import MainMenu from "./UI/Menu/Menu";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import QueensUni from "./UI/pages/queens/queensUni";
 import CombatPage from "./UI/pages/combat/combatPage";
-import HomePage from "./UI/pages/home/homePage";
 import TerrainPage from "./UI/pages/terrain/terrainPage";
 import MenuBar from "./UI/Menu/MenuBar";
 
