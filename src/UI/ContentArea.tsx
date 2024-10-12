@@ -4,44 +4,46 @@ import styled from "@emotion/styled";
 import React, { ReactNode, useCallback } from "react";
 import { useAppState } from "../hooks/useAppState";
 
-const ContentWrapper = styled.div`
-  width: 100vw;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  position: relative;
-  display: flex;
-  flex-basis: 75vh;
-  flex-direction: row;
-  align-items: center;
-`;
+const ContentWrapper = styled.div({
+  width: "100vw",
+  position: "relative",
+  display: "flex",
+  flexBasis: "75vh",
+  flexDirection: "row",
+  alignItems: "center",
+});
 
-const CentreSpace = styled.div`
-  flex-grow: 1;
-  align-self: flex-start;
-  height: 75vh;
-  overflow-y: auto;
-  position: relative;
-`;
+const CentreSpace = styled.div({
+  flexGrow: 1,
+  alignSelf: "flex-start",
+  height: "75vh",
+  overflow: "hidden",
+  position: "relative",
+});
 
-const arrowStyle = `
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 4rem;
-    padding: 0 4rem;
-    pointer-events: auto;
-    transition: transform 0.2s ease;
-  
-    &:hover {
-        transform: scale(1.3);
-        cursor: pointer;
-    }
-    `;
+const ArrowLeft = styled(FaArrowLeft)({
+  color: "rgba(255, 255, 255, 0.4)",
+  fontSize: "4rem",
+  padding: "0 4rem",
+  pointerEvents: "auto",
+  transition: "transform 0.2s ease",
+  "&:hover": {
+    transform: "scale(1.3)",
+    cursor: "pointer",
+  },
+});
 
-const ArrowLeft = styled(FaArrowLeft)`
-  ${arrowStyle}
-`;
-
-const ArrowRight = styled(FaArrowRight)`
-  ${arrowStyle}
-`;
+const ArrowRight = styled(FaArrowRight)({
+  color: "rgba(255, 255, 255, 0.4)",
+  fontSize: "4rem",
+  padding: "0 4rem",
+  pointerEvents: "auto",
+  transition: "transform 0.2s ease",
+  "&:hover": {
+    transform: "scale(1.3)",
+    cursor: "pointer",
+  },
+});
 
 interface ContentAreaProps {
   children?: ReactNode;

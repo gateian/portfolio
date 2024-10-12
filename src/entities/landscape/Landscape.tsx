@@ -6,6 +6,7 @@ import { useTexture } from "@react-three/drei";
 import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
 import MapMarker from "../mapMarker/MapMarker";
 import { useAppState } from "../../hooks/useAppState";
+import { useLocation } from "react-router-dom";
 
 extend({ LandscapeMaterial });
 
@@ -56,7 +57,10 @@ function Landscape() {
     return texture;
   }, [heightmap]);
 
+  const location = useLocation();
+
   if (location.pathname !== "/terrain") {
+    console.log("Not rendering terrain");
     return null;
   }
 
