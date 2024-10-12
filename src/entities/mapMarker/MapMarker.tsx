@@ -52,7 +52,7 @@ const Marker = (props: MarkerProps) => {
     >
       {props.pointMode ? (
         <mesh renderOrder={100}>
-          <planeGeometry args={[20, 20]} />
+          <planeGeometry args={[15, 15]} />
           <meshBasicMaterial
             depthTest={false}
             map={poiMarkerTex}
