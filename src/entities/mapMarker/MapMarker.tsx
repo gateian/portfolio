@@ -1,6 +1,7 @@
-import { Billboard, useTexture } from "@react-three/drei";
-import { useState } from "react";
-import { Texture, Vector3 } from "three";
+import { useTexture } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useEffect, useRef, useState } from "react";
+import { Group, Object3DEventMap, Texture, Vector3 } from "three";
 
 interface MarkerProps {
   position: Vector3;
@@ -10,9 +11,11 @@ interface MarkerProps {
   onMouseLeave?: () => void;
 }
 const Marker = (props: MarkerProps) => {
+  const markerRef = useRef<Group<Object3DEventMap>>(null);
   const texture = useTexture("/icons/mapMarker.png");
   const { position, image, onClick } = props;
   const [scale, setScale] = useState(1);
+  const meshRef = useRef<Group>(null);
 
   const mouseEnterHandler = () => {
     document.body.style.cursor = "pointer";
@@ -24,26 +27,36 @@ const Marker = (props: MarkerProps) => {
     setScale(1);
   };
 
+  useFrame(({ camera }) => {
+    if (meshRef.current) {
+      meshRef.current.lookAt(camera.position);
+    }
+  });
+
+  useEffect(() => {
+    if (markerRef.current) {
+      (markerRef.current.position as Vector3).set(position.x, 20, position.z);
+    }
+  }, [position]);
+
   return (
-    <Billboard>
-      <mesh
-        scale={[scale, scale, scale]}
-        position={position}
-        onClick={onClick}
-        onPointerEnter={mouseEnterHandler}
-        onPointerLeave={mouseLeaveHandler}
-      >
-        <planeGeometry args={[5, 5]} />
-        <meshBasicMaterial map={texture} transparent={true} depthTest={false} />
+    <group
+      ref={meshRef}
+      position={position}
+      onClick={onClick}
+      onPointerEnter={mouseEnterHandler}
+      onPointerLeave={mouseLeaveHandler}
+      scale={[scale, scale, scale]}
+    >
+      <mesh renderOrder={100}>
+        <planeGeometry args={[20, 20]} />
+        <meshBasicMaterial depthTest={false} map={texture} transparent={true} />
       </mesh>
-      <mesh
-        scale={[scale, scale, scale]}
-        position={new Vector3(position.x, position.y + 0.72, position.z)}
-      >
-        <circleGeometry args={[1.6, 32]} />
+      <mesh renderOrder={101} position={new Vector3(0, 3, 0)}>
+        <circleGeometry args={[6, 32]} />
         <meshBasicMaterial map={image} transparent={true} depthTest={false} />
       </mesh>
-    </Billboard>
+    </group>
   );
 };
 
