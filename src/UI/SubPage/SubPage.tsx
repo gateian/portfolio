@@ -8,11 +8,12 @@ export interface SubPageProps {
   children?: React.ReactNode;
   objectIndex?: number;
   modelView?: boolean;
+  disableExpand?: boolean;
 }
 
 const SubPage = (props: SubPageProps) => {
   const { setSelectedObject } = useAppState();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(props.disableExpand ?? false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -28,9 +29,11 @@ const SubPage = (props: SubPageProps) => {
     <PageWrapper modelView={props.modelView} expanded={expanded}>
       <h1>{props.title}</h1>
       <div>{props.children}</div>
-      <ExpandMoreButton onClick={handleExpandClick} expanded={expanded}>
-        <ExpandMoreIcon />
-      </ExpandMoreButton>
+      {!props.disableExpand ? (
+        <ExpandMoreButton onClick={handleExpandClick} expanded={expanded}>
+          <ExpandMoreIcon />
+        </ExpandMoreButton>
+      ) : null}
     </PageWrapper>
   );
 };

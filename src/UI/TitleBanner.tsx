@@ -1,31 +1,31 @@
 import styled from "@emotion/styled";
 
-const TitleBannerWrapper = styled.div`
-  font-size: 2rem;
-  font-weight: 100;
-  margin: 0;
-  text-align: center;
-  font-family: "Kanit", sans-serif;
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
-  background-color: rgba(0, 0, 0, 0.01);
-  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  justify-content: center;
-`;
+const TitleBannerWrapper = styled.div({
+  fontSize: "2rem",
+  fontWeight: 100,
+  margin: 0,
+  textAlign: "center",
+  fontFamily: '"Kanit", sans-serif',
+  letterSpacing: "0.5em",
+  textTransform: "uppercase",
+  backgroundColor: "rgba(0, 0, 0, 0)",
+  borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)",
+  display: "flex",
+  height: "100%",
+  flexDirection: "column",
+  justifyContent: "center",
+});
 
-const NamePlate = styled.div`
-  font-size: 4rem;
-  line-height: 1.3;
-`;
+const NamePlate = styled.div({
+  fontSize: "4rem",
+  lineHeight: 1.3,
+});
 
-const SubTitle = styled.div`
-  font-size: 0.6rem;
-  font-family: "Kulim Park", sans-serif;
-  font-weight: 500;
-`;
+const SubTitle = styled.div({
+  fontSize: "0.6rem",
+  fontFamily: '"Kulim Park", sans-serif',
+  fontWeight: 500,
+});
 
 const TitleBanner = () => {
   return (

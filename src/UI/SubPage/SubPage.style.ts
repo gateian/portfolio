@@ -13,7 +13,7 @@ export const PageWrapper = styled.div<PageWrapperProps>((props) => ({
   margin: 0,
   padding: 0,
   width: "100%",
-  overflowY: "auto",
+  overflowY: props.expanded ? "auto" : "hidden",
   overflowX: "hidden",
   backgroundColor: props.backgroundColor || "white",
   color: props.color || "black",
@@ -25,7 +25,7 @@ export const PageWrapper = styled.div<PageWrapperProps>((props) => ({
   fontFamily: '"Kanit", sans-serif',
   fontWeight: 200,
   minHeight: "8vh",
-  height: props.expanded ? "80vh" : "8vh",
+  height: props.expanded ? "75vh" : "8vh",
   transition: "height 0.3s ease-in-out",
 
   "& h1": {
@@ -39,7 +39,6 @@ export const PageWrapper = styled.div<PageWrapperProps>((props) => ({
     fontSize: "1rem",
     fontWeight: 100,
     maxWidth: "800px",
-    border: "1px solid white",
   },
 }));
 

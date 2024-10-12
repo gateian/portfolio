@@ -121,7 +121,7 @@ const CVMain = () => {
   }, []);
 
   return (
-    <SubPage title="CV / Resume" modelView={false}>
+    <SubPage title="CV / Resume" modelView={false} disableExpand>
       <CVWrapper ref={cvWrapperRef}>
         <SectionRight></SectionRight>
         <Section>

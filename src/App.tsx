@@ -42,7 +42,7 @@ function App() {
             <HeroBanner>
               <HeroBannerSideColumn />
               <TitleBanner />
-              <HeroBannerSideColumn>{/* <MainMenu /> */}</HeroBannerSideColumn>
+              <HeroBannerSideColumn></HeroBannerSideColumn>
             </HeroBanner>
             <ContentArea>
               <Routes>
