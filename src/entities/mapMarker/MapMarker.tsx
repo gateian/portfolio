@@ -37,7 +37,12 @@ const Marker = (props: MarkerProps) => {
 
   useFrame(({ camera }) => {
     if (meshRef.current) {
-      meshRef.current.lookAt(camera.position);
+      const cameraReverseDirection = camera
+        .getWorldDirection(new Vector3())
+        .negate();
+      meshRef.current.lookAt(
+        meshRef.current.position.clone().add(cameraReverseDirection)
+      );
     }
   });
 
