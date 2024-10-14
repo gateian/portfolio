@@ -8,6 +8,7 @@ import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/Di
 import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 import SceneCamera from "./components/SceneCamera";
 import CityModel from "./entities/city/CityModel";
+import MarkerLayer from "./entities/markerLayer/MarkerLayer";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -24,6 +25,8 @@ export default function ThreeScene() {
       <HarrierCockpit />
       <QueensUniversity />
       <CityModel />
+
+      <MarkerLayer />
 
       <DirectionalLightWithHelper />
       <pointLight position={[10, 10, 10]} />

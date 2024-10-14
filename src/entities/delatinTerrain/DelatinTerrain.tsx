@@ -20,7 +20,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
 
   const { coords, triangles } = useMemo(() => {
     const tin = new Delatin(heightField, dimension, dimension);
-    //tin.run(0.02);
+    tin.run(0.02);
     return tin;
   }, [heightField, dimension]);
 

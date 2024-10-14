@@ -8,7 +8,7 @@ const Roads = () => {
   });
 
   return (
-    <mesh geometry={geometry}>
+    <mesh geometry={geometry} position={[0, -1, 0]}>
       <meshBasicMaterial color="rgb(70, 70, 70)" />
     </mesh>
   );

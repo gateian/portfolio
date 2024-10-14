@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppState } from "../../hooks/useAppState";
-import { ExpandMoreButton, PageWrapper } from "./SubPage.style";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { PageWrapper } from "./SubPage.style";
 
 export interface SubPageProps {
   title: string;
@@ -12,29 +11,28 @@ export interface SubPageProps {
 }
 
 const SubPage = (props: SubPageProps) => {
-  const { setSelectedObject } = useAppState();
-  const [expanded, setExpanded] = useState(props.disableExpand ?? false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const { subPageDialogId, setSubPageDialogId, mapMarkers } = useAppState();
 
   useEffect(() => {
-    if (props.objectIndex != null) {
-      setSelectedObject(props.objectIndex ?? 0);
-    }
-  }, [setSelectedObject, props.objectIndex]);
+    return () => {
+      // Clear map markers when the component is unmounted
+      mapMarkers.forEach((marker) => {
+        marker.onClick = undefined;
+      });
+      setSubPageDialogId(-1);
+    };
+  }, [mapMarkers, setSubPageDialogId]);
 
   return (
-    <PageWrapper modelView={props.modelView} expanded={expanded}>
-      <h1>{props.title}</h1>
-      <div>{props.children}</div>
-      {!props.disableExpand ? (
-        <ExpandMoreButton onClick={handleExpandClick} expanded={expanded}>
-          <ExpandMoreIcon />
-        </ExpandMoreButton>
-      ) : null}
-    </PageWrapper>
+    <>
+      <PageWrapper modelView={props.modelView}>
+        <h1>{props.title}</h1>
+        <div>{props.children}</div>
+      </PageWrapper>
+      {subPageDialogId >= 0 && mapMarkers[subPageDialogId]?.dialogContent
+        ? mapMarkers[subPageDialogId].dialogContent
+        : null}
+    </>
   );
 };
 

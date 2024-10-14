@@ -16,6 +16,7 @@ import QueensUni from "./UI/pages/queens/queensUni";
 import CombatPage from "./UI/pages/combat/combatPage";
 import TerrainPage from "./UI/pages/terrain/terrainPage";
 import MenuBar from "./UI/Menu/MenuBar";
+import HomePage from "./UI/pages/home/homePage";
 
 const AppWrapper = styled.div`
   margin: 0;
@@ -44,7 +45,7 @@ function App() {
             </HeroBanner>
             <ContentArea>
               <Routes>
-                <Route path="/" element={null} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/cv" element={<CVMain />} />
                 <Route path="/terrain" element={<TerrainPage />} />
                 <Route path="/queens" element={<QueensUni />} />

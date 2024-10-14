@@ -4,8 +4,6 @@ import * as THREE from "three";
 import { LandscapeMaterial } from "./LandscapeMaterial";
 import { useTexture } from "@react-three/drei";
 import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
-import MapMarker from "../mapMarker/MapMarker";
-import { useAppState } from "../../hooks/useAppState";
 import { useLocation } from "react-router-dom";
 
 extend({ LandscapeMaterial });
@@ -14,9 +12,6 @@ function Landscape() {
   const heightmap = useTexture("./hires/heightmap.jpg");
   const albedo = useTexture("./hires/albedo.jpg");
   const [heightField, setHeightField] = useState<number[]>([]);
-  const { setCameraTarget } = useAppState();
-
-  const queensImage = useTexture("/icons/queens.png");
 
   const dataTexture = useMemo(() => {
     if (!heightmap) return undefined;
@@ -59,25 +54,15 @@ function Landscape() {
 
   const location = useLocation();
 
-  if (location.pathname !== "/terrain") {
-    console.log("Not rendering terrain");
-    return null;
-  }
-
   return (
     <>
-      {heightField && albedo ? (
+      {heightField && albedo && location.pathname === "/terrain" ? (
         <DelatinTerrain
           albedoMap={albedo}
           heightField={heightField}
           heightMap={dataTexture}
         />
       ) : null}
-      <MapMarker
-        position={new THREE.Vector3(0, 10, 0)}
-        image={queensImage}
-        onClick={() => setCameraTarget(new THREE.Vector3(300, 0, 0))}
-      />
     </>
   );
 }

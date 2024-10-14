@@ -25,15 +25,16 @@ const DirectionalLightWithHelper = () => {
   return (
     <directionalLight
       ref={lightRef}
-      position={[-9, 15, 15]}
+      position={[900, 1500, 1500]}
       intensity={2}
-      shadow-mapSize-width={2048}
-      shadow-mapSize-height={2048}
-      shadow-camera-far={50}
-      shadow-camera-left={-10}
-      shadow-camera-right={10}
-      shadow-camera-top={10}
-      shadow-camera-bottom={-10}
+      shadow-mapSize-width={4096}
+      shadow-mapSize-height={4096}
+      shadow-camera-far={5000}
+      shadow-camera-left={-1000}
+      shadow-camera-right={1000}
+      shadow-camera-top={1000}
+      shadow-camera-bottom={-1000}
+      castShadow
     />
   );
 };
