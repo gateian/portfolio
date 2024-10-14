@@ -23,7 +23,7 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
   const [objectCount, setObjectCount] = useState<number>(0);
   const [environmentMap, setEnvironmentMap] = useState<Texture | null>(null);
   const [cameraTarget, setCameraTarget] = useState<Vector3>(new Vector3());
-  const [subPageDialogId, setSubPageDialogId] = useState<number>(0);
+  const [subPageDialogId, setSubPageDialogId] = useState<number>(-1);
   const [mapMarkers, setMapMarkers] = useState<MapMarkerDefinition[]>([]);
 
   return (

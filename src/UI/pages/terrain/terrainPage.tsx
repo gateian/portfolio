@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "../../../hooks/useAppState";
 import TerrainDialog1 from "./terrainDialog1";
+import TerrainDialog2 from "./terrainDialog2";
+import TerrainDialog3 from "./terrainDialog3";
 
 const TerrainPage = () => {
   const { setMapMarkers } = useAppState();
@@ -20,13 +22,13 @@ const TerrainPage = () => {
       {
         position: new Vector3(155, 10, 0),
         type: "dialog",
-        dialogContent: <TerrainDialog1 />,
+        dialogContent: <TerrainDialog2 />,
         pointMode: true,
       },
       {
         position: new Vector3(-15, 10, 90),
         type: "dialog",
-        dialogContent: <TerrainDialog1 />,
+        dialogContent: <TerrainDialog3 />,
         pointMode: true,
       },
     ]);
