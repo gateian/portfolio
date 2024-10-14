@@ -21,7 +21,7 @@ const SubPage = (props: SubPageProps) => {
       });
       setSubPageDialogId(-1);
     };
-  }, [mapMarkers]);
+  }, [mapMarkers, setSubPageDialogId]);
 
   return (
     <>
