@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Vector3 } from "three";
 import { MenuOptions } from "../../Menu/Menu.enums";
 import { GetMenuItem } from "../../Menu/MenuItems";
-import { MapMarkerImageType } from "../../../entities/mapMarker/MapMarker";
+import { MapMarkerImageType } from "../../../entities/mapMarker/MapMarker.types";
 
 const HomePage = () => {
   const { setMapMarkers } = useAppState();

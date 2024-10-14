@@ -3,21 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Group, Object3DEventMap, Vector3 } from "three";
 import { useAppState } from "../../hooks/useAppState";
-
-export enum MapMarkerImageType {
-  Queens = "queens",
-  Terrain = "terrain",
-  Combat = "combat",
-}
-
-export interface MapMarkerDefinition {
-  type: "navigate" | "dialog";
-  position: Vector3;
-  image?: MapMarkerImageType;
-  dialogContent?: React.ReactNode;
-  onClick?: () => void;
-  pointMode?: boolean;
-}
+import { MapMarkerDefinition, MapMarkerImageType } from "./MapMarker.types";
 
 interface MarkerProps extends MapMarkerDefinition {
   id: number;

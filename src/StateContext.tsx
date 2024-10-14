@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode } from "react";
 import { Texture, Vector3 } from "three";
-import { MapMarkerDefinition } from "./entities/mapMarker/MapMarker";
+import { MapMarkerDefinition } from "./entities/mapMarker/MapMarker.types";
 type AppState = {
   selectedObject: number;
   setSelectedObject: (value: number) => void;
