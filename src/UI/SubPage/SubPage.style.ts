@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { IconButton } from "@mui/material";
 
 interface PageWrapperProps {
   backgroundColor?: string;
@@ -41,20 +40,3 @@ export const PageWrapper = styled.div<PageWrapperProps>((props) => ({
     maxWidth: "800px",
   },
 }));
-
-interface ExpandMoreButtonProps {
-  expanded?: boolean;
-}
-
-export const ExpandMoreButton = styled(IconButton)<ExpandMoreButtonProps>(
-  (props) => ({
-    position: "absolute",
-    right: "40px",
-    top: "20px",
-    pointerEvents: "auto",
-    cursor: "pointer",
-    transform: props.expanded ? "rotate(180deg)" : "rotate(0deg)",
-    transition: "transform 0.3s ease-in-out",
-    marginBottom: "1rem",
-  })
-);

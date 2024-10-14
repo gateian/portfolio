@@ -1,23 +1,43 @@
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
-import { Group, Object3DEventMap, Texture, Vector3 } from "three";
+import { Group, Object3DEventMap, Vector3 } from "three";
+import { useAppState } from "../../hooks/useAppState";
 
-interface MarkerProps {
+export enum MapMarkerImageType {
+  Queens = "queens",
+  Terrain = "terrain",
+  Combat = "combat",
+}
+
+export interface MapMarkerDefinition {
+  type: "navigate" | "dialog";
   position: Vector3;
-  image?: Texture;
+  image?: MapMarkerImageType;
+  dialogContent?: React.ReactNode;
   onClick?: () => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
   pointMode?: boolean;
 }
+
+interface MarkerProps extends MapMarkerDefinition {
+  id: number;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+}
+
 const Marker = (props: MarkerProps) => {
   const markerRef = useRef<Group<Object3DEventMap>>(null);
   const mapMarkerTex = useTexture("/icons/mapMarker.png");
   const poiMarkerTex = useTexture("/icons/poiMarker.png");
-  const { position, image, onClick } = props;
+  const queensImage = useTexture("/icons/queens.png");
+  const terrainImage = useTexture("/icons/terrainIcon.png");
+  const combatImage = useTexture("/icons/combat.png");
+
+  const { id, position, image, onClick } = props;
   const [scale, setScale] = useState(1);
   const meshRef = useRef<Group>(null);
+
+  const { setSubPageDialogId } = useAppState();
 
   const mouseEnterHandler = () => {
     document.body.style.cursor = "pointer";
@@ -35,6 +55,29 @@ const Marker = (props: MarkerProps) => {
     }
   });
 
+  const onClickHandler = () => {
+    if (onClick) {
+      onClick();
+    } else if (onClick == undefined && props.type === "dialog") {
+      setSubPageDialogId(id);
+    }
+  };
+
+  const setCorrectImage = (imageType: MapMarkerImageType | undefined) => {
+    switch (imageType) {
+      case MapMarkerImageType.Queens:
+        return queensImage;
+      case MapMarkerImageType.Terrain:
+        return terrainImage;
+      case MapMarkerImageType.Combat:
+        return combatImage;
+      default:
+        return null;
+    }
+  };
+
+  const customImageTex = setCorrectImage(image);
+
   useEffect(() => {
     if (markerRef.current) {
       (markerRef.current.position as Vector3).set(position.x, 20, position.z);
@@ -45,7 +88,7 @@ const Marker = (props: MarkerProps) => {
     <group
       ref={meshRef}
       position={position}
-      onClick={onClick}
+      onClick={onClickHandler}
       onPointerEnter={mouseEnterHandler}
       onPointerLeave={mouseLeaveHandler}
       scale={[scale, scale, scale]}
@@ -72,7 +115,7 @@ const Marker = (props: MarkerProps) => {
           <mesh renderOrder={101} position={new Vector3(0, 3, 0)}>
             <circleGeometry args={[6, 32]} />
             <meshBasicMaterial
-              map={image}
+              map={customImageTex}
               transparent={true}
               depthTest={false}
             />
