@@ -2,7 +2,7 @@ import useConvertGeojsonToLineGeometry from "../../hooks/useConvertGeoJsonToLine
 
 const Roads = () => {
   const geometry = useConvertGeojsonToLineGeometry({
-    url: "./osm/Belfast_roads.geojson",
+    url: "./osm/Belfast_roads.pbf",
     lat: 54.5844367,
     lon: -5.9284677,
   });

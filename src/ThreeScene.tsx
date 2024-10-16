@@ -9,9 +9,11 @@ import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 import SceneCamera from "./components/SceneCamera";
 import CityModel from "./entities/city/CityModel";
 import MarkerLayer from "./entities/markerLayer/MarkerLayer";
+import { useLocation } from "react-router-dom";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
+  const location = useLocation();
 
   return (
     <Canvas shadows>
@@ -21,10 +23,10 @@ export default function ThreeScene() {
 
       <ambientLight intensity={1} />
 
-      <Landscape />
-      <HarrierCockpit />
-      <QueensUniversity />
-      <CityModel />
+      {location.pathname == "/terrain" ? <Landscape /> : null}
+      {location.pathname == "/combat" ? <HarrierCockpit /> : null}
+      {location.pathname == "/queens" ? <QueensUniversity /> : null}
+      {location.pathname == "/" ? <CityModel /> : null}
 
       <MarkerLayer />
 

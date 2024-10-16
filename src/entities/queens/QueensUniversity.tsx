@@ -9,13 +9,10 @@ import {
   Object3D,
 } from "three";
 import { useAppState } from "../../hooks/useAppState";
-import { useLocation } from "react-router-dom";
 
 const QueensUniversity = () => {
   const { scene, materials } = useGLTF("./3d/QueensUniversity.glb");
   const { environmentMap } = useAppState();
-
-  const location = useLocation();
 
   const modifyMaterial = useCallback(
     (material: MeshPhysicalMaterial) => {
@@ -53,11 +50,6 @@ const QueensUniversity = () => {
       scene.children.forEach(findMesh);
     }
   }, [materials, scene, environmentMap, findMesh]);
-
-  if (location.pathname !== "/queens") {
-    console.log("Not rendering Queens University");
-    return null;
-  }
 
   return (
     <primitive

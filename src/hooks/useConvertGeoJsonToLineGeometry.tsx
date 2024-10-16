@@ -1,6 +1,7 @@
 import { FeatureCollection } from "geojson";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import * as THREE from "three";
+import useFetchGeojson from "./useFetchGeoJson";
 
 interface GeoJSONLineFeature {
   type: "Feature";
@@ -24,12 +25,7 @@ const useConvertGeojsonToLineGeometry = (
 
   const [geojson, setGeojson] = useState<FeatureCollection | null>(null);
 
-  useEffect(() => {
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => setGeojson(data))
-      .catch((error) => console.error("Error loading GeoJSON:", error));
-  }, [url]);
+  useFetchGeojson(url, setGeojson);
 
   const scale = 25000;
 
