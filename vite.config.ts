@@ -31,6 +31,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ["three"],
+    include: ["three", "@react-three/drei"],
   },
 });
