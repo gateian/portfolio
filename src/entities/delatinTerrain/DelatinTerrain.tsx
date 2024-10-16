@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import Delatin from "delatin";
 import * as THREE from "three";
-import { extend } from "@react-three/fiber";
 import { DelatinTerrainMaterial } from "./DelatinTerrainMaterial";
-
-extend({ DelatinTerrainMaterial });
 
 interface DelatinTerrainProps {
   heightField: number[];
@@ -16,6 +13,7 @@ interface DelatinTerrainProps {
 export const DelatinTerrain = (props: DelatinTerrainProps) => {
   const { heightField, wireframe, heightMap, albedoMap } = props;
   const meshRef = useRef<THREE.Mesh>(null!);
+  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
   const dimension = Math.sqrt(heightField.length);
 
   const { coords, triangles } = useMemo(() => {
@@ -44,20 +42,20 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
   }, [coords, dimension, triangles]);
 
   useEffect(() => {
-    if (heightMap && !wireframe && meshRef.current) {
-      const material = meshRef.current.material as THREE.ShaderMaterial;
+    if (heightMap && !wireframe && materialRef.current) {
+      const material = materialRef.current;
       material.uniforms.heightMap.value = heightMap;
       material.needsUpdate = true;
     }
-  }, [heightMap, wireframe, meshRef]);
+  }, [heightMap, wireframe]);
 
   useEffect(() => {
-    if (albedoMap && !wireframe && meshRef.current) {
-      const material = meshRef.current.material as THREE.ShaderMaterial;
+    if (albedoMap && !wireframe && materialRef.current) {
+      const material = materialRef.current;
       material.uniforms.albedoMap.value = albedoMap;
       material.needsUpdate = true;
     }
-  }, [albedoMap, wireframe, meshRef]);
+  }, [albedoMap, wireframe]);
 
   const scale = 110;
   return (
@@ -70,7 +68,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
       {wireframe ? (
         <meshStandardMaterial color="black" wireframe={true} />
       ) : (
-        <delatinTerrainMaterial heightmap={heightMap} />
+        <DelatinTerrainMaterial ref={materialRef} />
       )}
     </mesh>
   );

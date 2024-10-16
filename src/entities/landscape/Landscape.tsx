@@ -4,12 +4,15 @@ import * as THREE from "three";
 import { LandscapeMaterial } from "./LandscapeMaterial";
 import { useTexture } from "@react-three/drei";
 import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
+import { Texture } from "three";
 
 extend({ LandscapeMaterial });
 
 function Landscape() {
-  const heightmap = useTexture("./hires/heightmap.jpg");
-  const albedo = useTexture("./hires/albedo.jpg");
+  const heightmap: Texture = useTexture(
+    "./hires/heightmap.jpg"
+  ) as unknown as Texture;
+  const albedo = useTexture("./hires/albedo.jpg") as unknown as Texture;
   const [heightField, setHeightField] = useState<number[]>([]);
 
   const dataTexture = useMemo(() => {

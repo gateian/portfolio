@@ -1,4 +1,6 @@
-import MapMarker from "../mapMarker/MapMarker";
+import { lazy } from "react";
+
+const MapMarker = lazy(() => import("../mapMarker/MapMarker"));
 
 import { useAppState } from "../../hooks/useAppState";
 
