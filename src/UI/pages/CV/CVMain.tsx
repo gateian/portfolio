@@ -12,7 +12,7 @@ import {
   SubTitle,
   Title,
 } from "./CV.styles";
-import { html2pdf } from "html2pdf.js";
+import html2pdf from "html2pdf.js";
 import CVEmploymentBox from "./CVEmploymentBox";
 import { EmploymentHistoryItem } from "./CVInterfaces";
 import SubPage from "../../SubPage/SubPage";
@@ -120,6 +120,7 @@ const CVMain = () => {
     }
   }, []);
 
+  console.log("CVMain");
   return (
     <SubPage title="CV / Resume" modelView={false} disableExpand>
       <CVWrapper ref={cvWrapperRef}>
