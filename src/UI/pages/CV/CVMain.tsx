@@ -12,7 +12,6 @@ import {
   SubTitle,
   Title,
 } from "./CV.styles";
-import html2pdf from "html2pdf.js";
 import CVEmploymentBox from "./CVEmploymentBox";
 import { EmploymentHistoryItem } from "./CVInterfaces";
 import SubPage from "../../SubPage/SubPage";
@@ -111,13 +110,12 @@ const CVMain = () => {
   ];
 
   const handleDownload = useCallback(() => {
-    if (cvWrapperRef.current) {
-      const options = {
-        filename: "Ian_Hamblin_CV.pdf",
-      };
-
-      html2pdf().set(options).from(cvWrapperRef.current).save();
-    }
+    const link = document.createElement("a");
+    link.href = "/Ian_Hamblin_CV.pdf";
+    link.download = "Ian_Hamblin_CV.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }, []);
 
   console.log("CVMain");

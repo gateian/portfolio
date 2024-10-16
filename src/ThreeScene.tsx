@@ -1,12 +1,15 @@
 import { Canvas } from "@react-three/fiber";
-import Landscape from "./entities/landscape/Landscape";
-import HarrierCockpit from "./entities/harrier/HarrierCockpit";
+import { lazy } from "react";
+const Landscape = lazy(() => import("./entities/landscape/Landscape"));
+const HarrierCockpit = lazy(() => import("./entities/harrier/HarrierCockpit"));
 import { isDebugMode } from "./utils/generalUtils";
-import Debug from "./debug/Debug";
-import QueensUniversity from "./entities/queens/QueensUniversity";
+const Debug = lazy(() => import("./debug/Debug"));
+const QueensUniversity = lazy(
+  () => import("./entities/queens/QueensUniversity")
+);
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
 import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
-import SceneCamera from "./components/SceneCamera";
+const SceneCamera = lazy(() => import("./components/SceneCamera"));
 import CityModel from "./entities/city/CityModel";
 import MarkerLayer from "./entities/markerLayer/MarkerLayer";
 import { useLocation } from "react-router-dom";
@@ -18,6 +21,7 @@ export default function ThreeScene() {
   return (
     <Canvas shadows>
       <SceneCamera />
+
       {debug ? <Debug /> : null}
       <EnvironmentMapLoader />
 

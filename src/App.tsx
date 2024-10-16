@@ -7,7 +7,8 @@ import {
   ThreeContainer,
   HeroBannerSideColumn,
 } from "./StyledComponents";
-import ThreeScene from "./ThreeScene";
+import { lazy } from "react";
+const ThreeScene = lazy(() => import("./ThreeScene"));
 import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
 import { BrowserRouter } from "react-router-dom";

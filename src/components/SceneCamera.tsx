@@ -1,9 +1,16 @@
 import { PerspectiveCamera } from "@react-three/drei";
+
 import { useFrame } from "@react-three/fiber";
-import { useCallback, useEffect, useRef } from "react";
+import { lazy, useCallback, useEffect, useRef } from "react";
 import { PerspectiveCamera as THREEPerspectiveCamera, Vector3 } from "three";
 import { useAppState } from "../hooks/useAppState";
 import { isDebugMode } from "../utils/generalUtils";
+
+const PerspectiveCameraLazy = lazy(() =>
+  import("@react-three/drei").then((module) => ({
+    default: module.PerspectiveCamera,
+  }))
+);
 
 const SceneCamera = () => {
   const debug = isDebugMode();
@@ -161,7 +168,7 @@ const SceneCamera = () => {
   }, [debug, handleMouseMove, handleMouseDown, handleMouseUp, handleWheel]);
 
   return (
-    <PerspectiveCamera
+    <PerspectiveCameraLazy
       ref={ref}
       makeDefault
       position={[-500, 500, 500]}

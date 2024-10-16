@@ -1,4 +1,13 @@
-import { OrbitControls, Stats } from "@react-three/drei";
+import { lazy } from "react";
+
+const OrbitControls = lazy(() =>
+  import("@react-three/drei").then((module) => ({
+    default: module.OrbitControls,
+  }))
+);
+const Stats = lazy(() =>
+  import("@react-three/drei").then((module) => ({ default: module.Stats }))
+);
 import { AxesHelper } from "three";
 
 const Debug = () => {
