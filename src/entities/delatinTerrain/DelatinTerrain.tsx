@@ -47,7 +47,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
       material.uniforms.heightMap.value = heightMap;
       material.needsUpdate = true;
     }
-  }, [heightMap, wireframe, materialRef.current]);
+  }, [heightMap, wireframe]);
 
   useEffect(() => {
     if (albedoMap && !wireframe && materialRef.current) {
@@ -55,7 +55,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
       material.uniforms.albedoMap.value = albedoMap;
       material.needsUpdate = true;
     }
-  }, [albedoMap, wireframe, materialRef.current]);
+  }, [albedoMap, wireframe]);
 
   const scale = 110;
   return (

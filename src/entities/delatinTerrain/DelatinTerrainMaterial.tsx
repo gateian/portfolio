@@ -3,9 +3,10 @@ import CustomShaderMaterial from "three-custom-shader-material";
 import { forwardRef } from "react";
 import * as THREE from "three";
 
-const DelatinTerrainMaterial = forwardRef<any>((_props, ref) => {
+const DelatinTerrainMaterial = forwardRef((_props, ref) => {
   return (
     <CustomShaderMaterial
+      // @ts-expect-error cannot work out the type for the forwardRef
       ref={ref}
       baseMaterial={THREE.MeshPhysicalMaterial}
       vertexShader={`

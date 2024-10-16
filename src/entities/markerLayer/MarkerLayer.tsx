@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 
 const MapMarker = lazy(() => import("../mapMarker/MapMarker"));
 

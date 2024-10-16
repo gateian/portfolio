@@ -1,5 +1,3 @@
-import { PerspectiveCamera } from "@react-three/drei";
-
 import { useFrame } from "@react-three/fiber";
 import { lazy, useCallback, useEffect, useRef } from "react";
 import { PerspectiveCamera as THREEPerspectiveCamera, Vector3 } from "three";

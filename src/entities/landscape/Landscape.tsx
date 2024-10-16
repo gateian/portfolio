@@ -54,7 +54,6 @@ function Landscape() {
     return texture;
   }, [heightmap]);
 
-  console.log("Albedo:", albedo);
   return (
     <>
       {heightField && albedo ? (
