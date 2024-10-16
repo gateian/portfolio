@@ -41,7 +41,7 @@ function App() {
             <HeroBanner>
               <HeroBannerSideColumn />
               <TitleBanner />
-              <HeroBannerSideColumn></HeroBannerSideColumn>
+              <HeroBannerSideColumn />
             </HeroBanner>
             <ContentArea>
               <Routes>
