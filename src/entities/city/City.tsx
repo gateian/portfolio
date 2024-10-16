@@ -2,7 +2,7 @@ import useConvertGeojsonToExtrudedGeometry from "../../hooks/useConvertGeojsonTo
 
 const City = () => {
   const mergedGeometry = useConvertGeojsonToExtrudedGeometry({
-    url: "./osm/Belfast.geojson",
+    url: "./osm/Belfast.pbf",
     lat: 54.5844367,
     lon: -5.9284677,
   });
