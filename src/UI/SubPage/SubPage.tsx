@@ -7,7 +7,7 @@ export interface SubPageProps {
   children?: React.ReactNode;
   objectIndex?: number;
   modelView?: boolean;
-  disableExpand?: boolean;
+  expand?: boolean;
 }
 
 const SubPage = (props: SubPageProps) => {
@@ -25,7 +25,7 @@ const SubPage = (props: SubPageProps) => {
 
   return (
     <>
-      <PageWrapper modelView={props.modelView}>
+      <PageWrapper modelView={props.modelView} expanded={props.expand}>
         <h1>{props.title}</h1>
         <div>{props.children}</div>
       </PageWrapper>

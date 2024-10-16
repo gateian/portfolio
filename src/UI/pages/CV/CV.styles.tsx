@@ -94,7 +94,7 @@ export const DownloadButton = styled.button({
   cursor: "pointer",
   marginBottom: "1rem",
   position: "absolute",
-  top: "50px",
+  top: "0px",
   right: "50px",
   pointerEvents: "auto",
   "&:hover": {

@@ -33,13 +33,11 @@ const HeroBanner = styled.div({
 });
 
 const HeroBannerSideColumn = styled.div({
-  flexBasis: "25vh",
-  flexShrink: 0,
+  flexGrow: 1,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   align: "center",
-  flexGrow: 1,
 });
 
 export { ThreeContainer, Overlay, HeroBanner, HeroBannerSideColumn };
