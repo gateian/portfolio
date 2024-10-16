@@ -4,7 +4,6 @@ import * as THREE from "three";
 import { LandscapeMaterial } from "./LandscapeMaterial";
 import { useTexture } from "@react-three/drei";
 import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
-import { useLocation } from "react-router-dom";
 
 extend({ LandscapeMaterial });
 
@@ -52,11 +51,9 @@ function Landscape() {
     return texture;
   }, [heightmap]);
 
-  const location = useLocation();
-
   return (
     <>
-      {heightField && albedo && location.pathname === "/terrain" ? (
+      {heightField && albedo ? (
         <DelatinTerrain
           albedoMap={albedo}
           heightField={heightField}

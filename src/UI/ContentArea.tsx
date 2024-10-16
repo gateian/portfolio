@@ -3,6 +3,12 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import styled from "@emotion/styled";
 import React, { ReactNode, useCallback } from "react";
 import { useAppState } from "../hooks/useAppState";
+import { useLocation } from "react-router-dom";
+import CombatPage from "./pages/combat/combatPage";
+import CVMain from "./pages/CV/CVMain";
+import HomePage from "./pages/home/homePage";
+import QueensUni from "./pages/queens/queensUni";
+import TerrainPage from "./pages/terrain/terrainPage";
 
 const ContentWrapper = styled.div({
   width: "100vw",
@@ -49,7 +55,7 @@ interface ContentAreaProps {
   children?: ReactNode;
 }
 
-const ContentArea: React.FC<ContentAreaProps> = ({ children }) => {
+const ContentArea: React.FC<ContentAreaProps> = () => {
   const { selectedObject, setSelectedObject, objectCount } = useAppState();
 
   const arrowClickHander = useCallback(
@@ -70,10 +76,36 @@ const ContentArea: React.FC<ContentAreaProps> = ({ children }) => {
     [selectedObject, setSelectedObject, objectCount]
   );
 
+  const location = useLocation();
+
   return (
     <ContentWrapper>
       <ArrowLeft onClick={() => arrowClickHander("left")} />
-      <CentreSpace>{children}</CentreSpace>
+      <CentreSpace>
+        {(() => {
+          let content;
+          switch (location.pathname) {
+            case "/cv":
+              content = <CVMain />;
+              break;
+            case "/terrain":
+              content = <TerrainPage />;
+              break;
+            case "/queens":
+              content = <QueensUni />;
+              break;
+            case "/combat":
+              content = <CombatPage />;
+              break;
+            case "/":
+            default:
+              content = <HomePage />;
+              break;
+          }
+
+          return content;
+        })()}
+      </CentreSpace>
       <ArrowRight onClick={() => arrowClickHander("right")} />
     </ContentWrapper>
   );

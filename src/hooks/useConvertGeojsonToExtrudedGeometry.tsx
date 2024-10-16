@@ -2,6 +2,7 @@ import { FeatureCollection } from "geojson";
 import { useCallback, useEffect, useState } from "react";
 import { BufferGeometry, ExtrudeGeometry, Shape } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import useFetchGeojson from "./useFetchGeoJson";
 
 interface GeoJSONFeature {
   type: "Feature";
@@ -30,12 +31,7 @@ const useConvertGeojsonToExtrudedGeometry = (
     null
   );
 
-  useEffect(() => {
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => setGeojson(data))
-      .catch((error) => console.error("Error loading GeoJSON:", error));
-  }, [url]);
+  useFetchGeojson(url, setGeojson);
 
   const geoJsonToShape = useCallback(
     (geoJSON: GeoJSONFeature) => {
