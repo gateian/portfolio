@@ -122,7 +122,7 @@ const CVMain = () => {
 
   console.log("CVMain");
   return (
-    <SubPage title="CV / Resume" modelView={false} disableExpand>
+    <SubPage title="CV / Resume" modelView={false} expand>
       <CVWrapper ref={cvWrapperRef}>
         <SectionRight></SectionRight>
         <Section>
