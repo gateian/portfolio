@@ -2,6 +2,7 @@ import { Group, Material, Object3DEventMap } from "three";
 import { useAppState } from "../../hooks/useAppState";
 import GlbModelFetch from "./glbModelFetch";
 import GlbModelPrimitive from "./glbModelPrimitive";
+import { useThree } from "@react-three/fiber";
 
 export interface GlbModelBaseProps {
   position: [number, number, number];
@@ -15,6 +16,7 @@ export interface GlbModelBaseProps {
   ) => void;
   castShadow?: boolean;
   receiveShadow?: boolean;
+  visible?: boolean;
 }
 export interface GlbModelProps extends GlbModelBaseProps {
   url: string;
@@ -29,10 +31,16 @@ const GlbModel = (props: GlbModelProps) => {
     castShadow,
     receiveShadow,
     onloaded,
+    visible,
   } = props;
   const { glbModels } = useAppState();
 
   const glbModel = glbModels.get(url);
+  const { scene } = useThree();
+
+  if (glbModel) {
+    glbModel.parent = scene;
+  }
 
   return (
     <>
@@ -44,6 +52,7 @@ const GlbModel = (props: GlbModelProps) => {
           rotation={rotation}
           castShadow={castShadow}
           receiveShadow={receiveShadow}
+          visible={visible}
         />
       ) : (
         <GlbModelFetch
@@ -54,6 +63,7 @@ const GlbModel = (props: GlbModelProps) => {
           onloaded={onloaded}
           castShadow={castShadow}
           receiveShadow={receiveShadow}
+          visible={false}
         />
       )}
     </>

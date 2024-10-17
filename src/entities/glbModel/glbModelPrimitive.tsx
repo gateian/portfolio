@@ -6,8 +6,15 @@ interface GlbModelPrimitiveProps extends GlbModelBaseProps {
 }
 
 const GlbModelPrimitive = (props: GlbModelPrimitiveProps) => {
-  const { glbModel, position, scale, rotation, castShadow, receiveShadow } =
-    props;
+  const {
+    glbModel,
+    position,
+    scale,
+    rotation,
+    castShadow,
+    receiveShadow,
+    visible,
+  } = props;
 
   return (
     <primitive
@@ -17,6 +24,7 @@ const GlbModelPrimitive = (props: GlbModelPrimitiveProps) => {
       rotation={rotation}
       castShadow={castShadow}
       receiveShadow={receiveShadow}
+      visible={visible}
     />
   );
 };

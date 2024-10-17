@@ -8,9 +8,11 @@ import {
 } from "three";
 import { useAppState } from "../../hooks/useAppState";
 import GlbModel from "../glbModel/glbModel";
+import { useLocation } from "react-router-dom";
 
 const QueensUniversity = () => {
   const { environmentMap } = useAppState();
+  const location = useLocation();
 
   const modifyMaterial = useCallback(
     (material: MeshPhysicalMaterial) => {
@@ -51,6 +53,7 @@ const QueensUniversity = () => {
           position={[0, 0, -40]}
           rotation={[0, Math.PI * 0.5, 0]}
           scale={[1, 1, 1]}
+          visible={location.pathname == "/queens"}
         />
       ) : null}
     </>

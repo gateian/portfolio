@@ -13,6 +13,7 @@ const GlbModelFetch = (props: GlbModelProps) => {
     castShadow,
     receiveShadow,
     onloaded,
+    visible,
   } = props;
   const { glbModels, setGlbModels } = useAppState();
   const { scene, materials } = useGLTF(url);
@@ -35,6 +36,7 @@ const GlbModelFetch = (props: GlbModelProps) => {
       rotation={rotation}
       castShadow={castShadow}
       receiveShadow={receiveShadow}
+      visible={visible}
     />
   );
 };

@@ -28,8 +28,8 @@ export default function ThreeScene() {
       <ambientLight intensity={1} />
 
       {location.pathname == "/terrain" ? <Landscape /> : null}
-      {location.pathname == "/combat" ? <HarrierCockpit /> : null}
-      {location.pathname == "/queens" ? <QueensUniversity /> : null}
+      <HarrierCockpit />
+      <QueensUniversity />
       {location.pathname == "/" ? <CityModel /> : null}
 
       <MarkerLayer />
