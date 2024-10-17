@@ -1,17 +1,15 @@
-import { useGLTF } from "@react-three/drei";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import {
   Color,
-  Mesh,
   MeshPhysicalMaterial,
   Group,
   Object3DEventMap,
-  Object3D,
+  Material,
 } from "three";
 import { useAppState } from "../../hooks/useAppState";
+import GlbModel from "../glbModel/glbModel";
 
 const QueensUniversity = () => {
-  const { scene, materials } = useGLTF("./3d/QueensUniversity.glb");
   const { environmentMap } = useAppState();
 
   const modifyMaterial = useCallback(
@@ -31,33 +29,31 @@ const QueensUniversity = () => {
     [environmentMap]
   );
 
-  const findMesh = useCallback(
-    (child: Object3D<Object3DEventMap>) => {
-      if (child instanceof Mesh) {
-        const material = child.material as MeshPhysicalMaterial;
-        modifyMaterial(material);
-      } else if (child instanceof Group) {
-        child.children.forEach((child) => {
-          findMesh(child);
-        });
-      }
-    },
-    [modifyMaterial]
-  );
-
-  useEffect(() => {
-    if (scene && environmentMap) {
-      scene.children.forEach(findMesh);
+  const onLoadedHandler = (
+    _glbModel: Group<Object3DEventMap>,
+    materials: {
+      [name: string]: Material;
     }
-  }, [materials, scene, environmentMap, findMesh]);
+  ) => {
+    Object.values(materials).forEach((material) => {
+      if (material instanceof MeshPhysicalMaterial) {
+        modifyMaterial(material);
+      }
+    });
+  };
 
   return (
-    <primitive
-      object={scene}
-      position={[0, 0, -40]}
-      rotation={[0, Math.PI * 0.5, 0]}
-      scale={[1, 1, 1]}
-    />
+    <>
+      {environmentMap ? (
+        <GlbModel
+          url="/3d/QueensUniversity.glb"
+          onloaded={onLoadedHandler}
+          position={[0, 0, -40]}
+          rotation={[0, Math.PI * 0.5, 0]}
+          scale={[1, 1, 1]}
+        />
+      ) : null}
+    </>
   );
 };
 

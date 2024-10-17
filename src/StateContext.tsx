@@ -1,5 +1,5 @@
 import { createContext, useState, ReactNode } from "react";
-import { Texture, Vector3 } from "three";
+import { Group, Object3DEventMap, Texture, Vector3 } from "three";
 import { MapMarkerDefinition } from "./entities/mapMarker/MapMarker.types";
 type AppState = {
   selectedObject: number;
@@ -14,6 +14,8 @@ type AppState = {
   setSubPageDialogId: (value: number) => void;
   mapMarkers: MapMarkerDefinition[];
   setMapMarkers: (value: MapMarkerDefinition[]) => void;
+  glbModels: Map<string, Group<Object3DEventMap>>;
+  setGlbModels: (value: Map<string, Group<Object3DEventMap>>) => void;
 };
 
 const StateContext = createContext<AppState | undefined>(undefined);
@@ -25,6 +27,9 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
   const [cameraTarget, setCameraTarget] = useState<Vector3>(new Vector3());
   const [subPageDialogId, setSubPageDialogId] = useState<number>(-1);
   const [mapMarkers, setMapMarkers] = useState<MapMarkerDefinition[]>([]);
+  const [glbModels, setGlbModels] = useState<
+    Map<string, Group<Object3DEventMap>>
+  >(new Map());
 
   return (
     <StateContext.Provider
@@ -41,6 +46,8 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
         setSubPageDialogId,
         mapMarkers,
         setMapMarkers,
+        glbModels,
+        setGlbModels,
       }}
     >
       {children}
