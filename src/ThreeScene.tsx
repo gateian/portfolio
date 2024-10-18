@@ -9,10 +9,10 @@ const QueensUniversity = lazy(
 );
 import DirectionalLightWithHelper from "./entities/directionalLightWithHelper/DirectionalLightWithHelper";
 import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
-const SceneCamera = lazy(() => import("./components/SceneCamera"));
 import CityModel from "./entities/city/CityModel";
 import MarkerLayer from "./entities/markerLayer/MarkerLayer";
 import { useLocation } from "react-router-dom";
+import OrbitCamera from "./components/OrbitCamera";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -20,8 +20,7 @@ export default function ThreeScene() {
 
   return (
     <Canvas shadows>
-      <SceneCamera />
-
+      <OrbitCamera />
       {debug ? <Debug /> : null}
       <EnvironmentMapLoader />
 

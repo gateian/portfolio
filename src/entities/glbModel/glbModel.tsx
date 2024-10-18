@@ -4,16 +4,17 @@ import GlbModelFetch from "./glbModelFetch";
 import GlbModelPrimitive from "./glbModelPrimitive";
 import { useThree } from "@react-three/fiber";
 
+export interface GlbOnLoadedData {
+  glbModel: Group<Object3DEventMap>;
+  materials: {
+    [name: string]: Material;
+  };
+}
 export interface GlbModelBaseProps {
   position: [number, number, number];
   scale: [number, number, number];
   rotation: [number, number, number];
-  onloaded?: (
-    glbModel: Group<Object3DEventMap>,
-    materials: {
-      [name: string]: Material;
-    }
-  ) => void;
+  onloaded?: (data: GlbOnLoadedData) => void;
   castShadow?: boolean;
   receiveShadow?: boolean;
   visible?: boolean;

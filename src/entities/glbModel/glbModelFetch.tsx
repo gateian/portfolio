@@ -16,21 +16,21 @@ const GlbModelFetch = (props: GlbModelProps) => {
     visible,
   } = props;
   const { glbModels, setGlbModels } = useAppState();
-  const { scene, materials } = useGLTF(url);
+  const { scene: group, materials } = useGLTF(url);
 
   useEffect(() => {
-    if (scene) {
-      setGlbModels(new Map(glbModels).set(url, scene));
+    if (group) {
+      setGlbModels(new Map(glbModels).set(url, group));
 
       if (onloaded) {
-        onloaded(scene, materials);
+        onloaded({ glbModel: group, materials });
       }
     }
-  }, [scene, setGlbModels, url, glbModels, onloaded, materials]);
+  }, [group, setGlbModels, url, glbModels, onloaded, materials]);
 
   return (
     <GlbModelPrimitive
-      glbModel={scene}
+      glbModel={group}
       position={position}
       scale={scale}
       rotation={rotation}

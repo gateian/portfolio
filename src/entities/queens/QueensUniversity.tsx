@@ -1,13 +1,7 @@
 import { useCallback } from "react";
-import {
-  Color,
-  MeshPhysicalMaterial,
-  Group,
-  Object3DEventMap,
-  Material,
-} from "three";
+import { Color, MeshPhysicalMaterial } from "three";
 import { useAppState } from "../../hooks/useAppState";
-import GlbModel from "../glbModel/glbModel";
+import GlbModel, { GlbOnLoadedData } from "../glbModel/glbModel";
 import { useLocation } from "react-router-dom";
 
 const QueensUniversity = () => {
@@ -31,13 +25,8 @@ const QueensUniversity = () => {
     [environmentMap]
   );
 
-  const onLoadedHandler = (
-    _glbModel: Group<Object3DEventMap>,
-    materials: {
-      [name: string]: Material;
-    }
-  ) => {
-    Object.values(materials).forEach((material) => {
+  const onLoadedHandler = (data: GlbOnLoadedData) => {
+    Object.values(data.materials).forEach((material) => {
       if (material instanceof MeshPhysicalMaterial) {
         modifyMaterial(material);
       }
