@@ -47,32 +47,90 @@ const OrbitCamera = () => {
   );
 };
 
-const path = [
-  new CubicBezierCurve3(
-    new Vector3(-2.7, 6.54, -4.5), // Start
-    new Vector3(-5, 6.54, -2), // Control 1
-    new Vector3(-6, 6.54, 11), // Control 2
-    new Vector3(-2.7, 6.54, 14.5) // End
-  ),
-  new CubicBezierCurve3(
-    new Vector3(-2.7, 6.54, 14.5),
-    new Vector3(0, 6.54, 17),
-    new Vector3(2, 6.54, 17),
-    new Vector3(4.5, 6.54, 14.5)
-  ),
-  new CubicBezierCurve3(
-    new Vector3(4.5, 6.54, 14.5),
-    new Vector3(8, 6.54, 11),
-    new Vector3(9, 6.54, 0),
-    new Vector3(4.5, 6.54, -3.5)
-  ),
-  new CubicBezierCurve3(
-    new Vector3(4.5, 6.54, -3.5),
-    new Vector3(2, 6.54, -5),
-    new Vector3(0, 6.54, -7),
-    new Vector3(-2.7, 6.54, -4.5)
-  ),
+// const path = [
+//   new CubicBezierCurve3(
+//     new Vector3(-2.7, 6.54, -4.5), // Start
+//     new Vector3(-5, 6.54, -2), // Control 1
+//     new Vector3(-6, 6.54, 11), // Control 2
+//     new Vector3(0, 6.54, 14.5) // End
+//   ),
+//   new CubicBezierCurve3(
+//     new Vector3(0, 6.54, 14.5),
+//     new Vector3(0, 6.54, 17),
+//     new Vector3(2, 6.54, 17),
+//     new Vector3(4.5, 6.54, -3.5)
+//   ),
+//   new CubicBezierCurve3(
+//     new Vector3(4.5, 6.54, -3.5),
+//     new Vector3(2, 6.54, -5),
+//     new Vector3(0, 6.54, -7),
+//     new Vector3(-2.7, 6.54, -4.5)
+//   ),
+// ];
+
+interface PathPoint {
+  position: Vector3;
+  tangent: Vector3; // Direction vector for the tangent
+  intensity?: number; // Optional: control how far the control points extend (default = 1)
+}
+
+// Function to convert path points to cubic bezier curves
+const createBezierPath = (points: PathPoint[]): CubicBezierCurve3[] => {
+  const curves: CubicBezierCurve3[] = [];
+
+  for (let i = 0; i < points.length; i++) {
+    const currentPoint = points[i];
+    const nextPoint = points[(i + 1) % points.length];
+    const controlPointDistance = 4; // Base distance for control points
+    const currentIntensity = currentPoint.intensity ?? 1;
+    const nextIntensity = nextPoint.intensity ?? 1;
+
+    // Calculate control points
+    const control1 = new Vector3()
+      .copy(currentPoint.tangent)
+      .normalize()
+      .multiplyScalar(controlPointDistance * currentIntensity)
+      .add(currentPoint.position);
+
+    const control2 = new Vector3()
+      .copy(nextPoint.tangent)
+      .normalize()
+      .multiplyScalar(controlPointDistance * nextIntensity)
+      .negate()
+      .add(nextPoint.position);
+
+    curves.push(
+      new CubicBezierCurve3(
+        currentPoint.position,
+        control1,
+        control2,
+        nextPoint.position
+      )
+    );
+  }
+
+  return curves;
+};
+
+const pathPoints: PathPoint[] = [
+  {
+    position: new Vector3(-2.7, 6.54, -4.5),
+    tangent: new Vector3(0.5, 0, -0.3),
+    intensity: 0.9,
+  },
+  {
+    position: new Vector3(4.5, 6.54, -3.5),
+    tangent: new Vector3(0.5, 0, 1),
+    intensity: 0.8,
+  },
+  {
+    position: new Vector3(0, 0, 40),
+    tangent: new Vector3(-1, 0, 0),
+    intensity: 4,
+  },
 ];
+
+const path = createBezierPath(pathPoints);
 
 const MotionPathCamera = () => {
   const cameraRef = useRef<PerspectiveCameraType>(null);
@@ -82,7 +140,7 @@ const MotionPathCamera = () => {
 
   useFrame((_state, delta) => {
     // Increment progress (adjust speed by changing the delta multiplier)
-    setProgress((prev) => (prev + delta * 0.05) % 4); // 4 is the number of curves
+    setProgress((prev) => (prev + delta * 0.05) % 3); // 4 is the number of curves
 
     // Find which curve we're on and the local progress on that curve
     const curveIndex = Math.floor(progress);
@@ -94,7 +152,7 @@ const MotionPathCamera = () => {
 
     if (cameraRef.current) {
       cameraRef.current.position.copy(currentPosition);
-      cameraRef.current.lookAt(0, 5, 0);
+      cameraRef.current.lookAt(0, 3.5, 0);
     }
   });
 
@@ -161,39 +219,44 @@ const CameraMode = () => {
     <>
       <ActiveCameraMode />
 
-      {/* Visualize the path */}
-      <Line
-        points={points}
-        color="white"
-        lineWidth={1} // Reduced from 10 as Three.js line width is limited
-        transparent // Enable transparency
-        opacity={0.5} // Make it slightly transparent
-        dashed={false} // Optional: make it dashed
-        renderOrder={1} // Ensure it renders on top
-        depthTest={false}
-      />
+      {
+        /* Visualize the path */
+        isDebugMode() ? (
+          <Line
+            points={points}
+            color="white"
+            lineWidth={1}
+            transparent
+            opacity={0.5}
+            dashed={false}
+            renderOrder={1}
+            depthTest={false}
+          />
+        ) : null
+      }
 
-      {/* Optionally, visualize the control points */}
-      {path.map((curve, i) => (
-        <group key={i}>
-          <mesh position={curve.v0}>
-            <sphereGeometry args={[0.1]} />
-            <meshBasicMaterial color="red" />
-          </mesh>
-          <mesh position={curve.v1}>
-            <sphereGeometry args={[0.1]} />
-            <meshBasicMaterial color="blue" />
-          </mesh>
-          <mesh position={curve.v2}>
-            <sphereGeometry args={[0.1]} />
-            <meshBasicMaterial color="blue" />
-          </mesh>
-          <mesh position={curve.v3}>
-            <sphereGeometry args={[0.1]} />
-            <meshBasicMaterial color="red" />
-          </mesh>
-        </group>
-      ))}
+      {isDebugMode()
+        ? path.map((curve, i) => (
+            <group key={i}>
+              <mesh position={curve.v0}>
+                <sphereGeometry args={[0.1]} />
+                <meshBasicMaterial color="red" />
+              </mesh>
+              <mesh position={curve.v1}>
+                <sphereGeometry args={[0.1]} />
+                <meshBasicMaterial color="blue" />
+              </mesh>
+              <mesh position={curve.v2}>
+                <sphereGeometry args={[0.1]} />
+                <meshBasicMaterial color="blue" />
+              </mesh>
+              <mesh position={curve.v3}>
+                <sphereGeometry args={[0.1]} />
+                <meshBasicMaterial color="red" />
+              </mesh>
+            </group>
+          ))
+        : null}
     </>
   );
 };
