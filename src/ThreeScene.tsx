@@ -12,13 +12,11 @@ import EnvironmentMapLoader from "./components/EnvironmentMapLoader";
 import CityModel from "./entities/city/CityModel";
 import MarkerLayer from "./entities/markerLayer/MarkerLayer";
 import { useLocation } from "react-router-dom";
-import CameraMode from "./components/CameraMode";
-import { useAppState } from "./hooks/useAppState";
+import CameraMode from "./components/CameraMode/CameraMode";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
   const location = useLocation();
-  const { cameraSettings: orbitCameraSettings } = useAppState();
 
   return (
     <Canvas shadows>

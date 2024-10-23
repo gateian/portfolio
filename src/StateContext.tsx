@@ -1,7 +1,10 @@
 import { createContext, useState, ReactNode } from "react";
 import { Group, Object3DEventMap, Texture, Vector3 } from "three";
 import { MapMarkerDefinition } from "./entities/mapMarker/MapMarker.types";
-import { CameraModes, OrbitCameraSettingsProps } from "./components/CameraMode";
+import {
+  CameraModes,
+  OrbitCameraSettingsProps,
+} from "./components/CameraMode/CameraMode.types";
 
 type AppState = {
   selectedObject: number;

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAppState } from "../../../hooks/useAppState";
 import SubPage from "../../SubPage/SubPage";
 import { Vector3 } from "three";
-import { CameraModes } from "../../../components/CameraMode";
+import { CameraModes } from "../../../components/CameraMode/CameraMode.types";
 
 const CombatPage = () => {
   const { setCameraSettings } = useAppState();

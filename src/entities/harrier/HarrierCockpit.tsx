@@ -5,20 +5,20 @@ import { useCallback, useState } from "react";
 import { useAppState } from "../../hooks/useAppState";
 import { useFrame } from "@react-three/fiber";
 
+const glassMaterials = [
+  "AV8B-glass",
+  "GLASS",
+  "HUD_GLASS",
+  "HUD_PROJECTOR_GLASS",
+  "HUD_GLASS_BACK",
+];
+
 const HarrierCockpit = () => {
   const location = useLocation();
 
   const [materials, setMaterials] = useState<{ [name: string]: Material }>({});
 
   const { environmentMap } = useAppState();
-
-  const glassMaterials = [
-    "AV8B-glass",
-    "GLASS",
-    "HUD_GLASS",
-    "HUD_PROJECTOR_GLASS",
-    "HUD_GLASS_BACK",
-  ];
 
   const modifyMaterial = useCallback(
     (material: MeshPhysicalMaterial) => {

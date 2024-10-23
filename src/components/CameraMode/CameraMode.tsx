@@ -1,5 +1,5 @@
 import { lazy, useEffect, useMemo, useRef, useState } from "react";
-import { useAppState } from "../hooks/useAppState";
+import { useAppState } from "../../hooks/useAppState";
 import {
   CubicBezierCurve3,
   Vector3,
@@ -7,30 +7,14 @@ import {
 } from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Line, PerspectiveCamera } from "@react-three/drei";
-import { isDebugMode } from "../utils/generalUtils";
+import { isDebugMode } from "../../utils/generalUtils";
+import { CameraModes } from "./CameraMode.types";
 
 const OrbitControls = lazy(() =>
   import("@react-three/drei").then((module) => ({
     default: module.OrbitControls,
   }))
 );
-
-export enum CameraModes {
-  Static = "STATIC",
-  Orbit = "ORBIT",
-  MotionPath = "MOTION_PATH",
-}
-
-export interface OrbitCameraSettingsProps {
-  mode: CameraModes;
-  autoRotate?: boolean;
-  enableRotate?: boolean;
-  screenSpacePanning?: boolean;
-  maxDistance?: number;
-  minDistance?: number;
-  initialPosition?: Vector3;
-  target?: Vector3;
-}
 
 const OrbitCamera = () => {
   const { cameraSettings: props } = useAppState();
@@ -46,27 +30,6 @@ const OrbitCamera = () => {
     />
   );
 };
-
-// const path = [
-//   new CubicBezierCurve3(
-//     new Vector3(-2.7, 6.54, -4.5), // Start
-//     new Vector3(-5, 6.54, -2), // Control 1
-//     new Vector3(-6, 6.54, 11), // Control 2
-//     new Vector3(0, 6.54, 14.5) // End
-//   ),
-//   new CubicBezierCurve3(
-//     new Vector3(0, 6.54, 14.5),
-//     new Vector3(0, 6.54, 17),
-//     new Vector3(2, 6.54, 17),
-//     new Vector3(4.5, 6.54, -3.5)
-//   ),
-//   new CubicBezierCurve3(
-//     new Vector3(4.5, 6.54, -3.5),
-//     new Vector3(2, 6.54, -5),
-//     new Vector3(0, 6.54, -7),
-//     new Vector3(-2.7, 6.54, -4.5)
-//   ),
-// ];
 
 interface PathPoint {
   position: Vector3;
