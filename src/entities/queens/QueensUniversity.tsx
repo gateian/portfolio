@@ -1,18 +1,12 @@
-import { useGLTF } from "@react-three/drei";
-import { useCallback, useEffect } from "react";
-import {
-  Color,
-  Mesh,
-  MeshPhysicalMaterial,
-  Group,
-  Object3DEventMap,
-  Object3D,
-} from "three";
+import { useCallback } from "react";
+import { Color, MeshPhysicalMaterial } from "three";
 import { useAppState } from "../../hooks/useAppState";
+import GlbModel, { GlbOnLoadedData } from "../glbModel/glbModel";
+import { useLocation } from "react-router-dom";
 
 const QueensUniversity = () => {
-  const { scene, materials } = useGLTF("./3d/QueensUniversity.glb");
   const { environmentMap } = useAppState();
+  const location = useLocation();
 
   const modifyMaterial = useCallback(
     (material: MeshPhysicalMaterial) => {
@@ -31,33 +25,40 @@ const QueensUniversity = () => {
     [environmentMap]
   );
 
-  const findMesh = useCallback(
-    (child: Object3D<Object3DEventMap>) => {
-      if (child instanceof Mesh) {
-        const material = child.material as MeshPhysicalMaterial;
+  const onLoadedHandler = (data: GlbOnLoadedData) => {
+    Object.values(data.materials).forEach((material) => {
+      if (material instanceof MeshPhysicalMaterial) {
         modifyMaterial(material);
-      } else if (child instanceof Group) {
-        child.children.forEach((child) => {
-          findMesh(child);
-        });
       }
-    },
-    [modifyMaterial]
-  );
 
-  useEffect(() => {
-    if (scene && environmentMap) {
-      scene.children.forEach(findMesh);
-    }
-  }, [materials, scene, environmentMap, findMesh]);
+      data.glbModel.traverse((child) => {
+        if (child.isObject3D) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+    });
+  };
 
   return (
-    <primitive
-      object={scene}
-      position={[0, 0, -40]}
-      rotation={[0, Math.PI * 0.5, 0]}
-      scale={[1, 1, 1]}
-    />
+    <>
+      {environmentMap ? (
+        <GlbModel
+          url="/3d/QueensUniversity.glb"
+          onloaded={onLoadedHandler}
+          position={[0, 0, -40]}
+          rotation={[0, Math.PI * 0.5, 0]}
+          scale={[1, 1, 1]}
+          castShadow
+          receiveShadow
+          visible={location.pathname == "/queens"}
+        />
+      ) : null}
+      <mesh receiveShadow position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry attach="geometry" args={[100, 100]} />
+        <shadowMaterial attach="material" opacity={0.5} />
+      </mesh>
+    </>
   );
 };
 
