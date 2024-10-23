@@ -30,6 +30,13 @@ const QueensUniversity = () => {
       if (material instanceof MeshPhysicalMaterial) {
         modifyMaterial(material);
       }
+
+      data.glbModel.traverse((child) => {
+        if (child.isObject3D) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
     });
   };
 
@@ -42,9 +49,15 @@ const QueensUniversity = () => {
           position={[0, 0, -40]}
           rotation={[0, Math.PI * 0.5, 0]}
           scale={[1, 1, 1]}
+          castShadow
+          receiveShadow
           visible={location.pathname == "/queens"}
         />
       ) : null}
+      <mesh receiveShadow position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry attach="geometry" args={[100, 100]} />
+        <shadowMaterial attach="material" opacity={0.5} />
+      </mesh>
     </>
   );
 };
