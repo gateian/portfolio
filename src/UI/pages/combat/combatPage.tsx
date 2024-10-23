@@ -2,13 +2,15 @@ import { useEffect } from "react";
 import { useAppState } from "../../../hooks/useAppState";
 import SubPage from "../../SubPage/SubPage";
 import { Vector3 } from "three";
+import { CameraModes } from "../../../components/CameraMode";
 
 const CombatPage = () => {
-  const { setOrbitCameraSettings } = useAppState();
+  const { setCameraSettings } = useAppState();
 
   useEffect(() => {
-    setOrbitCameraSettings({
-      autoRotate: false,
+    setCameraSettings({
+      mode: CameraModes.MotionPath,
+      autoRotate: true,
       enableRotate: true,
       screenSpacePanning: true,
       maxDistance: 100,
@@ -16,7 +18,7 @@ const CombatPage = () => {
       initialPosition: new Vector3(-2.7, 6.54, -4.5),
       target: new Vector3(0, 2.5, 0),
     });
-  }, [setOrbitCameraSettings]);
+  }, [setCameraSettings]);
 
   return <SubPage title="Harrier Cockpit" objectIndex={1} modelView />;
 };

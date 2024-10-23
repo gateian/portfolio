@@ -1,7 +1,7 @@
 import { createContext, useState, ReactNode } from "react";
 import { Group, Object3DEventMap, Texture, Vector3 } from "three";
 import { MapMarkerDefinition } from "./entities/mapMarker/MapMarker.types";
-import { OrbitCameraProps } from "./components/OrbitCamera";
+import { CameraModes, OrbitCameraSettingsProps } from "./components/CameraMode";
 
 type AppState = {
   selectedObject: number;
@@ -16,8 +16,8 @@ type AppState = {
   setSubPageDialogId: (value: number) => void;
   mapMarkers: MapMarkerDefinition[];
   setMapMarkers: (value: MapMarkerDefinition[]) => void;
-  orbitCameraSettings: OrbitCameraProps;
-  setOrbitCameraSettings: (value: OrbitCameraProps) => void;
+  cameraSettings: OrbitCameraSettingsProps;
+  setCameraSettings: (value: OrbitCameraSettingsProps) => void;
   glbModels: Map<string, Group<Object3DEventMap>>;
   setGlbModels: (value: Map<string, Group<Object3DEventMap>>) => void;
 };
@@ -31,8 +31,9 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
   const [cameraTarget, setCameraTarget] = useState<Vector3>(new Vector3());
   const [subPageDialogId, setSubPageDialogId] = useState<number>(-1);
   const [mapMarkers, setMapMarkers] = useState<MapMarkerDefinition[]>([]);
-  const [orbitCameraSettings, setOrbitCameraSettings] =
-    useState<OrbitCameraProps>({
+  const [cameraSettings, setCameraSettings] =
+    useState<OrbitCameraSettingsProps>({
+      mode: CameraModes.Orbit,
       enableRotate: true,
       screenSpacePanning: true,
       maxDistance: 700,
@@ -57,8 +58,8 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
         setSubPageDialogId,
         mapMarkers,
         setMapMarkers,
-        orbitCameraSettings,
-        setOrbitCameraSettings,
+        cameraSettings,
+        setCameraSettings,
         glbModels,
         setGlbModels,
       }}

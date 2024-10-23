@@ -19,7 +19,7 @@ const Debug = () => {
         enableRotate={true}
         screenSpacePanning={true}
         maxDistance={700}
-        minDistance={50}
+        minDistance={1}
       />
     </>
   );
