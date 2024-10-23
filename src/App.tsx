@@ -11,7 +11,7 @@ import { lazy } from "react";
 const ThreeScene = lazy(() => import("./ThreeScene"));
 import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MenuBar from "./UI/Menu/MenuBar";
 
 const AppWrapper = styled.div`
@@ -39,7 +39,13 @@ function App() {
               <TitleBanner />
               <HeroBannerSideColumn />
             </HeroBanner>
-            <ContentArea />
+            <Routes>
+              <Route path="/" element={<ContentArea />} />
+              <Route path="/combat" element={<ContentArea />} />
+              <Route path="/queens" element={<ContentArea />} />
+              <Route path="/terrain" element={<ContentArea />} />
+              <Route path="/cv" element={<ContentArea />} />
+            </Routes>
             <MenuBar />
           </Overlay>
         </AppWrapper>
