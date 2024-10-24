@@ -57,7 +57,7 @@ export const DelatinTerrain = (props: DelatinTerrainProps) => {
     }
   }, [albedoMap, wireframe]);
 
-  const scale = 110;
+  const scale = 400;
   return (
     <mesh
       ref={meshRef}

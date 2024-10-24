@@ -15,4 +15,5 @@ export interface OrbitCameraSettingsProps {
   minDistance?: number;
   initialPosition?: Vector3;
   target?: Vector3;
+  fov?: number;
 }

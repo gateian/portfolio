@@ -3,28 +3,27 @@ import { MaterialNode } from "@react-three/fiber";
 import { ShaderMaterial } from "three";
 import * as THREE from "three";
 
-type LandscapeMaterialType = ShaderMaterial & {
+type TerrainMaterialType = ShaderMaterial & {
   key: string;
   heightmap: THREE.DataTexture;
 };
 
-export const LANDSCAPE_GRID_WIDTH = 4;
-export const LANDSCAPE_GRID_DEPTH = 4;
+export const TERRAIN_GRID_WIDTH = 4;
+export const TERRAIN_GRID_DEPTH = 4;
 
-const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
-  shaderMaterial(
-    {
-      heightMap: new THREE.DataTexture(
-        new Uint8Array(0),
-        0,
-        0,
-        THREE.RedFormat,
-        THREE.UnsignedByteType
-      ),
-    },
-    // vertex shader
-    /*glsl*/ `
-    #define INSTANCE_COUNT ${LANDSCAPE_GRID_WIDTH * LANDSCAPE_GRID_DEPTH}
+const TerrainMaterial: typeof ShaderMaterial & { key: string } = shaderMaterial(
+  {
+    heightMap: new THREE.DataTexture(
+      new Uint8Array(0),
+      0,
+      0,
+      THREE.RedFormat,
+      THREE.UnsignedByteType
+    ),
+  },
+  // vertex shader
+  /*glsl*/ `
+    #define INSTANCE_COUNT ${TERRAIN_GRID_WIDTH * TERRAIN_GRID_DEPTH}
 
   varying vec2 vUv;
   varying vec2 instanceUv;
@@ -38,8 +37,8 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
 	void main() {
 
     // Calculate grid position based on instance ID
-    int gridWidth = int(${LANDSCAPE_GRID_WIDTH});
-    int gridDepth = int(${LANDSCAPE_GRID_DEPTH});
+    int gridWidth = int(${TERRAIN_GRID_WIDTH});
+    int gridDepth = int(${TERRAIN_GRID_DEPTH});
 
     // Calculate row (z-coordinate) and column (x-coordinate) in the grid
     int row = gl_InstanceID / gridWidth;
@@ -101,8 +100,8 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
 
 	}
 `,
-    // fragment shader
-    /*glsl*/ `
+  // fragment shader
+  /*glsl*/ `
   varying vec2 vUv;
   varying vec2 instanceUv;
   varying float instanceID;
@@ -117,18 +116,18 @@ const LandscapeMaterial: typeof ShaderMaterial & { key: string } =
     gl_FragColor = vec4( baseColor, 1 );
   }
 `
-  );
+);
 
 /* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      landscapeMaterial: MaterialNode<
-        LandscapeMaterialType,
-        typeof LandscapeMaterial
+      terrainMaterial: MaterialNode<
+        TerrainMaterialType,
+        typeof TerrainMaterial
       >;
     }
   }
 }
 
-export { LandscapeMaterial };
+export { TerrainMaterial };

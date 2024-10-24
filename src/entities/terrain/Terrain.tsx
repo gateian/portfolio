@@ -1,14 +1,14 @@
 import { extend } from "@react-three/fiber";
 import { useMemo, useState } from "react";
 import * as THREE from "three";
-import { LandscapeMaterial } from "./LandscapeMaterial";
+import { TerrainMaterial } from "./TerrainMaterial";
 import { useTexture } from "@react-three/drei";
 import { DelatinTerrain } from "../delatinTerrain/DelatinTerrain";
 import { Texture } from "three";
 
-extend({ LandscapeMaterial });
+extend({ TerrainMaterial });
 
-function Landscape() {
+function Terrain() {
   const heightmap: Texture = useTexture(
     "./hires/heightmap.jpg"
   ) as unknown as Texture;
@@ -67,4 +67,4 @@ function Landscape() {
   );
 }
 
-export default Landscape;
+export default Terrain;

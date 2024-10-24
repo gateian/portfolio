@@ -18,16 +18,41 @@ const OrbitControls = lazy(() =>
 
 const OrbitCamera = () => {
   const { cameraSettings: props } = useAppState();
+  const cameraRef = useRef<PerspectiveCameraType>(null);
+
+  useEffect(() => {
+    if (props.initialPosition && cameraRef.current) {
+      cameraRef.current.position.set(
+        props.initialPosition.x,
+        props.initialPosition.y,
+        props.initialPosition.z
+      );
+    }
+  }, [props.initialPosition]);
+
+  useEffect(() => {
+    if (props.fov && cameraRef.current) {
+      cameraRef.current.fov = props.fov;
+      cameraRef.current.updateProjectionMatrix();
+    }
+  }, [props.fov]);
 
   return (
-    <OrbitControls
-      autoRotate={props.autoRotate}
-      enableRotate={props.enableRotate}
-      screenSpacePanning={props.screenSpacePanning}
-      maxDistance={props.maxDistance}
-      minDistance={props.minDistance}
-      target={props.target}
-    />
+    <>
+      <OrbitControls
+        autoRotate={props.autoRotate}
+        enableRotate={props.enableRotate}
+        screenSpacePanning={props.screenSpacePanning}
+        maxDistance={props.maxDistance}
+        minDistance={props.minDistance}
+        target={props.target}
+      />
+      <PerspectiveCamera
+        ref={cameraRef}
+        makeDefault
+        position={props.initialPosition}
+      />
+    </>
   );
 };
 
@@ -133,18 +158,6 @@ const MotionPathCamera = () => {
 
 const CameraMode = () => {
   const { cameraSettings: props } = useAppState();
-
-  const { camera } = useThree();
-
-  useEffect(() => {
-    if (props.initialPosition) {
-      camera.position.set(
-        props.initialPosition.x,
-        props.initialPosition.y,
-        props.initialPosition.z
-      );
-    }
-  }, [camera, props.initialPosition, props.mode]);
 
   const GetCameraMode = () => {
     if (isDebugMode()) {

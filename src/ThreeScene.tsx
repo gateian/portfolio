@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { lazy } from "react";
-const Landscape = lazy(() => import("./entities/landscape/Landscape"));
+const Terrain = lazy(() => import("./entities/terrain/Terrain"));
 const HarrierCockpit = lazy(() => import("./entities/harrier/HarrierCockpit"));
 import { isDebugMode } from "./utils/generalUtils";
 const Debug3D = lazy(() => import("./debug/Debug3D"));
@@ -26,7 +26,7 @@ export default function ThreeScene() {
 
       <ambientLight intensity={1} />
 
-      {location.pathname == "/terrain" ? <Landscape /> : null}
+      {location.pathname == "/terrain" ? <Terrain /> : null}
       <HarrierCockpit />
       <QueensUniversity />
       {location.pathname == "/" ? <CityModel /> : null}
