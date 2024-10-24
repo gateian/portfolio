@@ -3,7 +3,7 @@ import { lazy } from "react";
 const Landscape = lazy(() => import("./entities/landscape/Landscape"));
 const HarrierCockpit = lazy(() => import("./entities/harrier/HarrierCockpit"));
 import { isDebugMode } from "./utils/generalUtils";
-const Debug = lazy(() => import("./debug/Debug"));
+const Debug3D = lazy(() => import("./debug/Debug3D"));
 const QueensUniversity = lazy(
   () => import("./entities/queens/QueensUniversity")
 );
@@ -21,7 +21,7 @@ export default function ThreeScene() {
   return (
     <Canvas shadows>
       <CameraMode />
-      {debug ? <Debug /> : null}
+      {debug ? <Debug3D /> : null}
       <EnvironmentMapLoader />
 
       <ambientLight intensity={1} />
