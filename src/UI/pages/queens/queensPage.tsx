@@ -4,13 +4,14 @@ import SubPage from "../../SubPage/SubPage";
 import { Vector3 } from "three";
 import { CameraModes } from "../../../components/CameraMode/CameraMode.types";
 
-const QueensUni = () => {
+const QueensPage = () => {
   const { setSelectedObject, setCameraSettings } = useAppState();
 
   useEffect(() => {
     setCameraSettings({
       mode: CameraModes.Orbit,
-      autoRotate: false,
+      autoRotate: true,
+      autoRotateSpeed: 0.3,
       enableRotate: true,
       screenSpacePanning: true,
       maxDistance: 50,
@@ -31,4 +32,4 @@ const QueensUni = () => {
   );
 };
 
-export default QueensUni;
+export default QueensPage;

@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import CombatPage from "./pages/combat/combatPage";
 import CVMain from "./pages/CV/CVMain";
 import HomePage from "./pages/home/homePage";
-import QueensUni from "./pages/queens/queensUni";
+import QueensPage from "./pages/queens/queensPage";
 import TerrainPage from "./pages/terrain/terrainPage";
 
 const ContentWrapper = styled.div({
@@ -44,7 +44,7 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
               content = <TerrainPage />;
               break;
             case "/queens":
-              content = <QueensUni />;
+              content = <QueensPage />;
               break;
             case "/combat":
               content = <CombatPage />;
