@@ -41,6 +41,8 @@ const HomePage = () => {
       initialPosition: new Vector3(-11.43, 114.24, 135.24),
       target: new Vector3(0, 0, 0),
       fov: 60,
+      autoRotate: true,
+      autoRotateSpeed: 0.4,
     });
 
     return () => {

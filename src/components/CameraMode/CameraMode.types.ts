@@ -9,6 +9,7 @@ export enum CameraModes {
 export interface OrbitCameraSettingsProps {
   mode: CameraModes;
   autoRotate?: boolean;
+  autoRotateSpeed?: number;
   enableRotate?: boolean;
   screenSpacePanning?: boolean;
   maxDistance?: number;

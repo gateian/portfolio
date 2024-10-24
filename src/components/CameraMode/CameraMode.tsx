@@ -41,6 +41,7 @@ const OrbitCamera = () => {
     <>
       <OrbitControls
         autoRotate={props.autoRotate}
+        autoRotateSpeed={props.autoRotateSpeed}
         enableRotate={props.enableRotate}
         screenSpacePanning={props.screenSpacePanning}
         maxDistance={props.maxDistance}
