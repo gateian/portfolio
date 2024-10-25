@@ -13,7 +13,6 @@ import CityModel from "./entities/city/CityModel";
 import MarkerLayer from "./entities/markerLayer/MarkerLayer";
 import { useLocation } from "react-router-dom";
 import CameraMode from "./components/CameraMode/CameraMode";
-// import { EffectComposer, Vignette, Bloom } from "@react-three/postprocessing";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
