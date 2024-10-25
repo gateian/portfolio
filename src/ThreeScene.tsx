@@ -1,9 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import { lazy } from "react";
-const Landscape = lazy(() => import("./entities/landscape/Landscape"));
+const Terrain = lazy(() => import("./entities/terrain/Terrain"));
 const HarrierCockpit = lazy(() => import("./entities/harrier/HarrierCockpit"));
 import { isDebugMode } from "./utils/generalUtils";
-const Debug = lazy(() => import("./debug/Debug"));
+const Debug3D = lazy(() => import("./debug/Debug3D"));
 const QueensUniversity = lazy(
   () => import("./entities/queens/QueensUniversity")
 );
@@ -13,6 +13,7 @@ import CityModel from "./entities/city/CityModel";
 import MarkerLayer from "./entities/markerLayer/MarkerLayer";
 import { useLocation } from "react-router-dom";
 import CameraMode from "./components/CameraMode/CameraMode";
+import { EffectComposer, Vignette, Bloom } from "@react-three/postprocessing";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -21,12 +22,12 @@ export default function ThreeScene() {
   return (
     <Canvas shadows>
       <CameraMode />
-      {debug ? <Debug /> : null}
+      {debug ? <Debug3D /> : null}
       <EnvironmentMapLoader />
 
       <ambientLight intensity={1} />
 
-      {location.pathname == "/terrain" ? <Landscape /> : null}
+      {location.pathname == "/terrain" ? <Terrain /> : null}
       <HarrierCockpit />
       <QueensUniversity />
       {location.pathname == "/" ? <CityModel /> : null}
@@ -35,6 +36,16 @@ export default function ThreeScene() {
 
       <DirectionalLightWithHelper />
       <pointLight position={[10, 10, 10]} />
+
+      <EffectComposer multisampling={0}>
+        <Bloom
+          luminanceThreshold={0}
+          luminanceSmoothing={0.9}
+          height={300}
+          opacity={0.7}
+        />
+        <Vignette eskil={false} offset={0.1} darkness={0.7} />
+      </EffectComposer>
     </Canvas>
   );
 }

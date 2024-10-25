@@ -13,6 +13,9 @@ import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MenuBar from "./UI/Menu/MenuBar";
+import { DebugStateProvider } from "./debug/DebugStateContext";
+import { isDebugMode } from "./utils/generalUtils";
+import Debug2D from "./debug/Debug2D";
 
 const AppWrapper = styled.div`
   margin: 0;
@@ -26,29 +29,34 @@ const AppWrapper = styled.div`
 `;
 
 function App() {
+  const isDebug = isDebugMode();
+
   return (
     <BrowserRouter>
       <StateProvider>
-        <AppWrapper>
-          <ThreeContainer>
-            <ThreeScene />
-          </ThreeContainer>
-          <Overlay>
-            <HeroBanner>
-              <HeroBannerSideColumn />
-              <TitleBanner />
-              <HeroBannerSideColumn />
-            </HeroBanner>
-            <Routes>
-              <Route path="/" element={<ContentArea />} />
-              <Route path="/combat" element={<ContentArea />} />
-              <Route path="/queens" element={<ContentArea />} />
-              <Route path="/terrain" element={<ContentArea />} />
-              <Route path="/cv" element={<ContentArea />} />
-            </Routes>
-            <MenuBar />
-          </Overlay>
-        </AppWrapper>
+        <DebugStateProvider>
+          <AppWrapper>
+            <ThreeContainer>
+              <ThreeScene />
+            </ThreeContainer>
+            <Overlay>
+              <HeroBanner>
+                <HeroBannerSideColumn />
+                <TitleBanner />
+                <HeroBannerSideColumn />
+              </HeroBanner>
+              <Routes>
+                <Route path="/" element={<ContentArea />} />
+                <Route path="/combat" element={<ContentArea />} />
+                <Route path="/queens" element={<ContentArea />} />
+                <Route path="/terrain" element={<ContentArea />} />
+                <Route path="/cv" element={<ContentArea />} />
+              </Routes>
+              <MenuBar />
+            </Overlay>
+            {isDebug ? <Debug2D /> : null}
+          </AppWrapper>
+        </DebugStateProvider>
       </StateProvider>
     </BrowserRouter>
   );
