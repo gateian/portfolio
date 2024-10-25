@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { MenuBarButton, MenuBarWrapper } from "./MenuBar.style";
+import { MenuBarWrapper } from "./MenuBar.style";
+import MenuBarButton from "./MenuBarButton";
 import { useNavigate } from "react-router-dom";
 import MenuItems from "./MenuItems";
 
@@ -8,23 +9,21 @@ const MenuBar = () => {
 
   const navigate = useNavigate();
 
-  const handleMenuItemClick = (
-    _event: React.SyntheticEvent,
-    itemIdx: number
-  ) => {
+  const handleMenuItemClick = (itemIdx: number) => {
     navigate(MenuItems[itemIdx]?.route || "/");
     setValue(itemIdx);
   };
 
   return (
-    <MenuBarWrapper
-      value={value}
-      onChange={handleMenuItemClick}
-      showLabels
-      className="menu-bar-navigation"
-    >
-      {MenuItems.map((item) => (
-        <MenuBarButton key={item.id} label={item.label} icon={item.icon} />
+    <MenuBarWrapper>
+      {MenuItems.map((item, idx) => (
+        <MenuBarButton
+          key={item.id}
+          label={item.label}
+          icon={item.icon}
+          selected={value === idx}
+          onClick={() => handleMenuItemClick(idx)}
+        />
       ))}
     </MenuBarWrapper>
   );
