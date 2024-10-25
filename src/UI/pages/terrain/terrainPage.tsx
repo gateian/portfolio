@@ -44,7 +44,7 @@ const TerrainPage = () => {
     return () => {
       setMapMarkers([]);
     };
-  }, [navigate, setMapMarkers]);
+  }, [navigate, setMapMarkers, setCameraSettings]);
 
   return <SubPage title="Terrain and Mapping" objectIndex={0} modelView />;
 };

@@ -48,7 +48,7 @@ const HomePage = () => {
     return () => {
       setMapMarkers([]);
     };
-  }, [navigate, setMapMarkers]);
+  }, [navigate, setMapMarkers, setCameraSettings]);
 
   return <SubPage title="Welcome to my portfolio" modelView />;
 };

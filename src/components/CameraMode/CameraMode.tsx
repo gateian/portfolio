@@ -5,7 +5,7 @@ import {
   Vector3,
   PerspectiveCamera as PerspectiveCameraType,
 } from "three";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { Line, PerspectiveCamera } from "@react-three/drei";
 import { isDebugMode } from "../../utils/generalUtils";
 import { CameraModes } from "./CameraMode.types";

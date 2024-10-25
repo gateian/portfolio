@@ -13,13 +13,7 @@ import CityModel from "./entities/city/CityModel";
 import MarkerLayer from "./entities/markerLayer/MarkerLayer";
 import { useLocation } from "react-router-dom";
 import CameraMode from "./components/CameraMode/CameraMode";
-import {
-  EffectComposer,
-  DepthOfField,
-  Vignette,
-  Bloom,
-  Noise,
-} from "@react-three/postprocessing";
+import { EffectComposer, Vignette, Bloom } from "@react-three/postprocessing";
 
 export default function ThreeScene() {
   const debug = isDebugMode();
@@ -44,12 +38,6 @@ export default function ThreeScene() {
       <pointLight position={[10, 10, 10]} />
 
       <EffectComposer multisampling={0}>
-        {/* <DepthOfField
-          focusDistance={0.1}
-          focalLength={0.3}
-          bokehScale={2}
-          height={480}
-        /> */}
         <Bloom
           luminanceThreshold={0}
           luminanceSmoothing={0.9}
