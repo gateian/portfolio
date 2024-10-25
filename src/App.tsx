@@ -7,7 +7,7 @@ import {
   ThreeContainer,
   HeroBannerSideColumn,
 } from "./StyledComponents";
-import { lazy } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 const ThreeScene = lazy(() => import("./ThreeScene"));
 import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
@@ -17,27 +17,72 @@ import { DebugStateProvider } from "./debug/DebugStateContext";
 import { isDebugMode } from "./utils/generalUtils";
 import Debug2D from "./debug/Debug2D";
 
-const AppWrapper = styled.div`
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
-`;
+interface AppWrapperProps {
+  visible: boolean;
+}
+
+const AppWrapper = styled("div")<AppWrapperProps>(({ visible }) => ({
+  margin: 0,
+  padding: 0,
+  width: "100%",
+  height: "100%",
+  overflow: "hidden",
+  WebkitUserSelect: "none" /* Safari */,
+  msUserSelect: "none" /* IE 10 and IE 11 */,
+  userSelect: "none" /* Standard syntax */,
+  opacity: visible ? 1 : 0,
+  transition: "opacity 0.5s ease-in",
+}));
+
+const ThreeLoadingFallback = styled.div({
+  width: "100%",
+  height: "100%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: "#1a1a1a",
+  color: "white",
+  fontSize: "1.2rem",
+});
 
 function App() {
   const isDebug = isDebugMode();
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleLoaderRemoved = () => {
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 100);
+    };
+
+    window.addEventListener("initialLoaderRemoved", handleLoaderRemoved);
+
+    if (!document.getElementById("initial-loader")) {
+      handleLoaderRemoved();
+    }
+
+    return () => {
+      window.removeEventListener("initialLoaderRemoved", handleLoaderRemoved);
+    };
+  }, []);
 
   return (
     <BrowserRouter>
       <StateProvider>
         <DebugStateProvider>
-          <AppWrapper>
+          <AppWrapper visible={isVisible}>
             <ThreeContainer>
-              <ThreeScene />
+              <Suspense
+                fallback={
+                  <ThreeLoadingFallback>
+                    Loading 3D Scene...
+                  </ThreeLoadingFallback>
+                }
+              >
+                <ThreeScene />
+              </Suspense>
             </ThreeContainer>
             <Overlay>
               <HeroBanner>
