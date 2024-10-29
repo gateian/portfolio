@@ -32,6 +32,7 @@ const AppWrapper = styled("div")<AppWrapperProps>(({ visible }) => ({
   userSelect: "none" /* Standard syntax */,
   opacity: visible ? 1 : 0,
   transition: "opacity 0.5s ease-in",
+  backgroundColor: "#222",
 }));
 
 const ThreeLoadingFallback = styled.div({
