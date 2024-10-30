@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { useAppState } from "../../hooks/useAppState";
 import { PageWrapper } from "./SubPage.style";
+import {
+  GlbModelProps,
+  GlbModelSettings,
+} from "../../entities/glbModel/glbModelPrimitive";
+import { Group } from "three";
+import { OrbitCameraSettingsProps } from "../../components/CameraMode/CameraMode.types";
 
 export interface SubPageProps {
   title: string;
@@ -8,10 +14,19 @@ export interface SubPageProps {
   objectIndex?: number;
   modelView?: boolean;
   expand?: boolean;
+  glbModelSettings?: GlbModelSettings;
+  cameraSettings?: OrbitCameraSettingsProps;
 }
 
 const SubPage = (props: SubPageProps) => {
-  const { subPageDialogId, setSubPageDialogId, mapMarkers } = useAppState();
+  const {
+    subPageDialogId,
+    setSubPageDialogId,
+    mapMarkers,
+    glbModels,
+    setGlbModels,
+    setCameraSettings,
+  } = useAppState();
 
   useEffect(() => {
     return () => {
@@ -22,6 +37,24 @@ const SubPage = (props: SubPageProps) => {
       setSubPageDialogId(-1);
     };
   }, [mapMarkers, setSubPageDialogId]);
+
+  useEffect(() => {
+    const model = glbModels.get(location.pathname);
+
+    const updatedModel: GlbModelProps = {
+      glbModel: model?.glbModel ?? new Group(),
+      materials: model?.materials ?? {},
+      ...props.glbModelSettings,
+    };
+
+    setGlbModels(new Map(glbModels).set(location.pathname, updatedModel));
+  }, [setGlbModels, location.pathname]);
+
+  useEffect(() => {
+    if (props.cameraSettings) {
+      setCameraSettings(props.cameraSettings);
+    }
+  }, [setCameraSettings]);
 
   return (
     <>
