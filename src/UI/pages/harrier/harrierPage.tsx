@@ -72,11 +72,13 @@ const HarrierPage = () => {
   );
 
   const onLoadedHandler = (data: GlbOnLoadedData) => {
-    Object.values(data.materials).forEach((material) => {
-      if (material instanceof MeshPhysicalMaterial) {
-        modifyMaterial(material);
-      }
-    });
+    if (data.materials) {
+      Object.values(data.materials).forEach((material) => {
+        if (material instanceof MeshPhysicalMaterial) {
+          modifyMaterial(material);
+        }
+      });
+    }
   };
 
   return (

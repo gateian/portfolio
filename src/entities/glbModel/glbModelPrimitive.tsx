@@ -4,10 +4,11 @@ import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 export interface GlbOnLoadedData {
-  glbModel: Group<Object3DEventMap>;
-  materials: {
+  glbModel?: Group<Object3DEventMap>;
+  materials?: {
     [name: string]: Material;
   };
+  loading: boolean;
 }
 
 export interface GlbModelProps
@@ -37,7 +38,7 @@ const GlbModelPrimitive = (props: GlbModelPrimitiveProps) => {
 
   return (
     <>
-      {glbModel ? (
+      {glbModel?.glbModel ? (
         <primitive
           object={glbModel.glbModel}
           position={position}

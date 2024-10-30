@@ -6,7 +6,6 @@ import {
   GlbModelSettings,
   GlbOnLoadedData,
 } from "../../entities/glbModel/glbModelPrimitive";
-import { Group } from "three";
 import { OrbitCameraSettingsProps } from "../../components/CameraMode/CameraMode.types";
 
 export interface SubPageProps {
@@ -18,6 +17,7 @@ export interface SubPageProps {
   glbModelSettings?: GlbModelSettings;
   onGlbLoadedData?: (data: GlbOnLoadedData) => void;
   cameraSettings?: OrbitCameraSettingsProps;
+  gltfMaterialsProcessed?: boolean;
 }
 
 const SubPage = (props: SubPageProps) => {
@@ -44,8 +44,9 @@ const SubPage = (props: SubPageProps) => {
     const model = glbModels.get(location.pathname);
 
     const updatedModel: GlbModelProps = {
-      glbModel: model?.glbModel ?? new Group(),
-      materials: model?.materials ?? {},
+      glbModel: model?.glbModel,
+      materials: model?.materials,
+      loading: model?.loading ?? false,
       onGlbLoadedData: props.onGlbLoadedData,
       ...props.glbModelSettings,
     };
