@@ -1,9 +1,9 @@
-import { useLocation } from "react-router-dom";
-import GlbModel, { GlbOnLoadedData } from "../glbModel/glbModel";
-import { Color, DoubleSide, Material, MeshPhysicalMaterial } from "three";
-import { useCallback, useState } from "react";
+import GlbModelPrimitive, {
+  GlbOnLoadedData,
+} from "../glbModel/glbModelPrimitive";
+import { Color, DoubleSide, MeshPhysicalMaterial } from "three";
+import { useCallback } from "react";
 import { useAppState } from "../../hooks/useAppState";
-import { useFrame } from "@react-three/fiber";
 
 const glassMaterials = [
   "AV8B-glass",
@@ -14,10 +14,9 @@ const glassMaterials = [
 ];
 
 const HarrierCockpit = () => {
-  const location = useLocation();
+  //const [materials, setMaterials] = useState<{ [name: string]: Material }>({});
 
-  const [materials, setMaterials] = useState<{ [name: string]: Material }>({});
-
+  // const { scene: glbModel, materials } = useGLTF("/3d/HarrierPortfolioExport.glb");
   const { environmentMap } = useAppState();
 
   const modifyMaterial = useCallback(
@@ -53,7 +52,8 @@ const HarrierCockpit = () => {
   );
 
   const onLoadedHandler = (data: GlbOnLoadedData) => {
-    setMaterials(data.materials);
+    console.log("HarrierCockpit loaded");
+    //setMaterials(data.materials);
     Object.values(data.materials).forEach((material) => {
       if (material instanceof MeshPhysicalMaterial) {
         modifyMaterial(material);
@@ -61,31 +61,39 @@ const HarrierCockpit = () => {
     });
   };
 
-  useFrame(() => {
-    if (materials["AV8B-glass"]) {
-      const matGlass = materials["AV8B-glass"] as MeshPhysicalMaterial;
-      matGlass.opacity = 1.0;
-      matGlass.transmission = 0.9;
-    }
+  // useEffect(() => {
+  //   if (glbModel && materials) {
+  //     onLoadedHandler({ glbModel, materials });
+  //   }
+  // }, [glbModel, materials]);
 
-    if (materials["Mirror"]) {
-      const mirror = materials["Mirror"] as MeshPhysicalMaterial;
-      mirror.color = new Color(0xffffff);
-      mirror.metalness = 1;
-      mirror.envMap = environmentMap;
-      mirror.roughness = 0.05;
-      mirror.roughnessMap = mirror.map;
-    }
-  });
+  // useFrame(() => {
+  //   if (materials["AV8B-glass"]) {
+  //     const matGlass = materials["AV8B-glass"] as MeshPhysicalMaterial;
+  //     matGlass.opacity = 1.0;
+  //     matGlass.transmission = 0.9;
+  //   }
+
+  //   if (materials["Mirror"]) {
+  //     const mirror = materials["Mirror"] as MeshPhysicalMaterial;
+  //     mirror.color = new Color(0xffffff);
+  //     mirror.metalness = 1;
+  //     mirror.envMap = environmentMap;
+  //     mirror.roughness = 0.05;
+  //     mirror.roughnessMap = mirror.map;
+  //   }
+  // });
+
+  console.log("HarrierCockpit");
 
   return (
-    <GlbModel
-      url={"/3d/HarrierPortfolioExport.glb"}
+    <GlbModelPrimitive
       position={[0, 0, -40]}
-      rotation={[0, Math.PI, 0]}
       scale={[10, 10, 10]}
-      visible={location.pathname == "/combat"}
-      onloaded={onLoadedHandler}
+      rotation={[0, Math.PI, 0]}
+      castShadow={true}
+      receiveShadow={true}
+      visible={true}
     />
   );
 };

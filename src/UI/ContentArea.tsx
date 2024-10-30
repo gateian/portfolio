@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import React, { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
-import CombatPage from "./pages/combat/combatPage";
+import HarrierPage from "./pages/harrier/harrierPage";
 import CVMain from "./pages/CV/CVMain";
 import HomePage from "./pages/home/homePage";
 import QueensPage from "./pages/queens/queensPage";
@@ -47,7 +47,7 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
               content = <QueensPage />;
               break;
             case "/combat":
-              content = <CombatPage />;
+              content = <HarrierPage />;
               break;
             case "/":
             default:

@@ -1,10 +1,11 @@
 import { createContext, useState, ReactNode } from "react";
-import { Group, Object3DEventMap, Texture, Vector3 } from "three";
+import { Texture, Vector3 } from "three";
 import { MapMarkerDefinition } from "./entities/mapMarker/MapMarker.types";
 import {
   CameraModes,
   OrbitCameraSettingsProps,
 } from "./components/CameraMode/CameraMode.types";
+import { GlbModelProps } from "./entities/glbModel/glbModelPrimitive";
 
 type AppState = {
   selectedObject: number;
@@ -21,8 +22,8 @@ type AppState = {
   setMapMarkers: (value: MapMarkerDefinition[]) => void;
   cameraSettings: OrbitCameraSettingsProps;
   setCameraSettings: (value: OrbitCameraSettingsProps) => void;
-  glbModels: Map<string, Group<Object3DEventMap>>;
-  setGlbModels: (value: Map<string, Group<Object3DEventMap>>) => void;
+  glbModels: Map<string, GlbModelProps>;
+  setGlbModels: (value: Map<string, GlbModelProps>) => void;
 };
 
 const StateContext = createContext<AppState | undefined>(undefined);
@@ -43,7 +44,7 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
       minDistance: 50,
     });
   const [glbModels, setGlbModels] = useState<
-    Map<string, Group<Object3DEventMap>>
+    Map<string, GlbModelProps>
   >(new Map());
 
   return (

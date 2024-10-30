@@ -1,7 +1,9 @@
 import { useCallback } from "react";
 import { Color, MeshPhysicalMaterial } from "three";
 import { useAppState } from "../../hooks/useAppState";
-import GlbModel, { GlbOnLoadedData } from "../glbModel/glbModel";
+import GlbModelPrimitive, {
+  GlbOnLoadedData,
+} from "../glbModel/glbModelPrimitive";
 import { useLocation } from "react-router-dom";
 
 const QueensUniversity = () => {
@@ -43,9 +45,7 @@ const QueensUniversity = () => {
   return (
     <>
       {environmentMap ? (
-        <GlbModel
-          url="/3d/QueensUniversity.glb"
-          onloaded={onLoadedHandler}
+        <GlbModelPrimitive
           position={[0, 0, -40]}
           rotation={[0, Math.PI * 0.5, 0]}
           scale={[1, 1, 1]}
