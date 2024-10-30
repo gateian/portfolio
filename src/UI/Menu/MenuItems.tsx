@@ -3,7 +3,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import QueensIcon from "@mui/icons-material/School";
 import HarrierCockpitIcon from "@mui/icons-material/ConnectingAirports";
 import TerrainIcon from "@mui/icons-material/Landscape";
-import CVIcon from "@mui/icons-material/Description";
 
 const MenuItems = [
   {
@@ -12,13 +11,6 @@ const MenuItems = [
     label: "Home",
     icon: <HomeIcon />,
     route: "/",
-  },
-  {
-    id: MenuOptions.CV,
-    title: "CV / Resume",
-    label: "CV",
-    icon: <CVIcon />,
-    route: "/cv",
   },
   {
     id: MenuOptions.Terrain,
