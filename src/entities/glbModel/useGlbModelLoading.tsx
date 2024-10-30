@@ -32,9 +32,11 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
 
       if (existingGlbModel) {
         existingGlbModel.glbModel = glbModel;
+        existingGlbModel.materials = materials;
         setGlbModels(
           new Map(glbModels).set(location.pathname, existingGlbModel)
         );
+        existingGlbModel.onGlbLoadedData?.({ glbModel, materials });
       } else {
         const newGlbModel = { glbModel, materials };
         setGlbModels(new Map(glbModels).set(location.pathname, newGlbModel));

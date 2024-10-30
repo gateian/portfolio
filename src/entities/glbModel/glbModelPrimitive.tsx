@@ -21,6 +21,7 @@ interface GlbModelPrimitiveProps {
   castShadow?: boolean;
   receiveShadow?: boolean;
   visible?: boolean;
+  onGlbLoadedData?: (data: GlbOnLoadedData) => void;
 }
 
 export interface GlbModelSettings extends GlbModelPrimitiveProps {}
