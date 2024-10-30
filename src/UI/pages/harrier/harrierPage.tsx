@@ -1,10 +1,13 @@
 import SubPage from "../../SubPage/SubPage";
-import { Color, DoubleSide, MeshPhysicalMaterial, Vector3 } from "three";
-import { CameraModes } from "../../../components/CameraMode/CameraMode.types";
 import {
-  GlbModelSettings,
-  GlbOnLoadedData,
-} from "../../../entities/glbModel/glbModelPrimitive";
+  Color,
+  DoubleSide,
+  Material,
+  MeshPhysicalMaterial,
+  Vector3,
+} from "three";
+import { CameraModes } from "../../../components/CameraMode/CameraMode.types";
+import { GlbModelSettings } from "../../../entities/glbModel/glbModelPrimitive";
 import { useCallback } from "react";
 import { useAppState } from "../../../hooks/useAppState";
 
@@ -31,55 +34,47 @@ const HarrierPage = () => {
     target: new Vector3(0, 2.5, 0),
   };
 
-  const glassMaterials = [
-    "AV8B-glass",
-    "GLASS",
-    "HUD_GLASS",
-    "HUD_PROJECTOR_GLASS",
-    "HUD_GLASS_BACK",
-  ];
+  const handleMaterialReady = useCallback(
+    (material: Material) => {
+      const updateMaterial = material as MeshPhysicalMaterial;
 
-  const modifyMaterial = useCallback(
-    (material: MeshPhysicalMaterial) => {
-      if (glassMaterials.includes(material.name)) {
-        material.color = new Color(0xffffff);
-        material.transmission = 1;
-
-        material.metalness = 0;
-        material.roughness = 0.1;
-        material.roughnessMap = material.map;
-        material.ior = 1.5;
-        material.thickness = 0.02;
-        material.specularIntensity = 0.5;
-        material.specularColor = new Color(0xffffff);
-        material.envMap = environmentMap;
-        material.envMapIntensity = 0.2;
-        material.opacity = 0.5;
+      if (
+        [
+          "AV8B-glass",
+          "GLASS",
+          "HUD_GLASS",
+          "HUD_PROJECTOR_GLASS",
+          "HUD_GLASS_BACK",
+        ].includes(material.name)
+      ) {
+        updateMaterial.color = new Color(0xffffff);
+        updateMaterial.transmission = 1;
+        updateMaterial.metalness = 0;
+        updateMaterial.roughness = 0.1;
+        updateMaterial.roughnessMap = updateMaterial.map;
+        updateMaterial.ior = 1.5;
+        updateMaterial.thickness = 0.02;
+        updateMaterial.specularIntensity = 0.5;
+        updateMaterial.specularColor = new Color(0xffffff);
+        updateMaterial.envMapIntensity = 0.2;
+        updateMaterial.opacity = 0.5;
       } else {
-        material.metalness = 0.8;
-        material.roughness = 0.6;
-        material.specularIntensity = 0.0;
-        material.specularColor = new Color(0xffffff);
-        material.envMap = environmentMap;
-        material.envMapIntensity = 0.5;
+        updateMaterial.metalness = 0.8;
+        updateMaterial.roughness = 0.6;
+        updateMaterial.specularIntensity = 0.0;
+        updateMaterial.specularColor = new Color(0xffffff);
+        updateMaterial.envMapIntensity = 0.5;
       }
-      material.aoMapIntensity = 0.5;
-      material.side = DoubleSide;
-      material.depthWrite = true;
-      material.transparent = false;
+
+      updateMaterial.envMap = environmentMap;
+      updateMaterial.aoMapIntensity = 0.5;
+      updateMaterial.depthWrite = true;
+      updateMaterial.transparent = false;
+      updateMaterial.side = DoubleSide;
+      updateMaterial.needsUpdate = true;
     },
     [environmentMap]
   );
-
-  const onLoadedHandler = (data: GlbOnLoadedData) => {
-    if (data.materials) {
-      Object.values(data.materials).forEach((material) => {
-        if (material instanceof MeshPhysicalMaterial) {
-          modifyMaterial(material);
-        }
-      });
-    }
-  };
 
   return (
     <SubPage
@@ -87,8 +82,8 @@ const HarrierPage = () => {
       objectIndex={1}
       modelView
       glbModelSettings={glbModelSettings}
-      onGlbLoadedData={onLoadedHandler}
       cameraSettings={cameraSettings}
+      onMaterialReady={handleMaterialReady}
     />
   );
 };

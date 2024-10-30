@@ -7,6 +7,7 @@ import {
   GlbOnLoadedData,
 } from "../../entities/glbModel/glbModelPrimitive";
 import { OrbitCameraSettingsProps } from "../../components/CameraMode/CameraMode.types";
+import { Material } from "three";
 
 export interface SubPageProps {
   title: string;
@@ -16,6 +17,7 @@ export interface SubPageProps {
   expand?: boolean;
   glbModelSettings?: GlbModelSettings;
   onGlbLoadedData?: (data: GlbOnLoadedData) => void;
+  onMaterialReady?: (material: Material) => void;
   cameraSettings?: OrbitCameraSettingsProps;
   gltfMaterialsProcessed?: boolean;
 }
@@ -48,17 +50,24 @@ const SubPage = (props: SubPageProps) => {
       materials: model?.materials,
       loading: model?.loading ?? false,
       onGlbLoadedData: props.onGlbLoadedData,
+      onMaterialReady: props.onMaterialReady,
       ...props.glbModelSettings,
     };
 
     setGlbModels(new Map(glbModels).set(location.pathname, updatedModel));
-  }, [setGlbModels, location.pathname]);
+  }, [
+    setGlbModels,
+    glbModels,
+    props.glbModelSettings,
+    props.onGlbLoadedData,
+    props.onMaterialReady,
+  ]);
 
   useEffect(() => {
     if (props.cameraSettings) {
       setCameraSettings(props.cameraSettings);
     }
-  }, [setCameraSettings]);
+  }, [setCameraSettings, props.cameraSettings]);
 
   return (
     <>

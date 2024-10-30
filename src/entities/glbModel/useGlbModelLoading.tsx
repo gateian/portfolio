@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useAppState } from "../../hooks/useAppState";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
-import { Group, Material } from "three";
+import { Group, Material, Object3D } from "three";
 import { GlbModelProps, GlbOnLoadedData } from "./glbModelPrimitive";
 
 interface ModelUrls {
@@ -31,9 +31,9 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
   const processAndStoreModel = useCallback(
     (path: string, model: Group, existingGlbModel: GlbModelProps) => {
       const preloadedMaterials: { [key: string]: Material } = {};
-      model.traverse((child: any) => {
-        if (child.material) {
-          preloadedMaterials[child.material.name] = child.material;
+      model.traverse((object: Object3D) => {
+        if ("material" in object && object.material instanceof Material) {
+          preloadedMaterials[object.material.name] = object.material;
         }
       });
 
@@ -81,23 +81,16 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
 
           onCompleteCallback?.();
         },
-        undefined, // onProgress callback
+        undefined,
         (error) => {
           console.error(`Error preloading model for path ${path}:`, error);
         }
       );
     },
-    [processAndStoreModel, glbModels]
+    [processAndStoreModel, glbModels, props.modelUrls]
   );
 
-  // loading primary model first
-  useEffect(() => {
-    loadingModel(location.pathname, () => {
-      preloadOtherModels();
-    });
-  }, [location.pathname]);
-
-  const preloadOtherModels = () => {
+  const preloadOtherModels = useCallback(() => {
     const otherPaths = Object.entries(props.modelUrls).filter(
       ([path]) => path !== location.pathname
     );
@@ -105,7 +98,14 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
     otherPaths.forEach(([path]) => {
       loadingModel(path);
     });
-  };
+  }, [props.modelUrls, location.pathname, loadingModel]);
+
+  // loading primary model first
+  useEffect(() => {
+    loadingModel(location.pathname, () => {
+      preloadOtherModels();
+    });
+  }, [location.pathname, loadingModel, preloadOtherModels]);
 
   return { isLoading: false };
 };

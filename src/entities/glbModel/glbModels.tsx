@@ -2,7 +2,7 @@ import { useAppState } from "../../hooks/useAppState";
 import GlbModelPrimitive from "./glbModelPrimitive";
 import useGlbModelLoading from "./useGlbModelLoading";
 
-export const MODEL_URLS = {
+const MODEL_URLS = {
   "/combat": "/3d/HarrierPortfolioExport.glb",
   "/queens": "/3d/QueensUniversity.glb",
 };
@@ -18,11 +18,13 @@ const GlbModels = () => {
         return (
           <GlbModelPrimitive
             key={key}
+            name={key}
             position={value.position}
             scale={value.scale}
             rotation={value.rotation}
             castShadow={value.castShadow}
             receiveShadow={value.receiveShadow}
+            onMaterialReady={value.onMaterialReady}
             visible={value.visible}
           />
         );
