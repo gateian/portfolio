@@ -27,7 +27,6 @@ const SubPage = (props: SubPageProps) => {
     subPageDialogId,
     setSubPageDialogId,
     mapMarkers,
-    glbModels,
     setGlbModels,
     setCameraSettings,
   } = useAppState();
@@ -43,21 +42,24 @@ const SubPage = (props: SubPageProps) => {
   }, [mapMarkers, setSubPageDialogId]);
 
   useEffect(() => {
-    const model = glbModels.get(location.pathname);
+    setGlbModels(((prevModels: Map<string, GlbModelProps>) => {
+      const model = prevModels.get(location.pathname);
 
-    const updatedModel: GlbModelProps = {
-      glbModel: model?.glbModel,
-      materials: model?.materials,
-      loading: model?.loading ?? false,
-      onGlbLoadedData: props.onGlbLoadedData,
-      onMaterialReady: props.onMaterialReady,
-      ...props.glbModelSettings,
-    };
+      const updatedModel: GlbModelProps = {
+        glbModel: model?.glbModel,
+        materials: model?.materials,
+        loading: model?.loading ?? false,
+        onGlbLoadedData: props.onGlbLoadedData,
+        onMaterialReady: props.onMaterialReady,
+        ...props.glbModelSettings,
+      };
 
-    setGlbModels(new Map(glbModels).set(location.pathname, updatedModel));
+      const newModels = new Map(prevModels);
+      newModels.set(location.pathname, updatedModel);
+      return newModels;
+    }) as unknown as Map<string, GlbModelProps>);
   }, [
     setGlbModels,
-    glbModels,
     props.glbModelSettings,
     props.onGlbLoadedData,
     props.onMaterialReady,
@@ -67,7 +69,7 @@ const SubPage = (props: SubPageProps) => {
     if (props.cameraSettings) {
       setCameraSettings(props.cameraSettings);
     }
-  }, [setCameraSettings, props.cameraSettings]);
+  }, [props.cameraSettings, setCameraSettings]);
 
   return (
     <>

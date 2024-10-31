@@ -43,9 +43,9 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
       maxDistance: 700,
       minDistance: 50,
     });
-  const [glbModels, setGlbModels] = useState<
-    Map<string, GlbModelProps>
-  >(new Map());
+  const [glbModels, setGlbModels] = useState<Map<string, GlbModelProps>>(
+    new Map()
+  );
 
   return (
     <StateContext.Provider
