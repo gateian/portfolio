@@ -63,9 +63,9 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
       setLoadingModels((prev) => [...prev, path]);
 
       let existingGlbModel = glbModels.get(path);
-      if (existingGlbModel?.loading || existingGlbModel?.glbModel) {
-        return;
-      }
+      // if (existingGlbModel?.loading || existingGlbModel?.glbModel) {
+      //   return;
+      // }
 
       if (!preLoad) {
         setModelsLoading(true);
