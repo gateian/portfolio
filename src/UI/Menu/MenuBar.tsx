@@ -2,13 +2,15 @@ import { MenuBarWrapper } from "./MenuBar.style";
 import MenuBarButton from "./MenuBarButton";
 import { useLocation, useNavigate } from "react-router-dom";
 import MenuItems from "./MenuItems";
+import { isDebugMode } from "../../utils/generalUtils";
 
 const MenuBar = () => {
-
   const navigate = useNavigate();
 
   const handleMenuItemClick = (itemIdx: number) => {
-    navigate(MenuItems[itemIdx]?.route || "/");
+    const route = MenuItems[itemIdx]?.route || "/";
+    const params = isDebugMode() ? "?debug=true" : "";
+    navigate(`${route}${params}`);
   };
 
   const location = useLocation();
