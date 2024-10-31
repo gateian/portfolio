@@ -1,10 +1,7 @@
 import SubPage from "../../SubPage/SubPage";
 import { Color, Material, MeshPhysicalMaterial, Vector3 } from "three";
 import { CameraModes } from "../../../components/CameraMode/CameraMode.types";
-import {
-  GlbModelSettings,
-  GlbOnLoadedData,
-} from "../../../entities/glbModel/glbModelPrimitive";
+import { GlbModelSettings } from "../../../entities/glbModel/glbModelPrimitive";
 import { useAppState } from "../../../hooks/useAppState";
 import { useCallback, useMemo } from "react";
 

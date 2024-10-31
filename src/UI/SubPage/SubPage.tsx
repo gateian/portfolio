@@ -46,12 +46,12 @@ const SubPage = (props: SubPageProps) => {
       const model = prevModels.get(location.pathname);
 
       const updatedModel: GlbModelProps = {
+        ...props.glbModelSettings,
         glbModel: model?.glbModel,
         materials: model?.materials,
         loading: model?.loading ?? false,
         onGlbLoadedData: props.onGlbLoadedData,
         onMaterialReady: props.onMaterialReady,
-        ...props.glbModelSettings,
       };
 
       const newModels = new Map(prevModels);

@@ -125,8 +125,6 @@ const MotionPathCamera = () => {
   const cameraRef = useRef<PerspectiveCameraType>(null);
   const [progress, setProgress] = useState(0);
 
-  // Create the complete path
-
   useFrame((_state, delta) => {
     // Increment progress (adjust speed by changing the delta multiplier)
     setProgress((prev) => (prev + delta * 0.05) % 3); // 4 is the number of curves

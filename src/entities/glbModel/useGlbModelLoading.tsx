@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAppState } from "../../hooks/useAppState";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -25,7 +25,7 @@ loader.setDRACOLoader(dracoLoader);
 
 const useGlbModelLoading = (props: glbModelLoadingProps) => {
   const location = useLocation();
-
+  const [loading, setLoading] = useState(false);
   const { glbModels, setGlbModels } = useAppState();
 
   const processAndStoreModel = useCallback(
@@ -53,10 +53,14 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
   );
 
   const loadingModel = useCallback(
-    (path: string, onCompleteCallback?: () => void) => {
+    (path: string, preLoad: boolean, onCompleteCallback?: () => void) => {
       let existingGlbModel = glbModels.get(path);
       if (existingGlbModel?.loading || existingGlbModel?.glbModel) {
         return;
+      }
+
+      if (!preLoad) {
+        setLoading(true);
       }
 
       if (existingGlbModel === undefined) {
@@ -77,13 +81,17 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
           processAndStoreModel(path, gltf.scene, existingGlbModel);
 
           existingGlbModel.loading = false;
-          console.log("loaded model");
+          if (!preLoad) {
+            setLoading(false);
+          }
 
           onCompleteCallback?.();
         },
         undefined,
         (error) => {
           console.error(`Error preloading model for path ${path}:`, error);
+          setLoading(false);
+          existingGlbModel.loading = false;
         }
       );
     },
@@ -96,18 +104,18 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
     );
 
     otherPaths.forEach(([path]) => {
-      loadingModel(path);
+      loadingModel(path, true);
     });
   }, [props.modelUrls, location.pathname, loadingModel]);
 
   // loading primary model first
   useEffect(() => {
-    loadingModel(location.pathname, () => {
+    loadingModel(location.pathname, false, () => {
       preloadOtherModels();
     });
   }, [location.pathname, loadingModel, preloadOtherModels]);
 
-  return { isLoading: false };
+  return { isLoading: loading };
 };
 
 export default useGlbModelLoading;

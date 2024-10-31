@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { useAppState } from "../../hooks/useAppState";
 import GlbModelPrimitive from "./glbModelPrimitive";
 import useGlbModelLoading from "./useGlbModelLoading";
@@ -9,27 +10,36 @@ const MODEL_URLS = {
 
 const GlbModels = () => {
   const { glbModels } = useAppState();
-
+  const location = useLocation();
   useGlbModelLoading({ modelUrls: MODEL_URLS });
 
+  const glbModelProps = glbModels.get(location.pathname) || {};
+  const {
+    glbModel,
+    position,
+    scale,
+    rotation,
+    castShadow,
+    receiveShadow,
+    onMaterialReady,
+    visible,
+  } = glbModelProps;
+
+  if (!glbModel) {
+    return null;
+  }
+
   return (
-    <>
-      {Array.from(glbModels.entries()).map(([key, value]) => {
-        return (
-          <GlbModelPrimitive
-            key={key}
-            name={key}
-            position={value.position}
-            scale={value.scale}
-            rotation={value.rotation}
-            castShadow={value.castShadow}
-            receiveShadow={value.receiveShadow}
-            onMaterialReady={value.onMaterialReady}
-            visible={value.visible}
-          />
-        );
-      })}
-    </>
+    <GlbModelPrimitive
+      glbModel={glbModel}
+      position={position}
+      scale={scale}
+      rotation={rotation}
+      castShadow={castShadow}
+      receiveShadow={receiveShadow}
+      onMaterialReady={onMaterialReady}
+      visible={visible}
+    />
   );
 };
 

@@ -10,15 +10,14 @@ export interface GlbOnLoadedData {
   materials?: {
     [name: string]: Material;
   };
-  loading: boolean;
+  loading?: boolean;
 }
 
 export interface GlbModelProps
   extends GlbOnLoadedData,
     GlbModelPrimitiveProps {}
 
-interface GlbModelPrimitiveProps {
-  name?: string;
+interface GlbModelPrimitiveProps extends GlbOnLoadedData {
   position?: [number, number, number];
   scale?: [number, number, number];
   rotation?: [number, number, number];
