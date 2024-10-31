@@ -110,10 +110,16 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
 
   // loading primary model first
   useEffect(() => {
-    loadingModel(location.pathname, false, () => {
+    const url = props.modelUrls[location.pathname];
+
+    if (url) {
+      loadingModel(location.pathname, false, () => {
+        preloadOtherModels();
+      });
+    } else {
       preloadOtherModels();
-    });
-  }, [location.pathname, loadingModel, preloadOtherModels]);
+    }
+  }, [location.pathname, loadingModel, preloadOtherModels, props.modelUrls]);
 
   return { isLoading: loading };
 };
