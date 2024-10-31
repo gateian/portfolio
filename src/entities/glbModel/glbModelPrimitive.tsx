@@ -1,4 +1,4 @@
-import { Group, Material, Object3DEventMap } from "three";
+import { Group, Material, Object3D, Object3DEventMap } from "three";
 import { useAppState } from "../../hooks/useAppState";
 import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -48,10 +48,12 @@ const GlbModelPrimitive = (props: GlbModelPrimitiveProps) => {
   useFrame(() => {
     if ((glbModel?.glbModel && !loaded) || isDebugMode()) {
       setLoaded(true);
-      if (glbModel?.materials) {
-        Object.values(glbModel.materials).forEach((material) => {
-          if (material) {
-            props.onMaterialReady?.(material);
+      if (glbModel?.glbModel) {
+        glbModel.glbModel.traverse((object: Object3D) => {
+          if ("material" in object && object.material instanceof Material) {
+            if (object.material) {
+              props.onMaterialReady?.(object.material);
+            }
           }
         });
       }
