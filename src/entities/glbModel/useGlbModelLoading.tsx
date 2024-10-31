@@ -25,8 +25,10 @@ loader.setDRACOLoader(dracoLoader);
 
 const useGlbModelLoading = (props: glbModelLoadingProps) => {
   const location = useLocation();
-  const [loading, setLoading] = useState(false);
+  const [modelsLoading, setModelsLoading] = useState(false);
   const { glbModels, setGlbModels } = useAppState();
+  const [loadedModels, setLoadedModels] = useState<string[]>([]);
+  const [loadingModels, setLoadingModels] = useState<string[]>([]);
 
   const processAndStoreModel = useCallback(
     (path: string, model: Group, existingGlbModel: GlbModelProps) => {
@@ -54,13 +56,19 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
 
   const loadingModel = useCallback(
     (path: string, preLoad: boolean, onCompleteCallback?: () => void) => {
+      if (loadedModels.includes(path) || loadingModels.includes(path)) {
+        return;
+      }
+
+      setLoadingModels((prev) => [...prev, path]);
+
       let existingGlbModel = glbModels.get(path);
       if (existingGlbModel?.loading || existingGlbModel?.glbModel) {
         return;
       }
 
       if (!preLoad) {
-        setLoading(true);
+        setModelsLoading(true);
       }
 
       if (existingGlbModel === undefined) {
@@ -82,20 +90,31 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
 
           existingGlbModel.loading = false;
           if (!preLoad) {
-            setLoading(false);
+            setModelsLoading(false);
           }
+
+          setLoadedModels((prev) => [...prev, path]);
+          setLoadingModels((prev) =>
+            prev.filter((loadingPath) => loadingPath !== path)
+          );
 
           onCompleteCallback?.();
         },
         undefined,
         (error) => {
           console.error(`Error preloading model for path ${path}:`, error);
-          setLoading(false);
+          setModelsLoading(false);
           existingGlbModel.loading = false;
         }
       );
     },
-    [processAndStoreModel, glbModels, props.modelUrls]
+    [
+      processAndStoreModel,
+      glbModels,
+      props.modelUrls,
+      loadedModels,
+      loadingModels,
+    ]
   );
 
   const preloadOtherModels = useCallback(() => {
@@ -104,12 +123,17 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
     );
 
     otherPaths.forEach(([path]) => {
-      loadingModel(path, true);
+      const existingGlbModel = glbModels.get(path);
+      if (!existingGlbModel) {
+        loadingModel(path, true);
+      }
     });
-  }, [props.modelUrls, location.pathname, loadingModel]);
+  }, [props.modelUrls, location.pathname, loadingModel, glbModels]);
 
   // loading primary model first
   useEffect(() => {
+    // if we have a model for the current page then we load it
+    // as the primary model, otherwise we preload all other models
     const url = props.modelUrls[location.pathname];
 
     if (url) {
@@ -121,7 +145,7 @@ const useGlbModelLoading = (props: glbModelLoadingProps) => {
     }
   }, [location.pathname, loadingModel, preloadOtherModels, props.modelUrls]);
 
-  return { isLoading: loading };
+  return { isLoading: modelsLoading };
 };
 
 export default useGlbModelLoading;
