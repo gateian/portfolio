@@ -6,6 +6,7 @@ import CVMain from "./pages/CV/CVMain";
 import HomePage from "./pages/home/homePage";
 import QueensPage from "./pages/queens/queensPage";
 import TerrainPage from "./pages/terrain/terrainPage";
+import CVArtMain from "./pages/CV/CVArtMain";
 
 const ContentWrapper = styled.div({
   width: "100vw",
@@ -39,6 +40,9 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
           switch (location.pathname) {
             case "/cv":
               content = <CVMain />;
+              break;
+              case "/cvart":
+              content = <CVArtMain />;
               break;
             case "/terrain":
               content = <TerrainPage />;
