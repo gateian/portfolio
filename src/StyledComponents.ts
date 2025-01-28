@@ -16,6 +16,7 @@ const Overlay = styled.div({
   bottom: 0,
   width: '100%',
   height: '100%',
+  minHeight: '450px',
   pointerEvents: 'none',
   display: 'flex',
   flexDirection: 'column',
@@ -25,6 +26,7 @@ const Overlay = styled.div({
   backgroundImage:
     'radial-gradient(rgba(0.0, 0.0, 0.0, 0.05) 1px, transparent 0)',
   backgroundSize: '4px 4px',
+  overflow: 'auto',
 });
 
 interface HeroBannerProps {
