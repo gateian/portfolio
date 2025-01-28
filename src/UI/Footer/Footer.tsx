@@ -8,28 +8,71 @@ import {
   AttributionText,
   SocialContainer,
   ContactButton,
-  EmailText,
   SocialLink,
 } from './Footer.style';
 import ToastNotification from '../Toast/ToastNotifcation';
+import EmailModal from '../Modal/Modal';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
-  const [showEmail, setShowEmail] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
   const handleContactClick = () => {
-    setShowEmail(!showEmail);
+    setShowModal(true);
   };
 
   const email = 'ihamblin@gmail.com';
 
-  const handleCopyEmail = async () => {
+  const copyToClipboard = async (text: string) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (err) {
+        console.error('Clipboard API failed:', err);
+      }
+    }
+
+    // Fallback for older browsers and mobile devices
     try {
-      await navigator.clipboard.writeText(email);
-      setShowToast(true);
+      // Create temporary textarea
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+
+      // Make it invisible
+      textArea.style.position = 'fixed';
+      textArea.style.top = '0';
+      textArea.style.left = '0';
+      textArea.style.width = '2em';
+      textArea.style.height = '2em';
+      textArea.style.padding = '0';
+      textArea.style.border = 'none';
+      textArea.style.outline = 'none';
+      textArea.style.boxShadow = 'none';
+      textArea.style.background = 'transparent';
+
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      // Try to copy using the older command
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+
+      return successful;
     } catch (err) {
-      console.error('Failed to copy email:', err);
+      console.error('Fallback clipboard method failed:', err);
+      return false;
+    }
+  };
+
+  const handleCopyEmail = async () => {
+    const success = await copyToClipboard(email);
+    if (success) {
+      setShowToast(true);
+    } else {
+      alert('Could not copy email. Please copy it manually: ' + email);
     }
   };
 
@@ -55,16 +98,7 @@ function Footer() {
             <ContactButton onClick={handleContactClick}>
               Contact Me
             </ContactButton>
-            {showEmail && (
-              <>
-                <EmailText onClick={handleCopyEmail}>{email}</EmailText>
-                <ToastNotification
-                  message="Email copied to clipboard!"
-                  visible={showToast}
-                  onHide={() => setShowToast(false)}
-                />
-              </>
-            )}
+
             <SocialLink
               href="https://github.com/gateian"
               target="_blank"
@@ -82,6 +116,20 @@ function Footer() {
           </SocialContainer>
         </FlexContainer>
       </FooterContent>
+
+      {showModal && (
+        <EmailModal
+          email={email}
+          onClose={() => setShowModal(false)}
+          onCopy={handleCopyEmail}
+        />
+      )}
+
+      <ToastNotification
+        message="Email copied to clipboard!"
+        visible={showToast}
+        onHide={() => setShowToast(false)}
+      />
     </FooterContainer>
   );
 }

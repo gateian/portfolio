@@ -15,9 +15,7 @@ const ToastNotification: React.FC<ToastNotificationProps> = ({
   onHide,
 }) => {
   useEffect(() => {
-    if (!visible) {
-      return undefined; // Explicit return for the else case
-    }
+    if (!visible) return;
 
     const timer = setTimeout(() => {
       onHide();
@@ -26,7 +24,12 @@ const ToastNotification: React.FC<ToastNotificationProps> = ({
     return () => clearTimeout(timer);
   }, [visible, duration, onHide]);
 
-  return <ToastContainer visible={visible}>{message}</ToastContainer>;
+  // Force the component to always render, but control visibility with CSS
+  return (
+    <ToastContainer visible={visible} aria-live="polite">
+      {message}
+    </ToastContainer>
+  );
 };
 
 export default ToastNotification;

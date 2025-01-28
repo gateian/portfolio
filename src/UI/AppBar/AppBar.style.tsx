@@ -8,7 +8,26 @@ export const AppBarWrapper = styled('div')({
   bottom: '5rem',
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
   display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'nowrap',
   color: 'white',
+  '@media (max-width: 650px)': {
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  '> *:last-child': {
+    '@media (max-width: 450px)': {
+      width: '100%',
+      marginTop: '1rem',
+    },
+  },
+  '> *:not(:last-child)': {
+    '@media (max-width: 400px)': {
+      flex: '0 0 calc(20% - 1rem)',
+      marginRight: '0.1rem',
+      marginBottom: '0.1rem',
+    },
+  },
 });
 
 interface AppBarButtonProps {
@@ -32,8 +51,8 @@ export const AppBarButtonWrapper = styled('div')<AppBarButtonProps>(
     backgroundColor: '#ddd',
     pointerEvents: props.selected ? 'none' : 'auto',
     '& svg': {
-      width: '40px',
-      height: '40px',
+      width: '30px',
+      height: '30px',
       marginBottom: '0.1rem',
     },
     '&:hover': {
@@ -59,8 +78,8 @@ export const AppBarIconWrapper = styled('div')({
   backgroundColor: 'transparent',
   pointerEvents: 'none',
   '& svg': {
-    width: '40px',
-    height: '40px',
+    width: '30px',
+    height: '30px',
     marginBottom: '0.1rem',
   },
 });
