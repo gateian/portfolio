@@ -5,7 +5,7 @@ export const AppBarWrapper = styled("div")({
   zIndex: 100,
   pointerEvents: "auto",
   position: "absolute",
-  bottom: "3rem",
+  bottom: "5rem",
   backgroundColor: "rgba(0, 0, 0, 0.1)",
   display: "flex",
   color: "white",

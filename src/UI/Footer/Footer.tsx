@@ -43,7 +43,12 @@ const Footer = () => {
 
           <AttributionSection>
             <span>Built with:</span>
-            <AttributionText>React • Emotion • Typescript</AttributionText>
+            <AttributionText>
+              React • Emotion • Typescript • Icons by{" "}
+              <a target="_blank" href="https://icons8.com">
+                Icons8
+              </a>
+            </AttributionText>
           </AttributionSection>
 
           <SocialContainer>

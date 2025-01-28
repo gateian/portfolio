@@ -1,171 +1,180 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/mountains.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&family=Kulim+Park:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/mountains.svg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&family=Kulim+Park:wght@700&display=swap"
-    rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+    <!-- Start Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
+      // This script checks to see if a redirect is present in the query string,
+      // converts it back into the correct url and adds it to the
+      // browser's history using window.history.replaceState(...),
+      // which won't cause the browser to attempt to load the new url.
+      // When the single page app is loaded further down in this file,
+      // the correct url will be waiting in the browser's history for
+      // the single page app to route accordingly.
+      (function (l) {
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      })(window.location);
+    </script>
+    <!-- End Single Page Apps for GitHub Pages -->
 
-  <!-- Start Single Page Apps for GitHub Pages -->
-  <script type="text/javascript">
-    // Single Page Apps for GitHub Pages
-    // MIT License
-    // https://github.com/rafgraph/spa-github-pages
-    // This script checks to see if a redirect is present in the query string,
-    // converts it back into the correct url and adds it to the
-    // browser's history using window.history.replaceState(...),
-    // which won't cause the browser to attempt to load the new url.
-    // When the single page app is loaded further down in this file,
-    // the correct url will be waiting in the browser's history for
-    // the single page app to route accordingly.
-    (function (l) {
-      if (l.search[1] === '/') {
-        var decoded = l.search.slice(1).split('&').map(function (s) {
-          return s.replace(/~and~/g, '&')
-        }).join('?');
-        window.history.replaceState(null, null,
-          l.pathname.slice(0, -1) + decoded + l.hash
-        );
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ian Hamblin Portfolio</title>
+
+    <style>
+      @font-face {
+        font-family: "Zuume";
+        src: url("/fonts/Zuume-Regular.woff2") format("woff2"),
+          url("/fonts/Zuume-Regular.woff") format("woff"),
+          url("/fonts/ZuumeRegular.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap; /* This helps with font loading performance */
       }
-    }(window.location))
-  </script>
-  <!-- End Single Page Apps for GitHub Pages -->
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ian Hamblin Portfolio</title>
-
-  <style>
-    @font-face {
-      font-family: 'Zuume';
-      src: url('/fonts/Zuume-Regular.woff2') format('woff2'),
-          url('/fonts/Zuume-Regular.woff') format('woff'),
-          url('/fonts/ZuumeRegular.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap; /* This helps with font loading performance */
-    }
-    @font-face {
-      font-family: 'Zuume';
-      src: url('/fonts/Zuume-ExtraLight.woff2') format('woff2'),
-          url('/fonts/Zuume-ExtraLight.woff') format('woff'),
-          url('/fonts/ZuumeExtraLight.ttf') format('truetype');
-      font-weight: 300;
-      font-style: normal;
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'Zuume';
-      src: url('/fonts/Zuume-ExtraLightItalic.woff2') format('woff2'),
-          url('/fonts/Zuume-ExtraLightItalic.woff') format('woff'),
-          url('/fonts/ZuumeExtraLightItalic.ttf') format('truetype');
-      font-weight: 300;
-      font-style: italic;
-      font-display: swap;
-    }
-    #initial-loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #1a1a1a;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease-out;
-      background-image: url('/images/portfolio_city.webp');
-    }
-
-    #initial-loader.fade-out {
-      opacity: 0;
-    }
-
-    .loader-title {
-      color: white;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      font-family: "kanit", sans-serif;
-    }
-
-    .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #1a1a1a00;
-      border-bottom: 5px solid #1a1a1a00;
-      border-radius: 50%;
-      animation: spin 2s linear infinite;
-    }
-
-    .loading-spinner2 {
-      width: 40px;
-      height: 40px;
-      border: 2px solid #f3f3f3;
-      border-top: 5px solid #1a1a1a00;
-      border-bottom: 5px solid #1a1a1a00;
-      border-radius: 50%;
-      animation: spin-reverse 1s linear infinite;
-      position: relative;
-      top: -55px;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
+      @font-face {
+        font-family: "Zuume";
+        src: url("/fonts/Zuume-ExtraLight.woff2") format("woff2"),
+          url("/fonts/Zuume-ExtraLight.woff") format("woff"),
+          url("/fonts/ZuumeExtraLight.ttf") format("truetype");
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Zuume";
+        src: url("/fonts/Zuume-ExtraLightItalic.woff2") format("woff2"),
+          url("/fonts/Zuume-ExtraLightItalic.woff") format("woff"),
+          url("/fonts/ZuumeExtraLightItalic.ttf") format("truetype");
+        font-weight: 300;
+        font-style: italic;
+        font-display: swap;
+      }
+      #initial-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #1a1a1a;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+        background-image: url("/images/harrier.webp");
       }
 
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes spin-reverse {
-      0% {
-        transform: rotate(0deg);
+      #initial-loader.fade-out {
+        opacity: 0;
       }
 
-      100% {
-        transform: rotate(-360deg);
+      .loader-title {
+        color: white;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        font-family: "kanit", sans-serif;
       }
-    }
 
-    body {
-      font-family: 'Zuume', sans-serif;
-    }
-  </style>
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #1a1a1a00;
+        border-bottom: 5px solid #1a1a1a00;
+        border-radius: 50%;
+        animation: spin 2s linear infinite;
+      }
 
-</head>
+      .loading-spinner2 {
+        width: 40px;
+        height: 40px;
+        border: 2px solid #f3f3f3;
+        border-top: 5px solid #1a1a1a00;
+        border-bottom: 5px solid #1a1a1a00;
+        border-radius: 50%;
+        animation: spin-reverse 1s linear infinite;
+        position: relative;
+        top: -55px;
+      }
 
-<body>
-  <div id="initial-loader">
-    <h1 class="loader-title">Loading</h1>
-    <div class="loading-spinner"></div>
-    <div class="loading-spinner2"></div>
-  </div>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-<script>
-  window.addEventListener('load', () => {
-    const loader = document.getElementById('initial-loader');
-    setTimeout(() => {
-      loader.classList.add('fade-out');
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spin-reverse {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(-360deg);
+        }
+      }
+
+      body {
+        font-family: "Zuume", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="initial-loader">
+      <h1 class="loader-title">Loading</h1>
+      <div class="loading-spinner"></div>
+      <div class="loading-spinner2"></div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+  <script>
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("initial-loader");
       setTimeout(() => {
-        loader.style.display = 'none';
-      }, 500);
-    }, 1000);
-  });
-</script>
-
+        loader.classList.add("fade-out");
+        setTimeout(() => {
+          loader.style.display = "none";
+        }, 500);
+      }, 1000);
+    });
+  </script>
 </html>

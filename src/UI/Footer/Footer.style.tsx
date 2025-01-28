@@ -41,6 +41,13 @@ export const AttributionSection = styled.div({
 
 export const AttributionText = styled.span({
   color: "#ddd",
+  "& a": {
+    color: "#fff",
+    textDecoration: "underline",
+    "&:hover": {
+      color: "#ddd",
+    },
+  },
 });
 
 export const SocialContainer = styled.div({
@@ -55,6 +62,7 @@ export const ContactButton = styled.button({
   border: "none",
   cursor: "pointer",
   padding: "0",
+  textDecoration: "underline",
   fontSize: "0.875rem",
   "&:hover": {
     color: "#ddd",
@@ -72,7 +80,7 @@ export const EmailText = styled.div({
 
 export const SocialLink = styled.a({
   color: "white",
-  textDecoration: "none",
+  textDecoration: "underline",
   "&:hover": {
     color: "#ddd",
   },
