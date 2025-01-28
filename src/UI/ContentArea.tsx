@@ -1,11 +1,8 @@
 import styled from '@emotion/styled';
 import React, { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import HarrierPage from './pages/harrier/harrierPage';
 import CVMain from './pages/CV/CVMain';
 import HomePage from './pages/home/homePage';
-import QueensPage from './pages/queens/queensPage';
-import TerrainPage from './pages/terrain/terrainPage';
 import CVArtMain from './pages/CV/CVArtMain';
 
 const ContentWrapper = styled.div({
@@ -43,15 +40,6 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
               break;
             case '/cvart':
               content = <CVArtMain />;
-              break;
-            case '/terrain':
-              content = <TerrainPage />;
-              break;
-            case '/queens':
-              content = <QueensPage />;
-              break;
-            case '/combat':
-              content = <HarrierPage />;
               break;
             case '/':
             default:

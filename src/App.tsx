@@ -100,9 +100,6 @@ function App() {
               </HeroBanner>
               <Routes>
                 <Route path="/" element={<ContentArea />} />
-                <Route path="/combat" element={<ContentArea />} />
-                <Route path="/queens" element={<ContentArea />} />
-                <Route path="/terrain" element={<ContentArea />} />
                 <Route path="/cv" element={<ContentArea />} />
                 <Route path="/cvart" element={<ContentArea />} />
               </Routes>
