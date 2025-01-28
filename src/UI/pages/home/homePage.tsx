@@ -50,7 +50,7 @@ const HomePage = () => {
     };
   }, [navigate, setMapMarkers, setCameraSettings]);
 
-  return <SubPage title="Welcome to my portfolio" modelView />;
+  return ( <div>  </div>);
 };
 
 export default HomePage;

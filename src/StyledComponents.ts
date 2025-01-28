@@ -19,6 +19,10 @@ const Overlay = styled.div({
   flexDirection: "column",
   justifyContent: "flex-start",
   alignItems: "center",
+  background: "transparent",
+  backgroundImage: "radial-gradient(black 1px, transparent 0)",
+  backgroundSize: "4px 4px",
+  backgroundPosition: "-19px -19px",
 });
 
 const HeroBanner = styled.div({
@@ -28,8 +32,7 @@ const HeroBanner = styled.div({
   width: "100%",
   display: "flex",
   pointerEvents: "auto",
-  backdropFilter: "blur(5px)",
-  backgroundColor: "#00000066",
+  marginTop: "50px",
 });
 
 const HeroBannerSideColumn = styled.div({

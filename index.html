@@ -44,6 +44,33 @@
   <title>Ian Hamblin Portfolio</title>
 
   <style>
+    @font-face {
+      font-family: 'Zuume';
+      src: url('/fonts/Zuume-Regular.woff2') format('woff2'),
+          url('/fonts/Zuume-Regular.woff') format('woff'),
+          url('/fonts/ZuumeRegular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap; /* This helps with font loading performance */
+    }
+    @font-face {
+      font-family: 'Zuume';
+      src: url('/fonts/Zuume-ExtraLight.woff2') format('woff2'),
+          url('/fonts/Zuume-ExtraLight.woff') format('woff'),
+          url('/fonts/ZuumeExtraLight.ttf') format('truetype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Zuume';
+      src: url('/fonts/Zuume-ExtraLightItalic.woff2') format('woff2'),
+          url('/fonts/Zuume-ExtraLightItalic.woff') format('woff'),
+          url('/fonts/ZuumeExtraLightItalic.ttf') format('truetype');
+      font-weight: 300;
+      font-style: italic;
+      font-display: swap;
+    }
     #initial-loader {
       position: fixed;
       top: 0;
@@ -111,6 +138,10 @@
       100% {
         transform: rotate(-360deg);
       }
+    }
+
+    body {
+      font-family: 'Zuume', sans-serif;
     }
   </style>
 

@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useAppState } from "../../hooks/useAppState";
-import { PageWrapper } from "./SubPage.style";
 import {
   GlbModelProps,
   GlbModelSettings,
@@ -73,10 +72,6 @@ const SubPage = (props: SubPageProps) => {
 
   return (
     <>
-      <PageWrapper modelView={props.modelView} expanded={props.expand}>
-        <h1>{props.title}</h1>
-        <div>{props.children}</div>
-      </PageWrapper>
       {subPageDialogId >= 0 && mapMarkers[subPageDialogId]?.dialogContent
         ? mapMarkers[subPageDialogId].dialogContent
         : null}

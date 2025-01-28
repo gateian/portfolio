@@ -20,7 +20,7 @@ export const PageWrapper = styled.div<PageWrapperProps>((props) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  borderRadius: "0 0 20px 20px",
+  borderRadius: "0 0",
   fontFamily: '"Kanit", sans-serif',
   fontWeight: 200,
   minHeight: "8vh",
