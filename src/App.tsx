@@ -11,6 +11,7 @@ import { isDebugMode } from "./utils/generalUtils";
 import Debug2D from "./debug/Debug2D";
 import MediaSlideshow from "./components/MediaSlideshow";
 import AppBar from "./UI/AppBar/AppBar";
+import Footer from "./UI/Footer/Footer";
 
 interface AppWrapperProps {
   visible: boolean;
@@ -106,6 +107,7 @@ function App() {
                 <Route path="/cvart" element={<ContentArea />} />
               </Routes>
               <AppBar />
+              <Footer />
             </Overlay>
             {isDebug ? <Debug2D /> : null}
           </AppWrapper>

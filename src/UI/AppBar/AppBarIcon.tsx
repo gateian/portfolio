@@ -1,18 +1,16 @@
-import { AppBarButtonWrapper } from "./AppBar.style";
+import { AppBarIconWrapper } from "./AppBar.style";
 
-interface AppBarButtonProps {
-  onClick: () => void;
+interface AppBarIconProps {
   icon: React.ReactNode;
   label: string;
-  selected?: boolean;
 }
 
-const AppBarIcon = ({ icon, label, onClick, selected }: AppBarButtonProps) => {
+const AppBarIcon = ({ icon, label }: AppBarIconProps) => {
   return (
-    <AppBarButtonWrapper onClick={onClick} selected={selected}>
+    <AppBarIconWrapper>
       <div>{icon}</div>
       <span>{label}</span>
-    </AppBarButtonWrapper>
+    </AppBarIconWrapper>
   );
 };
 
