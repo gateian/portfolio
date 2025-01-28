@@ -1,11 +1,11 @@
-import { shaderMaterial } from "@react-three/drei";
-import * as THREE from "three";
+import { shaderMaterial } from '@react-three/drei';
+import * as THREE from 'three';
 
 export const ColorShiftMaterial = shaderMaterial(
   { time: 0, color: new THREE.Color(0.2, 0.0, 0.1) },
 
   // vertex shader
-  //*glsl*/ `
+  //* glsl*/ `
   //       varying vec2 vUv;
   //       void main() {
   //         vUv = uv;
@@ -23,7 +23,7 @@ export const ColorShiftMaterial = shaderMaterial(
   //       }
   //     `
   // vertex shader
-  /*glsl*/ `
+  /* glsl */ `
   attribute vec3 instancePosition;
   attribute vec4 instanceQuaternion;
   varying vec2 vUv;
@@ -39,7 +39,7 @@ export const ColorShiftMaterial = shaderMaterial(
   }
 `,
   // fragment shader
-  /*glsl*/ `
+  /* glsl */ `
   uniform float time;
   uniform vec3 color;
   varying vec2 vUv;

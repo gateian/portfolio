@@ -1,14 +1,13 @@
-import { useEffect } from "react";
-import { useAppState } from "../../../hooks/useAppState";
-import SubPage from "../../SubPage/SubPage";
-import { useNavigate } from "react-router-dom";
-import { Vector3 } from "three";
-import { MenuOptions } from "../../Menu/Menu.enums";
-import { GetMenuItem } from "../../Menu/MenuItems";
-import { MapMarkerImageType } from "../../../entities/mapMarker/MapMarker.types";
-import { CameraModes } from "../../../components/CameraMode/CameraMode.types";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Vector3 } from 'three';
+import { useAppState } from '../../../hooks/useAppState';
+import { MenuOptions } from '../../Menu/Menu.enums';
+import { GetMenuItem } from '../../Menu/MenuItems';
+import { MapMarkerImageType } from '../../../entities/mapMarker/MapMarker.types';
+import { CameraModes } from '../../../components/CameraMode/CameraMode.types';
 
-const HomePage = () => {
+function HomePage() {
   const { setMapMarkers } = useAppState();
   const navigate = useNavigate();
 
@@ -20,19 +19,19 @@ const HomePage = () => {
         position: new Vector3(-85, 10, 0),
         image: MapMarkerImageType.Queens,
         onClick: () => navigate(GetMenuItem(MenuOptions.Queens).route),
-        type: "navigate",
+        type: 'navigate',
       },
       {
         position: new Vector3(70, 10, 0),
         image: MapMarkerImageType.Terrain,
         onClick: () => navigate(GetMenuItem(MenuOptions.Terrain).route),
-        type: "navigate",
+        type: 'navigate',
       },
       {
         position: new Vector3(-15, 10, 70),
         image: MapMarkerImageType.Combat,
         onClick: () => navigate(GetMenuItem(MenuOptions.Combat).route),
-        type: "navigate",
+        type: 'navigate',
       },
     ]);
 
@@ -50,7 +49,7 @@ const HomePage = () => {
     };
   }, [navigate, setMapMarkers, setCameraSettings]);
 
-  return ( <div>  </div>);
-};
+  return <div> </div>;
+}
 
 export default HomePage;

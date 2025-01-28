@@ -1,4 +1,4 @@
-import { PageWrapper } from "./SubPage.style";
+import { PageWrapper } from './SubPage.style';
 
 export interface SubPageProps {
   title: string;
@@ -6,8 +6,8 @@ export interface SubPageProps {
   expand?: boolean;
 }
 
-const SubPage = (props: SubPageProps) => {
+function SubPage(props: SubPageProps) {
   return <PageWrapper>{props.children}</PageWrapper>;
-};
+}
 
 export default SubPage;

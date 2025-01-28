@@ -1,6 +1,6 @@
-import { createContext, useState, ReactNode } from "react";
-import { Vector3 } from "three";
-import { isDebugMode } from "../utils/generalUtils";
+import { createContext, useState, ReactNode } from 'react';
+import { Vector3 } from 'three';
+import { isDebugMode } from '../utils/generalUtils';
 
 type DebugState = {
   cameraPosition: Vector3 | undefined;
@@ -9,7 +9,7 @@ type DebugState = {
 
 const DebugStateContext = createContext<DebugState | undefined>(undefined);
 
-export const DebugStateProvider = ({ children }: { children: ReactNode }) => {
+export function DebugStateProvider({ children }: { children: ReactNode }) {
   const [cameraPosition, setCameraPosition] = useState<Vector3>();
 
   if (!isDebugMode) {
@@ -26,6 +26,6 @@ export const DebugStateProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </DebugStateContext.Provider>
   );
-};
+}
 
 export default DebugStateContext;

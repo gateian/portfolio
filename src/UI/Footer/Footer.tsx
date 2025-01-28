@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   FooterContainer,
   FooterContent,
@@ -10,10 +10,10 @@ import {
   ContactButton,
   EmailText,
   SocialLink,
-} from "./Footer.style";
-import ToastNotification from "../Toast/ToastNotifcation";
+} from './Footer.style';
+import ToastNotification from '../Toast/ToastNotifcation';
 
-const Footer = () => {
+function Footer() {
   const currentYear = new Date().getFullYear();
   const [showEmail, setShowEmail] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -22,14 +22,14 @@ const Footer = () => {
     setShowEmail(!showEmail);
   };
 
-  const email = "ihamblin@gmail.com";
+  const email = 'ihamblin@gmail.com';
 
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(email);
       setShowToast(true);
     } catch (err) {
-      console.error("Failed to copy email:", err);
+      console.error('Failed to copy email:', err);
     }
   };
 
@@ -44,8 +44,8 @@ const Footer = () => {
           <AttributionSection>
             <span>Built with:</span>
             <AttributionText>
-              React • Emotion • Typescript • Icons by{" "}
-              <a target="_blank" href="https://icons8.com">
+              React • Emotion • Typescript • Icons by{' '}
+              <a target="_blank" href="https://icons8.com" rel="noreferrer">
                 Icons8
               </a>
             </AttributionText>
@@ -84,6 +84,6 @@ const Footer = () => {
       </FooterContent>
     </FooterContainer>
   );
-};
+}
 
 export default Footer;

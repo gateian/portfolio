@@ -1,9 +1,9 @@
-import { Group, Material, Object3D, Object3DEventMap } from "three";
-import { useAppState } from "../../hooks/useAppState";
-import { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useFrame } from "@react-three/fiber";
-import { isDebugMode } from "../../utils/generalUtils";
+import { Group, Material, Object3D, Object3DEventMap } from 'three';
+import { useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useFrame } from '@react-three/fiber';
+import { useAppState } from '../../hooks/useAppState';
+import { isDebugMode } from '../../utils/generalUtils';
 
 export interface GlbOnLoadedData {
   glbModel?: Group<Object3DEventMap>;
@@ -30,7 +30,7 @@ interface GlbModelPrimitiveProps extends GlbOnLoadedData {
 
 export interface GlbModelSettings extends GlbModelPrimitiveProps {}
 
-const GlbModelPrimitive = (props: GlbModelPrimitiveProps) => {
+function GlbModelPrimitive(props: GlbModelPrimitiveProps) {
   const { position, scale, rotation, castShadow, receiveShadow, visible } =
     props;
 
@@ -49,7 +49,7 @@ const GlbModelPrimitive = (props: GlbModelPrimitiveProps) => {
       setLoaded(true);
       if (glbModel?.glbModel) {
         glbModel.glbModel.traverse((object: Object3D) => {
-          if ("material" in object && object.material instanceof Material) {
+          if ('material' in object && object.material instanceof Material) {
             if (object.material) {
               props.onMaterialReady?.(object.material);
             }
@@ -74,6 +74,6 @@ const GlbModelPrimitive = (props: GlbModelPrimitiveProps) => {
       ) : null}
     </>
   );
-};
+}
 
 export default GlbModelPrimitive;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import styled from '@emotion/styled';
 
 interface MediaItem {
@@ -51,15 +51,15 @@ const Image = styled.div<{ src: string }>(({ src }) => ({
     transform: 'scale(1.2)',
   },
 }));
-
 const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [isImagePanning, setIsImagePanning] = useState(false);
 
-  const handleMediaEnd = () => {
+  // Wrap handleMediaEnd in useCallback
+  const handleMediaEnd = useCallback(() => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-  };
+  }, [items.length]); // Add items.length as dependency
 
   useEffect(() => {
     // Initialize video refs array
@@ -68,23 +68,26 @@ const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items }) => {
 
   useEffect(() => {
     const currentItem = items[currentIndex];
-    
+
     if (currentItem.type === 'video') {
       const videoElement = videoRefs.current[currentIndex];
       if (videoElement) {
         videoElement.currentTime = 0;
         const playPromise = videoElement.play();
         if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.error("Video playback failed:", error);
+          playPromise.catch((error) => {
+            console.error('Video playback failed:', error);
           });
         }
       }
-    } else if (currentItem.type === 'image') {
+      return undefined; // Explicit return for video case
+    }
+
+    if (currentItem.type === 'image') {
       setIsImagePanning(true);
       const timer = setTimeout(() => {
         handleMediaEnd();
-      }, 8000); // Adjust duration as needed
+      }, 8000);
       return () => clearTimeout(timer);
     }
 
@@ -92,14 +95,19 @@ const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items }) => {
     if (currentItem.type === 'video') {
       setIsImagePanning(false);
     }
-  }, [currentIndex, items]);
+
+    return undefined; // Default return
+  }, [currentIndex, items, handleMediaEnd]);
 
   const renderMedia = (item: MediaItem, index: number) => {
     if (item.type === 'video') {
       return (
-        <MediaElement className={index === currentIndex ? 'active' : ''} key={item.src}>
+        <MediaElement
+          className={index === currentIndex ? 'active' : ''}
+          key={item.src}
+        >
           <Video
-            ref={el => videoRefs.current[index] = el}
+            ref={(el) => (videoRefs.current[index] = el)}
             src={item.src}
             muted
             playsInline
@@ -107,16 +115,18 @@ const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items }) => {
           />
         </MediaElement>
       );
-    } else {
-      return (
-        <MediaElement className={index === currentIndex ? 'active' : ''} key={item.src}>
-          <Image
-            src={item.src}
-            className={isImagePanning && index === currentIndex ? 'pan' : ''}
-          />
-        </MediaElement>
-      );
     }
+    return (
+      <MediaElement
+        className={index === currentIndex ? 'active' : ''}
+        key={item.src}
+      >
+        <Image
+          src={item.src}
+          className={isImagePanning && index === currentIndex ? 'pan' : ''}
+        />
+      </MediaElement>
+    );
   };
 
   return (

@@ -1,4 +1,4 @@
-import { AppBarButtonWrapper } from "./AppBar.style";
+import { AppBarButtonWrapper } from './AppBar.style';
 
 interface AppBarButtonProps {
   onClick?: () => void;
@@ -7,18 +7,13 @@ interface AppBarButtonProps {
   selected?: boolean;
 }
 
-const AppBarButton = ({
-  icon,
-  label,
-  onClick,
-  selected,
-}: AppBarButtonProps) => {
+function AppBarButton({ icon, label, onClick, selected }: AppBarButtonProps) {
   return (
     <AppBarButtonWrapper onClick={onClick} selected={selected}>
       <div>{icon}</div>
       <span>{label}</span>
     </AppBarButtonWrapper>
   );
-};
+}
 
 export default AppBarButton;

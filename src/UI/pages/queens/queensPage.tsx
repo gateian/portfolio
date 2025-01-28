@@ -1,26 +1,27 @@
-import SubPage from "../../SubPage/SubPage";
-import { Color, Material, MeshPhysicalMaterial, Vector3 } from "three";
-import { CameraModes } from "../../../components/CameraMode/CameraMode.types";
-import { GlbModelSettings } from "../../../entities/glbModel/glbModelPrimitive";
-import { useAppState } from "../../../hooks/useAppState";
-import { useCallback, useMemo } from "react";
+import { Color, Material, MeshPhysicalMaterial, Vector3 } from 'three';
+import { useCallback, useMemo } from 'react';
+import SubPage from '../../SubPage/SubPage';
+import { CameraModes } from '../../../components/CameraMode/CameraMode.types';
+import { GlbModelSettings } from '../../../entities/glbModel/glbModelPrimitive';
+import { useAppState } from '../../../hooks/useAppState';
 
-const QueensPage = () => {
+function QueensPage() {
   const { environmentMap } = useAppState();
 
-  const glbModelSettings: GlbModelSettings = useMemo(() => {
-    return {
+  const glbModelSettings: GlbModelSettings = useMemo(
+    () => ({
       position: [0, 0, -40],
       rotation: [0, Math.PI * 0.5, 0],
       scale: [1, 1, 1],
       castShadow: true,
       receiveShadow: true,
       visible: true,
-    };
-  }, []);
+    }),
+    []
+  );
 
-  const cameraSettings = useMemo(() => {
-    return {
+  const cameraSettings = useMemo(
+    () => ({
       mode: CameraModes.Orbit,
       autoRotate: true,
       autoRotateSpeed: 0.3,
@@ -30,8 +31,9 @@ const QueensPage = () => {
       minDistance: 1,
       initialPosition: new Vector3(1, 3, 50),
       target: new Vector3(3, 12.5, 0),
-    };
-  }, []);
+    }),
+    []
+  );
 
   const handleMaterialReady = useCallback(
     (material: Material) => {
@@ -63,6 +65,6 @@ const QueensPage = () => {
       <p>description</p>
     </SubPage>
   );
-};
+}
 
 export default QueensPage;

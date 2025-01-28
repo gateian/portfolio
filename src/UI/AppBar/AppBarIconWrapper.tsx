@@ -1,22 +1,19 @@
-import React from "react";
+import React from 'react';
 
 interface IconWrapperProps {
   color?: string;
   children: React.ReactNode;
 }
 
-const IconWrapper = ({
-  color = "currentColor",
-  children,
-}: IconWrapperProps) => {
+function IconWrapper({ color = 'currentColor', children }: IconWrapperProps) {
   return (
-    <div style={{ color: color }}>
+    <div style={{ color }}>
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child as React.ReactElement<any>, {
             style: {
               ...child.props.style,
-              fill: "currentColor",
+              fill: 'currentColor',
             },
           });
         }
@@ -24,6 +21,6 @@ const IconWrapper = ({
       })}
     </div>
   );
-};
+}
 
 export default IconWrapper;

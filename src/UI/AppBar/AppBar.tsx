@@ -7,13 +7,13 @@ import {
   IconUnrealEngine,
   IconZBrush,
   IconLinkedIn,
-} from "./AppBar.icons";
-import { AppBarWrapper } from "./AppBar.style";
-import AppBarButton from "./AppBarButton";
-import AppBarIcon from "./AppBarIcon";
+} from './AppBar.icons';
+import { AppBarWrapper } from './AppBar.style';
+import AppBarButton from './AppBarButton';
+import AppBarIcon from './AppBarIcon';
 
 interface AppBarItemsProps {
-  type: "icon" | "button";
+  type: 'icon' | 'button';
   name: string;
   icon: React.ReactNode;
   onclick?: () => void;
@@ -21,55 +21,55 @@ interface AppBarItemsProps {
 
 const AppBarItems: AppBarItemsProps[] = [
   {
-    type: "icon",
-    name: "3DS Max",
+    type: 'icon',
+    name: '3DS Max',
     icon: <Icon3DSMax />,
   },
   {
-    type: "icon",
-    name: "Blender",
+    type: 'icon',
+    name: 'Blender',
     icon: <IconBlender2 />,
   },
   {
-    type: "icon",
-    name: "Photoshop",
+    type: 'icon',
+    name: 'Photoshop',
     icon: <IconPhotoshop />,
   },
   {
-    type: "icon",
-    name: "Unity",
+    type: 'icon',
+    name: 'Unity',
     icon: <IconUnity />,
   },
   {
-    type: "icon",
-    name: "Unreal",
+    type: 'icon',
+    name: 'Unreal',
     icon: <IconUnrealEngine />,
   },
   {
-    type: "icon",
-    name: "Resolve",
+    type: 'icon',
+    name: 'Resolve',
     icon: <IconDavinciResolve />,
   },
   {
-    type: "icon",
-    name: "Z Brush",
+    type: 'icon',
+    name: 'Z Brush',
     icon: <IconZBrush />,
   },
   {
-    type: "button",
-    name: "Connect",
+    type: 'button',
+    name: 'Connect',
     icon: <IconLinkedIn />,
     onclick: () => {
-      window.open("https://www.linkedin.com/in/ihamblin", "_blank");
+      window.open('https://www.linkedin.com/in/ihamblin', '_blank');
     },
   },
 ];
 
-const AppBar = () => {
+function AppBar() {
   return (
     <AppBarWrapper>
       {AppBarItems.map((item, idx) => {
-        if (item.type === "icon") {
+        if (item.type === 'icon') {
           return <AppBarIcon key={idx} icon={item.icon} label={item.name} />;
         }
 
@@ -85,6 +85,6 @@ const AppBar = () => {
       })}
     </AppBarWrapper>
   );
-};
+}
 
 export default AppBar;

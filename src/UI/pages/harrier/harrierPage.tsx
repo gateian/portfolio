@@ -1,32 +1,33 @@
-import SubPage from "../../SubPage/SubPage";
 import {
   Color,
   DoubleSide,
   Material,
   MeshPhysicalMaterial,
   Vector3,
-} from "three";
-import { CameraModes } from "../../../components/CameraMode/CameraMode.types";
-import { GlbModelSettings } from "../../../entities/glbModel/glbModelPrimitive";
-import { useCallback, useMemo } from "react";
-import { useAppState } from "../../../hooks/useAppState";
+} from 'three';
+import { useCallback, useMemo } from 'react';
+import SubPage from '../../SubPage/SubPage';
+import { CameraModes } from '../../../components/CameraMode/CameraMode.types';
+import { GlbModelSettings } from '../../../entities/glbModel/glbModelPrimitive';
+import { useAppState } from '../../../hooks/useAppState';
 
-const HarrierPage = () => {
+function HarrierPage() {
   const { environmentMap } = useAppState();
 
-  const glbModelSettings: GlbModelSettings = useMemo(() => {
-    return {
+  const glbModelSettings: GlbModelSettings = useMemo(
+    () => ({
       position: [0, 0, -40],
       scale: [10, 10, 10],
       rotation: [0, Math.PI, 0],
       castShadow: true,
       receiveShadow: true,
       visible: true,
-    };
-  }, []);
+    }),
+    []
+  );
 
-  const cameraSettings = useMemo(() => {
-    return {
+  const cameraSettings = useMemo(
+    () => ({
       mode: CameraModes.MotionPath,
       autoRotate: true,
       enableRotate: true,
@@ -35,8 +36,9 @@ const HarrierPage = () => {
       minDistance: 1,
       initialPosition: new Vector3(-2.7, 6.54, -4.5),
       target: new Vector3(0, 2.5, 0),
-    };
-  }, []);
+    }),
+    []
+  );
 
   const handleMaterialReady = useCallback(
     (material: Material) => {
@@ -44,11 +46,11 @@ const HarrierPage = () => {
 
       if (
         [
-          "AV8B-glass",
-          "GLASS",
-          "HUD_GLASS",
-          "HUD_PROJECTOR_GLASS",
-          "HUD_GLASS_BACK",
+          'AV8B-glass',
+          'GLASS',
+          'HUD_GLASS',
+          'HUD_PROJECTOR_GLASS',
+          'HUD_GLASS_BACK',
         ].includes(material.name)
       ) {
         updateMaterial.color = new Color(0xffffff);
@@ -90,6 +92,6 @@ const HarrierPage = () => {
       onMaterialReady={handleMaterialReady}
     />
   );
-};
+}
 
 export default HarrierPage;

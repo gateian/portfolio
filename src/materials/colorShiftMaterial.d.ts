@@ -1,5 +1,5 @@
-import { ColorShiftMaterial } from "./ColorShiftMaterial";
-import { Object3DNode } from "@react-three/fiber";
+import { ColorShiftMaterial } from './ColorShiftMaterial';
+import { Object3DNode } from '@react-three/fiber';
 
 type ColorShiftMaterialType = typeof ColorShiftMaterial & {
   color: THREE.Color | string | number;

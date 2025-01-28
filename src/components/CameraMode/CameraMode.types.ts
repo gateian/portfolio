@@ -1,9 +1,9 @@
-import { Vector3 } from "three";
+import { Vector3 } from 'three';
 
 export enum CameraModes {
-  Static = "STATIC",
-  Orbit = "ORBIT",
-  MotionPath = "MOTION_PATH",
+  Static = 'STATIC',
+  Orbit = 'ORBIT',
+  MotionPath = 'MOTION_PATH',
 }
 
 export interface OrbitCameraSettingsProps {

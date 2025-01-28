@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { ToastContainer } from "./Toast.styles";
+import React, { useEffect } from 'react';
+import { ToastContainer } from './Toast.styles';
 
 interface ToastNotificationProps {
   message: string;
@@ -15,13 +15,15 @@ const ToastNotification: React.FC<ToastNotificationProps> = ({
   onHide,
 }) => {
   useEffect(() => {
-    if (visible) {
-      const timer = setTimeout(() => {
-        onHide();
-      }, duration);
-
-      return () => clearTimeout(timer);
+    if (!visible) {
+      return undefined; // Explicit return for the else case
     }
+
+    const timer = setTimeout(() => {
+      onHide();
+    }, duration);
+
+    return () => clearTimeout(timer);
   }, [visible, duration, onHide]);
 
   return <ToastContainer visible={visible}>{message}</ToastContainer>;

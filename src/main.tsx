@@ -1,17 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
 
 const createCustomEvent = () => {
-  const event = new CustomEvent("initialLoaderRemoved");
+  const event = new CustomEvent('initialLoaderRemoved');
   window.dispatchEvent(event);
 };
 
 const cleanup = () => {
-  const loader = document.getElementById("initial-loader");
+  const loader = document.getElementById('initial-loader');
   if (loader) {
-    loader.classList.add("fade-out");
+    loader.classList.add('fade-out');
     setTimeout(() => {
       loader.remove();
       createCustomEvent();
@@ -21,7 +21,7 @@ const cleanup = () => {
   }
 };
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
