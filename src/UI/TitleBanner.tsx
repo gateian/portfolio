@@ -21,6 +21,9 @@ const NamePlate = styled.div({
   padding: '0.5rem 2rem 0rem 2rem',
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
   textShadow: '0px 0px 6px rgba(0,0,0,0.8)',
+  '@media (max-width: 650px)': {
+    fontSize: '4rem',
+  },
 });
 
 const SubTitle = styled.div({

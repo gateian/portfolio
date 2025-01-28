@@ -23,10 +23,15 @@ export const FlexContainer = styled.div({
   alignItems: 'center',
   justifyContent: 'space-between',
   fontSize: '0.875rem',
-  color: 'white', // "#4b5563",
+  color: 'white',
+  '@media (max-width: 650px)': {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 });
 
 export const Copyright = styled.p({
+  margin: 0,
   marginRight: '1.5rem',
 });
 
@@ -54,6 +59,9 @@ export const SocialContainer = styled.div({
   display: 'flex',
   alignItems: 'center',
   gap: '1rem',
+  '@media (max-width: 650px)': {
+    fontSize: '1.75rem',
+  },
 });
 
 export const ContactButton = styled.button({
@@ -66,6 +74,9 @@ export const ContactButton = styled.button({
   fontSize: '0.875rem',
   '&:hover': {
     color: '#ddd',
+  },
+  '@media (max-width: 650px)': {
+    fontSize: '1.75rem',
   },
 });
 
