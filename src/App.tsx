@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { StateProvider } from './StateContext';
+import StateContext, { StateProvider } from './StateContext';
 import { Overlay, HeroBanner, HeroBannerSideColumn } from './StyledComponents';
 import ContentArea from './UI/ContentArea';
 import TitleBanner from './UI/TitleBanner';
@@ -63,10 +63,11 @@ const mediaItems: MediaItemsProps[] = [
   },
 ];
 
-function App() {
+function AppContent() {
   const isDebug = isDebugMode();
 
   const [isVisible, setIsVisible] = useState(false);
+  const { isUIVisible } = useContext(StateContext);
 
   useEffect(() => {
     const handleLoaderRemoved = () => {
@@ -87,27 +88,33 @@ function App() {
   }, []);
 
   return (
+    <AppWrapper visible={isVisible}>
+      <MediaSlideshow items={mediaItems} />
+      <Overlay>
+        <HeroBanner isVisible={isUIVisible}>
+          <HeroBannerSideColumn />
+          <TitleBanner />
+          <HeroBannerSideColumn />
+        </HeroBanner>
+        <Routes>
+          <Route path="/" element={<ContentArea />} />
+          <Route path="/cv" element={<ContentArea />} />
+          <Route path="/cvart" element={<ContentArea />} />
+        </Routes>
+        <AppBar />
+        <Footer />
+      </Overlay>
+      {isDebug ? <Debug2D /> : null}
+    </AppWrapper>
+  );
+}
+
+function App() {
+  return (
     <BrowserRouter>
       <StateProvider>
         <DebugStateProvider>
-          <AppWrapper visible={isVisible}>
-            <MediaSlideshow items={mediaItems} />
-            <Overlay>
-              <HeroBanner>
-                <HeroBannerSideColumn />
-                <TitleBanner />
-                <HeroBannerSideColumn />
-              </HeroBanner>
-              <Routes>
-                <Route path="/" element={<ContentArea />} />
-                <Route path="/cv" element={<ContentArea />} />
-                <Route path="/cvart" element={<ContentArea />} />
-              </Routes>
-              <AppBar />
-              <Footer />
-            </Overlay>
-            {isDebug ? <Debug2D /> : null}
-          </AppWrapper>
+          <AppContent />
         </DebugStateProvider>
       </StateProvider>
     </BrowserRouter>

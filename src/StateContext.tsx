@@ -24,9 +24,36 @@ type AppState = {
   setCameraSettings: (value: OrbitCameraSettingsProps) => void;
   glbModels: Map<string, GlbModelProps>;
   setGlbModels: (value: Map<string, GlbModelProps>) => void;
+  isUIVisible: boolean;
+  setIsUIVisible: (visible: boolean) => void;
 };
 
-const StateContext = createContext<AppState | undefined>(undefined);
+const StateContext = createContext<AppState>({
+  selectedObject: 0,
+  setSelectedObject: () => {},
+  objectCount: 0,
+  setObjectCount: () => {},
+  environmentMap: null,
+  setEnvironmentMap: () => {},
+  cameraTarget: new Vector3(),
+  setCameraTarget: () => {},
+  subPageDialogId: -1,
+  setSubPageDialogId: () => {},
+  mapMarkers: [],
+  setMapMarkers: () => {},
+  cameraSettings: {
+    mode: CameraModes.Orbit,
+    enableRotate: true,
+    screenSpacePanning: true,
+    maxDistance: 700,
+    minDistance: 50,
+  },
+  setCameraSettings: () => {},
+  glbModels: new Map(),
+  setGlbModels: () => {},
+  isUIVisible: true,
+  setIsUIVisible: () => {},
+});
 
 export function StateProvider({ children }: { children: ReactNode }) {
   const [selectedObject, setSelectedObject] = useState<number>(0);
@@ -35,6 +62,8 @@ export function StateProvider({ children }: { children: ReactNode }) {
   const [cameraTarget, setCameraTarget] = useState<Vector3>(new Vector3());
   const [subPageDialogId, setSubPageDialogId] = useState<number>(-1);
   const [mapMarkers, setMapMarkers] = useState<MapMarkerDefinition[]>([]);
+  const [isUIVisible, setIsUIVisible] = useState(true);
+
   const [cameraSettings, setCameraSettings] =
     useState<OrbitCameraSettingsProps>({
       mode: CameraModes.Orbit,
@@ -66,6 +95,8 @@ export function StateProvider({ children }: { children: ReactNode }) {
         setCameraSettings,
         glbModels,
         setGlbModels,
+        isUIVisible,
+        setIsUIVisible,
       }}
     >
       {children}

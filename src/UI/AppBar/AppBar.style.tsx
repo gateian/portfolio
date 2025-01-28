@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
 
-export const AppBarWrapper = styled('div')({
+interface AppBarButtonProps {
+  isVisible: boolean;
+}
+
+export const AppBarWrapper = styled.div<AppBarButtonProps>((props) => ({
   padding: '1rem',
   zIndex: 100,
   pointerEvents: 'auto',
@@ -11,14 +15,15 @@ export const AppBarWrapper = styled('div')({
   flexDirection: 'row',
   flexWrap: 'nowrap',
   color: 'white',
+  opacity: props.isVisible ? 1 : 0,
+  transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out',
   '@media (max-width: 650px)': {
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
   '> *:last-child': {
     '@media (max-width: 450px)': {
-      width: '100%',
-      marginTop: '1rem',
+      display: 'none',
     },
   },
   '> *:not(:last-child)': {
@@ -28,7 +33,7 @@ export const AppBarWrapper = styled('div')({
       marginBottom: '0.1rem',
     },
   },
-});
+}));
 
 interface AppBarButtonProps {
   selected?: boolean;
