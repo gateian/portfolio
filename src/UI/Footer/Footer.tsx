@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import StateContext from '../../StateContext';
 import {
   FooterContainer,
   FooterContent,
@@ -9,6 +10,7 @@ import {
   SocialContainer,
   ContactButton,
   SocialLink,
+  VisibilityButton,
 } from './Footer.style';
 import ToastNotification from '../Toast/ToastNotifcation';
 import EmailModal from '../Modal/Modal';
@@ -17,6 +19,7 @@ function Footer() {
   const currentYear = new Date().getFullYear();
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const { isUIVisible, setIsUIVisible } = useContext(StateContext);
 
   const handleContactClick = () => {
     setShowModal(true);
@@ -78,7 +81,7 @@ function Footer() {
 
   return (
     <FooterContainer>
-      <FooterContent>
+      <FooterContent isVisible={isUIVisible}>
         <FlexContainer>
           <Copyright>
             © {currentYear} Ian Hamblin. All rights reserved.
@@ -130,6 +133,13 @@ function Footer() {
         visible={showToast}
         onHide={() => setShowToast(false)}
       />
+
+      <VisibilityButton
+        isVisible={isUIVisible}
+        onClick={() => setIsUIVisible(!isUIVisible)}
+      >
+        <span />
+      </VisibilityButton>
     </FooterContainer>
   );
 }

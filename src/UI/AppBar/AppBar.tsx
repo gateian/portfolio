@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
   Icon3DSMax,
   IconBlender2,
@@ -11,6 +12,7 @@ import {
 import { AppBarWrapper } from './AppBar.style';
 import AppBarButton from './AppBarButton';
 import AppBarIcon from './AppBarIcon';
+import StateContext from '../../StateContext';
 
 interface AppBarItemsProps {
   type: 'icon' | 'button';
@@ -66,8 +68,10 @@ const AppBarItems: AppBarItemsProps[] = [
 ];
 
 function AppBar() {
+  const { isUIVisible } = useContext(StateContext);
+
   return (
-    <AppBarWrapper>
+    <AppBarWrapper isVisible={isUIVisible}>
       {AppBarItems.map((item, idx) => {
         if (item.type === 'icon') {
           return <AppBarIcon key={idx} icon={item.icon} label={item.name} />;

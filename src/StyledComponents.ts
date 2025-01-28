@@ -27,7 +27,11 @@ const Overlay = styled.div({
   backgroundSize: '4px 4px',
 });
 
-const HeroBanner = styled.div({
+interface HeroBannerProps {
+  isVisible: boolean;
+}
+
+const HeroBanner = styled.div<HeroBannerProps>((props) => ({
   color: 'white',
   flexBasis: '15vh',
   flexShrink: 0,
@@ -35,7 +39,9 @@ const HeroBanner = styled.div({
   display: 'flex',
   pointerEvents: 'auto',
   marginTop: '50px',
-});
+  opacity: props.isVisible ? 1 : 0,
+  transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out',
+}));
 
 const HeroBannerSideColumn = styled.div({
   flexGrow: 1,
