@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 
-interface AppBarButtonProps {
+interface AppBarWrapperProps {
   isVisible: boolean;
 }
 
-export const AppBarWrapper = styled.div<AppBarButtonProps>((props) => ({
+export const AppBarWrapper = styled.div<AppBarWrapperProps>((props) => ({
   padding: '1rem',
   zIndex: 100,
   pointerEvents: 'auto',
@@ -35,11 +35,11 @@ export const AppBarWrapper = styled.div<AppBarButtonProps>((props) => ({
   },
 }));
 
-interface AppBarButtonProps {
+interface AppBarButtonWrapperProps {
   selected?: boolean;
 }
 
-export const AppBarButtonWrapper = styled('div')<AppBarButtonProps>(
+export const AppBarButtonWrapper = styled('div')<AppBarButtonWrapperProps>(
   (props) => ({
     flexGrow: 1,
     fontSize: '0.9rem',
