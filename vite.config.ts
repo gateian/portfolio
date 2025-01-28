@@ -1,15 +1,18 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/",
+  base: '/',
+  server: {
+    host: '0.0.0.0',
+  },
   build: {
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules/three")) {
-            return "three";
+          if (id.includes('node_modules/three')) {
+            return 'three';
           }
         },
       },
@@ -17,20 +20,20 @@ export default defineConfig({
   },
   plugins: [
     react({
-      jsxImportSource: "@emotion/react",
+      jsxImportSource: '@emotion/react',
       babel: {
-        plugins: ["@emotion/babel-plugin"],
+        plugins: ['@emotion/babel-plugin'],
       },
     }),
   ],
   resolve: {
     alias: {
-      three: "three",
-      "three/examples/jsm/loaders/RGBELoader":
-        "three/examples/jsm/loaders/RGBELoader.js",
+      three: 'three',
+      'three/examples/jsm/loaders/RGBELoader':
+        'three/examples/jsm/loaders/RGBELoader.js',
     },
   },
   optimizeDeps: {
-    include: ["three", "@react-three/drei"],
+    include: ['three', '@react-three/drei'],
   },
 });
