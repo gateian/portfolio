@@ -21,7 +21,7 @@ const CentreSpace = styled.div({
   flexGrow: 1,
   alignSelf: "flex-start",
   height: "75vh",
-  overflow: "hidden",
+  overflow: "auto",
   position: "relative",
 });
 
@@ -41,7 +41,7 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
             case "/cv":
               content = <CVMain />;
               break;
-              case "/cvart":
+            case "/cvart":
               content = <CVArtMain />;
               break;
             case "/terrain":

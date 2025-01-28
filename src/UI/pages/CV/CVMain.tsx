@@ -118,9 +118,8 @@ const CVMain = () => {
     document.body.removeChild(link);
   }, []);
 
-  console.log("CVMain");
   return (
-    <SubPage title="CV / Resume" modelView={false} expand>
+    <SubPage title="CV / Resume" expand>
       <CVWrapper ref={cvWrapperRef}>
         <SectionRight></SectionRight>
         <Section>

@@ -1,20 +1,16 @@
 import styled from "@emotion/styled";
 import "./App.css";
 import { StateProvider } from "./StateContext";
-import {
-  Overlay,
-  HeroBanner,
-  HeroBannerSideColumn,
-} from "./StyledComponents";
+import { Overlay, HeroBanner, HeroBannerSideColumn } from "./StyledComponents";
 import { useEffect, useState } from "react";
 import ContentArea from "./UI/ContentArea";
 import TitleBanner from "./UI/TitleBanner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import MenuBar from "./UI/Menu/MenuBar";
 import { DebugStateProvider } from "./debug/DebugStateContext";
 import { isDebugMode } from "./utils/generalUtils";
 import Debug2D from "./debug/Debug2D";
 import MediaSlideshow from "./components/MediaSlideshow";
+import AppBar from "./UI/AppBar/AppBar";
 
 interface AppWrapperProps {
   visible: boolean;
@@ -35,35 +31,35 @@ const AppWrapper = styled("div")<AppWrapperProps>(({ visible }) => ({
 }));
 
 interface MediaItemsProps {
-  type: 'video' | 'image';
+  type: "video" | "image";
   src: string;
 }
 
-const mediaItems : MediaItemsProps[] = [
+const mediaItems: MediaItemsProps[] = [
   {
-    type: 'video',
-    src: '/videos/raptor_short_web.mp4',
+    type: "video",
+    src: "/videos/raptor_short_web.mp4",
   },
   {
-    type: 'video',
-    src: '/videos/mountain.mp4',
+    type: "video",
+    src: "/videos/mountain.mp4",
   },
   {
-    type: 'image',
-    src: '/images/ShrineRender2.webp',
+    type: "image",
+    src: "/images/ShrineRender2.webp",
   },
   {
-    type: 'video',
-    src: '/videos/tower.mp4',
+    type: "video",
+    src: "/videos/tower.mp4",
   },
   {
-    type: 'image',
-    src: '/images/harrier.webp',
+    type: "image",
+    src: "/images/harrier.webp",
   },
   {
-    type: 'video',
-    src: '/videos/carvis.mp4',
-  }
+    type: "video",
+    src: "/videos/carvis.mp4",
+  },
 ];
 
 function App() {
@@ -94,7 +90,7 @@ function App() {
       <StateProvider>
         <DebugStateProvider>
           <AppWrapper visible={isVisible}>
-          <MediaSlideshow items={mediaItems} />
+            <MediaSlideshow items={mediaItems} />
             <Overlay>
               <HeroBanner>
                 <HeroBannerSideColumn />
@@ -109,7 +105,7 @@ function App() {
                 <Route path="/cv" element={<ContentArea />} />
                 <Route path="/cvart" element={<ContentArea />} />
               </Routes>
-              <MenuBar />
+              <AppBar />
             </Overlay>
             {isDebug ? <Debug2D /> : null}
           </AppWrapper>

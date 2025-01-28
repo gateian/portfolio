@@ -24,7 +24,7 @@ export const PageWrapper = styled.div<PageWrapperProps>((props) => ({
   fontFamily: '"Kanit", sans-serif',
   fontWeight: 200,
   minHeight: "8vh",
-  height: props.expanded ? "75vh" : "8vh",
+  height: "71vh",
   transition: "height 0.3s ease-in-out",
 
   "& h1": {

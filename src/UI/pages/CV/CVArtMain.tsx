@@ -119,9 +119,8 @@ const CVArtMain = () => {
     document.body.removeChild(link);
   }, []);
 
-  console.log("CVMain");
   return (
-    <SubPage title="CV / Resume" modelView={false} expand>
+    <SubPage title="CV / Resume" expand>
       <CVWrapper ref={cvWrapperRef}>
         <SectionRight></SectionRight>
         <Section>
@@ -131,10 +130,12 @@ const CVArtMain = () => {
               <SkillsBox>
                 <SubTitle>3D Art</SubTitle>
                 <div>
-                  3ds Max / Blender / Photoshop / Unreal Engine / Unity / Three.js / Zbrush / Substance Painter / Gaea 2.0 / Davinci Resolve
+                  3ds Max / Blender / Photoshop / Unreal Engine / Unity /
+                  Three.js / Zbrush / Substance Painter / Gaea 2.0 / Davinci
+                  Resolve
                 </div>
               </SkillsBox>
-              
+
               <SkillsBox>
                 <SubTitle>Code</SubTitle>
                 AR / VR / Unity c# / Android Java / Kotlin / ios
@@ -151,18 +152,24 @@ const CVArtMain = () => {
             <Column>
               <Title>About Me</Title>
               <p>
-                Hi, I'm Ian and i'm a 3D specialist with a passion for beutiful CG art and visuals.
-                I have worked with 3D across a variety of disciplines since graduating from Teeside University in 2004.
-                On top of having a background in 3D environments for games and CG Art, I also have experience in developing 3D content
-                for the web and can also write shaders for visual effects.
+                Hi, I'm Ian and i'm a 3D specialist with a passion for beutiful
+                CG art and visuals. I have worked with 3D across a variety of
+                disciplines since graduating from Teeside University in 2004. On
+                top of having a background in 3D environments for games and CG
+                Art, I also have experience in developing 3D content for the web
+                and can also write shaders for visual effects.
               </p>
               <p>
-                I am a highliy motivated, sociable, fast working and adaptable individual that loves to work in teams and learn from everybody around me.
-                I have worked on projects for many high profile clients such as Price Waterhouse Cooper, HSBC, Fiat, Unilever and M-Sport and know how to 
-                work quickly and efficiently to meet tight deadlines.
+                I am a highliy motivated, sociable, fast working and adaptable
+                individual that loves to work in teams and learn from everybody
+                around me. I have worked on projects for many high profile
+                clients such as Price Waterhouse Cooper, HSBC, Fiat, Unilever
+                and M-Sport and know how to work quickly and efficiently to meet
+                tight deadlines.
               </p>
               <p>
-                My other passions in life are Formula 1, Lego, Cycling, Video Games, Films and generally getting into nature with the family.
+                My other passions in life are Formula 1, Lego, Cycling, Video
+                Games, Films and generally getting into nature with the family.
               </p>
             </Column>
           </Row>

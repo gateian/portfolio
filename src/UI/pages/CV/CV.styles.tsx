@@ -5,7 +5,7 @@ export const CVWrapper = styled.div({
   padding: 0,
   width: "100%",
   backgroundColor: "white",
-  overflow: "hidden",
+  overflow: "auto",
   color: "black",
   pointerEvents: "all",
   display: "flex",
@@ -14,6 +14,8 @@ export const CVWrapper = styled.div({
   borderRadius: "20px",
   fontFamily: '"Kanit", sans-serif',
   fontWeight: 200,
+  height: "100%",
+  maxHeight: "75vh",
 });
 
 export const Section = styled.div({

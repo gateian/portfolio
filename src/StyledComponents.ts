@@ -9,20 +9,22 @@ const ThreeContainer = styled.div({
 });
 
 const Overlay = styled.div({
-  position: "absolute",
+  position: "fixed",
   top: 0,
   left: 0,
-  width: "100vw",
-  height: "100vh",
+  right: 0,
+  bottom: 0,
+  width: "100%",
+  height: "100%",
   pointerEvents: "none",
   display: "flex",
   flexDirection: "column",
   justifyContent: "flex-start",
   alignItems: "center",
   background: "transparent",
-  backgroundImage: "radial-gradient(black 1px, transparent 0)",
+  backgroundImage:
+    "radial-gradient(rgba(0.0, 0.0, 0.0, 0.2) 1px, transparent 0)",
   backgroundSize: "4px 4px",
-  backgroundPosition: "-19px -19px",
 });
 
 const HeroBanner = styled.div({
