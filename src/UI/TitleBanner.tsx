@@ -1,39 +1,43 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 const TitleBannerWrapper = styled.div({
-  fontSize: "2rem",
+  fontSize: '4rem',
   fontWeight: 100,
   margin: 0,
-  textAlign: "center",
-  fontFamily: '"Kanit", sans-serif',
-  letterSpacing: "0.5em",
-  textTransform: "uppercase",
-  backgroundColor: "rgba(0, 0, 0, 0)",
-  borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)",
-  display: "flex",
-  height: "100%",
-  flexDirection: "column",
-  justifyContent: "center",
+  textAlign: 'center',
+  fontFamily: '"Zuume", sans-serif',
+  textTransform: 'uppercase',
+  backgroundColor: 'rgba(0, 0, 0, 0)',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  marginTop: '40px',
 });
 
 const NamePlate = styled.div({
-  fontSize: "4rem",
-  lineHeight: 1.3,
+  fontSize: '8rem',
+  border: '4px solid white',
+  lineHeight: 1,
+  padding: '0.5rem 2rem 0rem 2rem',
+  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  textShadow: '0px 0px 6px rgba(0,0,0,0.8)',
 });
 
 const SubTitle = styled.div({
-  fontSize: "0.6rem",
-  fontFamily: '"Kulim Park", sans-serif',
-  fontWeight: 500,
+  fontSize: '2rem',
+  fontFamily: '"Zuume", sans-serif',
+  fontWeight: 300,
+  fontStyle: 'normal',
+  textShadow: '0px 0px 6px rgba(0,0,0,1.0)',
 });
 
-const TitleBanner = () => {
+function TitleBanner() {
   return (
     <TitleBannerWrapper>
       <NamePlate>Ian Hamblin</NamePlate>
-      <SubTitle>Web | 3D | Programmer</SubTitle>
+      <SubTitle>3D Graphics Specialist</SubTitle>
     </TitleBannerWrapper>
   );
-};
+}
 
 export default TitleBanner;

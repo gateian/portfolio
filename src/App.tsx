@@ -1,50 +1,67 @@
-import styled from "@emotion/styled";
-import "./App.css";
-import { StateProvider } from "./StateContext";
-import {
-  Overlay,
-  HeroBanner,
-  ThreeContainer,
-  HeroBannerSideColumn,
-} from "./StyledComponents";
-import { lazy, Suspense, useEffect, useState } from "react";
-const ThreeScene = lazy(() => import("./ThreeScene"));
-import ContentArea from "./UI/ContentArea";
-import TitleBanner from "./UI/TitleBanner";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import MenuBar from "./UI/Menu/MenuBar";
-import { DebugStateProvider } from "./debug/DebugStateContext";
-import { isDebugMode } from "./utils/generalUtils";
-import Debug2D from "./debug/Debug2D";
+import styled from '@emotion/styled';
+import './App.css';
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { StateProvider } from './StateContext';
+import { Overlay, HeroBanner, HeroBannerSideColumn } from './StyledComponents';
+import ContentArea from './UI/ContentArea';
+import TitleBanner from './UI/TitleBanner';
+import { DebugStateProvider } from './debug/DebugStateContext';
+import { isDebugMode } from './utils/generalUtils';
+import Debug2D from './debug/Debug2D';
+import MediaSlideshow from './components/MediaSlideshow';
+import AppBar from './UI/AppBar/AppBar';
+import Footer from './UI/Footer/Footer';
 
 interface AppWrapperProps {
   visible: boolean;
 }
 
-const AppWrapper = styled("div")<AppWrapperProps>(({ visible }) => ({
+const AppWrapper = styled('div')<AppWrapperProps>(({ visible }) => ({
   margin: 0,
   padding: 0,
-  width: "100%",
-  height: "100%",
-  overflow: "hidden",
-  WebkitUserSelect: "none" /* Safari */,
-  msUserSelect: "none" /* IE 10 and IE 11 */,
-  userSelect: "none" /* Standard syntax */,
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  WebkitUserSelect: 'none' /* Safari */,
+  msUserSelect: 'none' /* IE 10 and IE 11 */,
+  userSelect: 'none' /* Standard syntax */,
   opacity: visible ? 1 : 0,
-  transition: "opacity 0.5s ease-in",
-  backgroundColor: "#222",
+  transition: 'opacity 0.5s ease-in',
+  backgroundColor: '#222',
 }));
 
-const ThreeLoadingFallback = styled.div({
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  background: "#1a1a1a",
-  color: "white",
-  fontSize: "1.2rem",
-});
+interface MediaItemsProps {
+  type: 'video' | 'image';
+  src: string;
+}
+
+const mediaItems: MediaItemsProps[] = [
+  {
+    type: 'video',
+    src: '/videos/raptor_short_web.mp4',
+  },
+  {
+    type: 'video',
+    src: '/videos/mountain.mp4',
+  },
+  {
+    type: 'image',
+    src: '/images/ShrineRender2.webp',
+  },
+  {
+    type: 'video',
+    src: '/videos/tower.mp4',
+  },
+  {
+    type: 'image',
+    src: '/images/harrier.webp',
+  },
+  {
+    type: 'video',
+    src: '/videos/carvis.mp4',
+  },
+];
 
 function App() {
   const isDebug = isDebugMode();
@@ -58,14 +75,14 @@ function App() {
       }, 100);
     };
 
-    window.addEventListener("initialLoaderRemoved", handleLoaderRemoved);
+    window.addEventListener('initialLoaderRemoved', handleLoaderRemoved);
 
-    if (!document.getElementById("initial-loader")) {
+    if (!document.getElementById('initial-loader')) {
       handleLoaderRemoved();
     }
 
     return () => {
-      window.removeEventListener("initialLoaderRemoved", handleLoaderRemoved);
+      window.removeEventListener('initialLoaderRemoved', handleLoaderRemoved);
     };
   }, []);
 
@@ -74,17 +91,7 @@ function App() {
       <StateProvider>
         <DebugStateProvider>
           <AppWrapper visible={isVisible}>
-            <ThreeContainer>
-              <Suspense
-                fallback={
-                  <ThreeLoadingFallback>
-                    Loading 3D Scene...
-                  </ThreeLoadingFallback>
-                }
-              >
-                <ThreeScene />
-              </Suspense>
-            </ThreeContainer>
+            <MediaSlideshow items={mediaItems} />
             <Overlay>
               <HeroBanner>
                 <HeroBannerSideColumn />
@@ -93,13 +100,11 @@ function App() {
               </HeroBanner>
               <Routes>
                 <Route path="/" element={<ContentArea />} />
-                <Route path="/combat" element={<ContentArea />} />
-                <Route path="/queens" element={<ContentArea />} />
-                <Route path="/terrain" element={<ContentArea />} />
                 <Route path="/cv" element={<ContentArea />} />
                 <Route path="/cvart" element={<ContentArea />} />
               </Routes>
-              <MenuBar />
+              <AppBar />
+              <Footer />
             </Overlay>
             {isDebug ? <Debug2D /> : null}
           </AppWrapper>

@@ -1,11 +1,11 @@
-import { createContext, useState, ReactNode } from "react";
-import { Texture, Vector3 } from "three";
-import { MapMarkerDefinition } from "./entities/mapMarker/MapMarker.types";
+import { createContext, useState, ReactNode } from 'react';
+import { Texture, Vector3 } from 'three';
+import { MapMarkerDefinition } from './entities/mapMarker/MapMarker.types';
 import {
   CameraModes,
   OrbitCameraSettingsProps,
-} from "./components/CameraMode/CameraMode.types";
-import { GlbModelProps } from "./entities/glbModel/glbModelPrimitive";
+} from './components/CameraMode/CameraMode.types';
+import { GlbModelProps } from './entities/glbModel/glbModelPrimitive';
 
 type AppState = {
   selectedObject: number;
@@ -28,7 +28,7 @@ type AppState = {
 
 const StateContext = createContext<AppState | undefined>(undefined);
 
-export const StateProvider = ({ children }: { children: ReactNode }) => {
+export function StateProvider({ children }: { children: ReactNode }) {
   const [selectedObject, setSelectedObject] = useState<number>(0);
   const [objectCount, setObjectCount] = useState<number>(0);
   const [environmentMap, setEnvironmentMap] = useState<Texture | null>(null);
@@ -71,6 +71,6 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </StateContext.Provider>
   );
-};
+}
 
 export default StateContext;
