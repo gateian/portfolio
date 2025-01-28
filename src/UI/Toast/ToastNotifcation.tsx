@@ -15,7 +15,9 @@ const ToastNotification: React.FC<ToastNotificationProps> = ({
   onHide,
 }) => {
   useEffect(() => {
-    if (!visible) return;
+    if (!visible) {
+      return undefined;
+    }
 
     const timer = setTimeout(() => {
       onHide();

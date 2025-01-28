@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
-const modalOverlayStyle = {
-  position: 'fixed' as 'fixed',
+export const ModalOverlay = styled.div({
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
@@ -11,30 +11,30 @@ const modalOverlayStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   zIndex: 1000,
-};
+});
 
-const modalContentStyle = {
+export const ModalContent = styled.div({
   padding: '2rem',
   border: '4px solid white',
   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
   display: 'flex',
-  flexDirection: 'column' as 'column',
+  flexDirection: 'column',
   gap: '1rem',
   minWidth: '300px',
-};
+});
 
-const emailContainerStyle = {
+export const EmailContainer = styled.div({
   display: 'flex',
   gap: '1rem',
   alignItems: 'center',
-};
+});
 
-const emailTextStyle = {
+export const EmailText = styled.span({
   fontSize: '2.1rem',
   color: 'white',
-};
+});
 
-const copyButtonStyle = {
+export const CopyButton = styled.button({
   padding: '0.5rem 1rem',
   backgroundColor: 'white',
   color: 'black',
@@ -45,10 +45,4 @@ const copyButtonStyle = {
   '&:hover': {
     backgroundColor: '#0056b3',
   },
-};
-
-export const ModalOverlay = styled.div(modalOverlayStyle);
-export const ModalContent = styled.div(modalContentStyle);
-export const EmailContainer = styled.div(emailContainerStyle);
-export const EmailText = styled.span(emailTextStyle);
-export const CopyButton = styled.button(copyButtonStyle);
+});

@@ -72,7 +72,7 @@ function Footer() {
     if (success) {
       setShowToast(true);
     } else {
-      alert('Could not copy email. Please copy it manually: ' + email);
+      alert(`Could not copy email. Please copy it manually: ${email}`);
     }
   };
 
