@@ -3,7 +3,7 @@ import './App.css';
 import { useContext, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import StateContext, { StateProvider } from './StateContext';
-import { Overlay, HeroBanner, HeroBannerSideColumn } from './StyledComponents';
+import { Overlay, HeroBanner, HeroBannerSideColumn, FooterArea } from './StyledComponents';
 import ContentArea from './UI/ContentArea';
 import TitleBanner from './UI/TitleBanner';
 import { DebugStateProvider } from './debug/DebugStateContext';
@@ -67,7 +67,8 @@ function AppContent() {
   const isDebug = isDebugMode();
 
   const [isVisible, setIsVisible] = useState(false);
-  const { isUIVisible } = useContext(StateContext);
+  const { isUIVisible, isFullPage } = useContext(StateContext);
+
 
   useEffect(() => {
     const handleLoaderRemoved = () => {
@@ -87,11 +88,13 @@ function AppContent() {
     };
   }, []);
 
+  console.log('isFullPage', isFullPage);
+
   return (
     <AppWrapper visible={isVisible}>
-      <MediaSlideshow items={mediaItems} />
+      {isFullPage == false ? <MediaSlideshow items={mediaItems} /> : null}
       <Overlay>
-        <HeroBanner isVisible={isUIVisible}>
+        <HeroBanner isVisible={isUIVisible} isDisabled={isFullPage}>
           <HeroBannerSideColumn />
           <TitleBanner />
           <HeroBannerSideColumn />
@@ -101,8 +104,10 @@ function AppContent() {
           <Route path="/cv" element={<ContentArea />} />
           <Route path="/cvart" element={<ContentArea />} />
         </Routes>
+        <FooterArea>
         <AppBar />
         <Footer />
+        </FooterArea>
       </Overlay>
       {isDebug ? <Debug2D /> : null}
     </AppWrapper>

@@ -1,8 +1,9 @@
-import { useCallback, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import {
   Column,
+  ContactDetails,
   CVWrapper,
-  DownloadButton,
+  EducationBox,
   List,
   Row,
   Section,
@@ -10,14 +11,28 @@ import {
   SkillsBox,
   SubRow,
   SubTitle,
+  SuperSubTitle,
+  SuperTitle,
   Title,
 } from './CV.styles';
+import StateContext from '../../../StateContext';
 import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
+import PrintCV from "../../PrintCV/PrintCV";
 
 function CVArtMain() {
   const cvWrapperRef = useRef<HTMLDivElement>(null);
+  const { setIsFullPage } = useContext(StateContext);
+
+  useEffect(() => {
+    setIsFullPage(true);
+
+    console.log('CVArtMain useEffect');
+    return () => {
+      setIsFullPage(false);
+    };
+  }, [setIsFullPage]);
 
   const employmentHistory: EmploymentHistoryItem[] = [
     {
@@ -25,7 +40,7 @@ function CVArtMain() {
       role: '3D Engineer',
       dates: '2016 - 2024',
       description: [
-        'Built a 3D terrain visualizer for displaying and analysing Bathymetry (under water) elevation data.',
+        'Built a 3D tile based terrain visualizer for displaying and analysing Bathymetry (under water) elevation data.',
         'Used shaders to visualize elevation data in colour, for more useful analysis.',
         'Created terrain analysis tools such as cross section of elevation and sediment volume calculation.',
         'Worked with Harwich Port to translate their multi depth scanning technique into colour system for harbour pilots.',
@@ -56,17 +71,17 @@ function CVArtMain() {
     },
     {
       company: 'Caspian Learning',
-      role: 'Artist / Developer',
+      role: 'Lead Artist',
       dates: '2005 - 2015',
       description: [
         'Building educational games for schools, military and professional industries.',
-        'Used 3ds Max and Photoshop to create, edit characters, objects and environments for the game engine.',
+        'Used 3ds Max and Photoshop to create environments, objects and characters for the game engine.',
+        'Worked with development team to enhance environment lighting with lightmapping pipeline.',
         'Worked closely with programmers to develop efficient and flexible character rig, which included facial animation.',
         'Created, applied and edited looping character animations for all game characters.',
         'Worked on projects for high profile clients such as Siemens, IBM, Fiat, Unilever and PWC.',
         'Developed tools to rapidly speed up art asset importing as well as improve quality.',
-        'Organised and managed over 2000 art assets in the Caspian library.',
-        'Worked with development team to bring lightmapped environments to the game engine.',
+        'Organised and managed art assets across a range of projects, managing outsource teams.',
         'Built a custom 3ds Max material editor to speed up working with game engine materials.',
       ],
     },
@@ -110,20 +125,25 @@ function CVArtMain() {
     },
   ];
 
-  const handleDownload = useCallback(() => {
-    const link = document.createElement('a');
-    link.href = '/Ian_Hamblin_CV.pdf';
-    link.download = 'Ian_Hamblin_CV.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, []);
-
   return (
     <SubPage title="CV / Resume" expand>
-      <CVWrapper ref={cvWrapperRef}>
+      <CVWrapper ref={cvWrapperRef} className={"cv-container"}>
         <SectionRight />
         <Section>
+          <Row>
+            <Column>
+            <SuperTitle>Ian Hamblin</SuperTitle>
+            <SuperSubTitle>3D Graphics Specialist</SuperSubTitle>
+          </Column>
+          <Column>
+          <ContactDetails>
+            <div><b>Email:</b> ihamblin@gmail.com</div>
+            <div><b>Phone:</b> 07882449285</div>
+            <div><b>LinkedIn:</b> linkedin.com/in/ihamblin</div>
+            <div><b>Portfolio:</b> https://ianhamblin.xyz</div>
+          </ContactDetails>
+          </Column>
+          </Row>
           <Row>
             <Column>
               <Title>Technical Skills</Title>
@@ -150,6 +170,7 @@ function CVArtMain() {
               </SkillsBox>
             </Column>
             <Column>
+            
               <Title>About Me</Title>
               <p>
                 Hi, I'm Ian and i'm a 3D specialist with a passion for beutiful
@@ -191,7 +212,7 @@ function CVArtMain() {
               <Title>Education</Title>
               {education.map((edu) => (
                 <SubRow key={edu.date}>
-                  <SkillsBox>{edu.date}</SkillsBox>
+                  <EducationBox>{edu.date}</EducationBox>
                   <div>{edu.description}</div>
                 </SubRow>
               ))}
@@ -207,9 +228,7 @@ function CVArtMain() {
           </Row>
         </Section>
       </CVWrapper>
-      <DownloadButton onClick={handleDownload}>
-        Download PDF Version
-      </DownloadButton>
+      <PrintCV />
     </SubPage>
   );
 }

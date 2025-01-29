@@ -9,7 +9,7 @@ const ContentWrapper = styled.div({
   width: '100vw',
   position: 'relative',
   display: 'flex',
-  flexBasis: '75vh',
+  flexBasis: '100vh',
   flexDirection: 'row',
   alignItems: 'center',
 });
@@ -31,7 +31,7 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
 
   return (
     <ContentWrapper>
-      <CentreSpace>
+      {/* <CentreSpace> */}
         {(() => {
           let content;
           switch (location.pathname) {
@@ -49,7 +49,7 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
 
           return content;
         })()}
-      </CentreSpace>
+      {/* </CentreSpace> */}
     </ContentWrapper>
   );
 };

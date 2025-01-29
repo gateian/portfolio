@@ -31,14 +31,15 @@ const Overlay = styled.div({
 
 interface HeroBannerProps {
   isVisible: boolean;
+  isDisabled?: boolean;
 }
 
 const HeroBanner = styled.div<HeroBannerProps>((props) => ({
+  display: props.isDisabled ? 'none' : 'flex',
   color: 'white',
   flexBasis: '15vh',
   flexShrink: 0,
   width: '100%',
-  display: 'flex',
   pointerEvents: 'auto',
   marginTop: '50px',
   opacity: props.isVisible ? 1 : 0,
@@ -53,4 +54,19 @@ const HeroBannerSideColumn = styled.div({
   align: 'center',
 });
 
-export { ThreeContainer, Overlay, HeroBanner, HeroBannerSideColumn };
+interface FooterAreaProps {
+  isDisabled?: boolean;
+}
+
+const FooterArea = styled.div<FooterAreaProps>((props) => ({
+  display: props.isDisabled ? 'flex' : 'none',
+  justifyContent: 'center',
+  alignItems: 'center',
+  align: 'center',
+  width: '100%',
+  height: '100%',
+  padding: '10px',
+  backgroundColor: '#222',
+}));
+
+export { ThreeContainer, Overlay, HeroBanner, HeroBannerSideColumn, FooterArea };
