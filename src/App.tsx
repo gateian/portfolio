@@ -51,8 +51,8 @@ const mediaItems: MediaItemsProps[] = [
     src: '/videos/mountain.mp4',
   },
   {
-    type: 'image',
-    src: '/images/ShrineRender2.webp',
+    type: 'video',
+    src: '/videos/cap2.mp4',
   },
   {
     type: 'video',
@@ -61,6 +61,10 @@ const mediaItems: MediaItemsProps[] = [
   {
     type: 'image',
     src: '/images/harrier.webp',
+  },
+  {
+    type: 'image',
+    src: '/images/ShrineRender2.webp',
   },
   {
     type: 'video',
@@ -108,7 +112,7 @@ function AppContent() {
           <Route path="/cv" element={<ContentArea />} />
           <Route path="/cvart" element={<ContentArea />} />
         </Routes>
-        <FooterArea>
+        <FooterArea isDisabled={isFullPage}>
           <AppBar />
           <Footer />
         </FooterArea>

@@ -59,14 +59,13 @@ interface FooterAreaProps {
 }
 
 const FooterArea = styled.div<FooterAreaProps>((props) => ({
-  display: props.isDisabled ? 'flex' : 'none',
+  display: props.isDisabled ? 'none' : 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   align: 'center',
   width: '100%',
   height: '100%',
   padding: '10px',
-  backgroundColor: '#222',
 }));
 
 export {

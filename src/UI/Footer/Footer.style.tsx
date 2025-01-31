@@ -53,6 +53,9 @@ export const AttributionSection = styled.div({
 
 export const AttributionText = styled.span({
   color: '#ddd',
+  '@media (max-width: 696px)': {
+    marginRight: '1rem',
+  },
   '& a': {
     color: '#fff',
     textDecoration: 'underline',
@@ -66,6 +69,8 @@ export const SocialContainer = styled.div({
   display: 'flex',
   alignItems: 'center',
   gap: '1rem',
+  marginRight: '3rem',
+
   '@media (max-width: 650px)': {
     fontSize: '1.75rem',
   },
