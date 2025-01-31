@@ -14,14 +14,6 @@ const ContentWrapper = styled.div({
   alignItems: 'center',
 });
 
-const CentreSpace = styled.div({
-  flexGrow: 1,
-  alignSelf: 'flex-start',
-  height: '75vh',
-  overflow: 'auto',
-  position: 'relative',
-});
-
 interface ContentAreaProps {
   children?: ReactNode;
 }
@@ -32,24 +24,23 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
   return (
     <ContentWrapper>
       {/* <CentreSpace> */}
-        {(() => {
-          let content;
-          switch (location.pathname) {
-            case '/cv':
-              content = <CVMain />;
-              break;
-            case '/cvart':
-              content = <CVArtMain />;
-              break;
-            case '/':
-            default:
-              content = <HomePage />;
-              break;
-          }
+      {(() => {
+        let content;
+        switch (location.pathname) {
+          case '/cv':
+            content = <CVMain />;
+            break;
+          case '/cvart':
+            content = <CVArtMain />;
+            break;
+          case '/':
+          default:
+            content = <HomePage />;
+            break;
+        }
 
-          return content;
-        })()}
-      {/* </CentreSpace> */}
+        return content;
+      })()}
     </ContentWrapper>
   );
 };

@@ -19,7 +19,7 @@ import StateContext from '../../../StateContext';
 import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
-import PrintCV from "../../PrintCV/PrintCV";
+import PrintCV from '../../PrintCV/PrintCV';
 
 function CVArtMain() {
   const cvWrapperRef = useRef<HTMLDivElement>(null);
@@ -28,7 +28,6 @@ function CVArtMain() {
   useEffect(() => {
     setIsFullPage(true);
 
-    console.log('CVArtMain useEffect');
     return () => {
       setIsFullPage(false);
     };
@@ -127,22 +126,30 @@ function CVArtMain() {
 
   return (
     <SubPage title="CV / Resume" expand>
-      <CVWrapper ref={cvWrapperRef} className={"cv-container"}>
+      <CVWrapper ref={cvWrapperRef} className="cv-container">
         <SectionRight />
         <Section>
           <Row>
             <Column>
-            <SuperTitle>Ian Hamblin</SuperTitle>
-            <SuperSubTitle>3D Graphics Specialist</SuperSubTitle>
-          </Column>
-          <Column>
-          <ContactDetails>
-            <div><b>Email:</b> ihamblin@gmail.com</div>
-            <div><b>Phone:</b> 07882449285</div>
-            <div><b>LinkedIn:</b> linkedin.com/in/ihamblin</div>
-            <div><b>Portfolio:</b> https://ianhamblin.xyz</div>
-          </ContactDetails>
-          </Column>
+              <SuperTitle>Ian Hamblin</SuperTitle>
+              <SuperSubTitle>3D Graphics Specialist</SuperSubTitle>
+            </Column>
+            <Column>
+              <ContactDetails>
+                <div>
+                  <b>Email:</b> ihamblin@gmail.com
+                </div>
+                <div>
+                  <b>Phone:</b> 07882449285
+                </div>
+                <div>
+                  <b>LinkedIn:</b> linkedin.com/in/ihamblin
+                </div>
+                <div>
+                  <b>Portfolio:</b> https://ianhamblin.xyz
+                </div>
+              </ContactDetails>
+            </Column>
           </Row>
           <Row>
             <Column>
@@ -170,7 +177,6 @@ function CVArtMain() {
               </SkillsBox>
             </Column>
             <Column>
-            
               <Title>About Me</Title>
               <p>
                 Hi, I'm Ian and i'm a 3D specialist with a passion for beutiful

@@ -81,8 +81,6 @@ export const SubTitle = styled.h3({
   fontFamily: '"Zuume", sans-serif',
 });
 
-
-
 export const List = styled.ul({
   listStyleType: 'square',
   padding: 0,
@@ -121,7 +119,6 @@ export const EducationBox = styled.div({
     textTransform: 'uppercase',
   },
 });
-
 
 export const ContactDetails = styled.div({
   margin: '1rem',

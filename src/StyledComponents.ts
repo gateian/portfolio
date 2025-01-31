@@ -69,4 +69,10 @@ const FooterArea = styled.div<FooterAreaProps>((props) => ({
   backgroundColor: '#222',
 }));
 
-export { ThreeContainer, Overlay, HeroBanner, HeroBannerSideColumn, FooterArea };
+export {
+  ThreeContainer,
+  Overlay,
+  HeroBanner,
+  HeroBannerSideColumn,
+  FooterArea,
+};
