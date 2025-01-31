@@ -14,8 +14,8 @@ export const CVWrapper = styled.div({
   borderRadius: '20px',
   fontFamily: '"Kanit", sans-serif',
   fontWeight: 200,
+  fontSize: '0.75rem',
   height: '100%',
-  maxHeight: '75vh',
 });
 
 export const Section = styled.div({
@@ -48,17 +48,37 @@ export const Column = styled.div({
   flexGrow: 1,
 });
 
+export const SuperTitle = styled.div({
+  color: 'black',
+  fontFamily: '"Zuume", sans-serif',
+  fontWeight: 200,
+  fontSize: '3rem',
+  margin: '0',
+  textAlign: 'left',
+  height: '50px',
+});
+
+export const SuperSubTitle = styled.h3({
+  color: 'black',
+  margin: 0,
+  fontFamily: '"Zuume", sans-serif',
+  fontSize: '1.54rem',
+  fontWeight: 300,
+  fontStyle: 'italic',
+});
+
 export const Title = styled.h2({
   color: 'black',
-  fontFamily: '"Kanit", sans-serif',
-  fontWeight: 200,
+  fontFamily: '"Zuume", sans-serif',
+  fontWeight: 300,
+  fontStyle: 'italic',
   margin: '20px 0',
 });
 
 export const SubTitle = styled.h3({
   color: 'black',
   margin: 0,
-  fontFamily: '"Kanit", sans-serif',
+  fontFamily: '"Zuume", sans-serif',
 });
 
 export const List = styled.ul({
@@ -79,9 +99,34 @@ export const SkillsBox = styled.div({
   fontFamily: '"Kanit", sans-serif',
   fontWeight: 100,
   marginBottom: '1rem',
+  minWidth: '40vw',
   '& h3': {
     color: 'white',
     textTransform: 'uppercase',
+  },
+});
+
+export const EducationBox = styled.div({
+  backgroundColor: '#333333',
+  color: 'white',
+  padding: '1rem',
+  borderRadius: '10px',
+  fontFamily: '"Kanit", sans-serif',
+  fontWeight: 100,
+  marginBottom: '1rem',
+  '& h3': {
+    color: 'white',
+    textTransform: 'uppercase',
+  },
+});
+
+export const ContactDetails = styled.div({
+  margin: '1rem',
+  fontSize: '0.75rem',
+  position: 'relative',
+  left: '1rem',
+  '& b': {
+    fontWeight: 400,
   },
 });
 

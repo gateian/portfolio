@@ -26,6 +26,8 @@ type AppState = {
   setGlbModels: (value: Map<string, GlbModelProps>) => void;
   isUIVisible: boolean;
   setIsUIVisible: (visible: boolean) => void;
+  isFullPage: boolean;
+  setIsFullPage: (value: boolean) => void;
 };
 
 const StateContext = createContext<AppState>({
@@ -53,6 +55,8 @@ const StateContext = createContext<AppState>({
   setGlbModels: () => {},
   isUIVisible: true,
   setIsUIVisible: () => {},
+  isFullPage: false,
+  setIsFullPage: () => {},
 });
 
 export function StateProvider({ children }: { children: ReactNode }) {
@@ -63,6 +67,7 @@ export function StateProvider({ children }: { children: ReactNode }) {
   const [subPageDialogId, setSubPageDialogId] = useState<number>(-1);
   const [mapMarkers, setMapMarkers] = useState<MapMarkerDefinition[]>([]);
   const [isUIVisible, setIsUIVisible] = useState(true);
+  const [isFullPage, setIsFullPage] = useState(false);
 
   const [cameraSettings, setCameraSettings] =
     useState<OrbitCameraSettingsProps>({
@@ -97,6 +102,8 @@ export function StateProvider({ children }: { children: ReactNode }) {
         setGlbModels,
         isUIVisible,
         setIsUIVisible,
+        isFullPage,
+        setIsFullPage,
       }}
     >
       {children}
