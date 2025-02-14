@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import CVMain from './pages/CV/CVMain';
 import HomePage from './pages/home/homePage';
 import CVArtMain from './pages/CV/CVArtMain';
+import CVWebMain from './pages/CV/CVWebMain';
 
 const ContentWrapper = styled.div({
   width: '100vw',
@@ -32,6 +33,9 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
             break;
           case '/cvart':
             content = <CVArtMain />;
+            break;
+          case '/cvweb':
+            content = <CVWebMain />;
             break;
           case '/':
           default:
