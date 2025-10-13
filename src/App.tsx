@@ -48,11 +48,15 @@ const mediaItems: MediaItemsProps[] = [
   },
   {
     type: 'video',
-    src: '/videos/mountain.mp4',
+    src: '/videos/cap2.mp4',
   },
   {
     type: 'video',
-    src: '/videos/cap2.mp4',
+    src: '/videos/Cyberpunkcity005.mp4',
+  },
+  {
+    type: 'video',
+    src: '/videos/mountain.mp4',
   },
   {
     type: 'video',
