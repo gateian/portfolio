@@ -22,8 +22,6 @@ import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
 import StateContext from '../../../StateContext';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import html2pdf from 'html2pdf.js';
 
 function CVMain() {
@@ -45,6 +43,10 @@ function CVMain() {
       role: '3D and Code',
       dates: '2011 - 2016 & 2024 - Present',
       description: [
+        'Built python based Blender addons for art asset exporting and importing',
+        'Helped develop 3d interior design editor in three.js, including tiling editor',
+        'Implemented webrtc feed from browser to Blender in realtime, for high quality realtime rendering',
+        'Generated 3D renders of the M-Sport Raptor Dakar Rally car for use in marketing materials.',
         'Built a VR driving simulator for highlighting the dangers of Alcohol and driving.',
         'Various AR based app, including displaying interactive information on a real world brain model.',
         'Worked on Sixty5 app for helping farmers spray fields using GPS data.',
@@ -96,6 +98,7 @@ function CVMain() {
       dates: '2004 - 2005',
       description: [
         'Built popular Grand Theft Auto websites, GTA3 Unleashed, Vice city Unleashed and G-Unleashed.',
+        'Recognised by Rockstar Games as a top fan website for GTA gaming.',
         'Achieved ranking in the top 50,000 most active websites according to alexa rankings.',
         'Achieved No. 1 search ranking for “GTA Vice City hidden packages guide” on google.',
       ],
@@ -206,9 +209,12 @@ function CVMain() {
     {
       title: 'FRONTEND',
       skills: [
-        { skill: 'TypeScript', years: 7 },
-        { skill: 'React', years: 3 },
-        { skill: 'Three.js', years: 5 },
+        { skill: 'HTML', years: 20 },
+        { skill: 'CSS', years: 20 },
+        { skill: 'Javascript', years: 20 },
+        { skill: 'TypeScript', years: 9 },
+        { skill: 'Three.js', years: 7 },
+        { skill: 'React', years: 5 },
         { skill: 'SASS', years: 6 },
         { skill: 'Emotion', years: 4 },
         { skill: 'MUI', years: 3 },
@@ -225,6 +231,9 @@ function CVMain() {
         { skill: 'CI/CD', years: 4 },
         { skill: 'Docker', years: 3 },
         { skill: 'Nginx/Apache', years: 5 },
+        { skill: 'PHP', years: 5 },
+        { skill: 'MySQL', years: 3 },
+        { skill: 'Python', years: 1 },
       ],
     },
     {
