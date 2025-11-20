@@ -82,8 +82,10 @@ export const ColumnRight = styled.div({
   color: 'black',
   width: '60%',
   padding: '1rem 0',
+  fontWeight: 200,
   '& p': {
-    fontSize: '0.75rem',
+    fontSize: '0.85rem',
+    fontWeight: 200,
   },
 });
 

@@ -6,6 +6,7 @@ import HomePage from './pages/home/homePage';
 import CVArtMain from './pages/CV/CVArtMain';
 import CVWebMain from './pages/CV/CVWebMain';
 import CVGraphics from './pages/CV/CVGraphicsDeveloper';
+import CV3DDesigner from './pages/CV/CV3DDesigner';
 
 const ContentWrapper = styled.div({
   width: '100vw',
@@ -40,6 +41,9 @@ const ContentArea: React.FC<ContentAreaProps> = () => {
             break;
           case '/cvgraphics':
             content = <CVGraphics />;
+            break;
+          case '/cv3d':
+            content = <CV3DDesigner />;
             break;
           // case '/':
           default:
