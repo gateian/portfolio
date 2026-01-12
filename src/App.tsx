@@ -115,6 +115,9 @@ function AppContent() {
           <Route path="/" element={<ContentArea />} />
           <Route path="/cv" element={<ContentArea />} />
           <Route path="/cvart" element={<ContentArea />} />
+          <Route path="/cvweb" element={<ContentArea />} />
+          <Route path="/cvgraphics" element={<ContentArea />} />
+          <Route path="/cv3d" element={<ContentArea />} />
         </Routes>
         <FooterArea isDisabled={isFullPage}>
           <AppBar />

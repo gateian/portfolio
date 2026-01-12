@@ -1,6 +1,7 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import {
   Column,
+  ContactDetails,
   CVWrapper,
   DownloadButton,
   List,
@@ -8,40 +9,57 @@ import {
   Section,
   SectionRight,
   SkillsBox,
+  SkillsCategory,
+  SkillsItem,
   SubRow,
   SubTitle,
+  SuperSubTitle,
+  SuperTitle,
+  Tab,
   Title,
+  Years,
 } from './CV.styles';
 import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
+import StateContext from '../../../StateContext';
 
 function CVMain() {
   const cvWrapperRef = useRef<HTMLDivElement>(null);
 
+  const { setIsFullPage } = useContext(StateContext);
+
+  useEffect(() => {
+    setIsFullPage(true);
+
+    return () => {
+      setIsFullPage(false);
+    };
+  }, [setIsFullPage]);
+
   const employmentHistory: EmploymentHistoryItem[] = [
     {
       company: '3DEO',
-      role: 'Visual Engineer',
-      dates: '2016 - Present',
+      role: 'Lead Visual Engineer',
+      dates: '2016 - 2024',
       description: [
-        'Built a 3D terrain visualizer for displaying and analysing Bathymetry (under water) elevation data.',
-        'Used shaders to visualize elevation data in colour, for more useful analysis.',
-        'Created terrain analysis tools such as cross section of elevation and sediment volume calculation.',
-        'Worked with Harwich Port to translate their multi depth scanning technique into colour system for harbour pilots.',
-        'Used elevation data in shader to calculate shadows and lighting in realtime.',
-        'Wrote shader to allow blending between different elevation data over time.',
-        'Worked with team to build ‘Active Maps’, for displaying geo based data on maps.',
+        'Built a browser based realtime 3D terrain visualizer in typescript for displaying and analysing Bathymetry (under water) elevation data.',
+        'Co Developed the customer portal in react and AWS for managing and viewing complex customer geospatial data.',
+        'Improved volume calculation speeds from 30 seconds to 0.1 seconds, via gpu calculations.',
+        'Designed and built terrain colouring method that allowed customers to analyse their large datasets in realtime.',
+        'Worked with Harwich Port to build simple colour system for guiding harbour pilots through port.',
+        'Worked with team to convert huge datasets (gigabytes) into a format that could be streamed to the browser in seconds.',
+        'Developed method to show changes in elevation data over time, again in realtime.',
         'Created Server app for converting raw cctv feed to browser compatible video stream.',
         'Created an AR mobile app to show air quality at various real world locations.',
-        'Built COP26 journey. A 3D flythrough of the Forth estuary, interspersed with videos and user interactions.',
-        'Worked with AWS EC2, S3 and other backed infrastructure.',
+        'Built a realtime 3D flythrough of the Forth estuary, for use at the COP26 summit.',
+        'Worked with AWS EC2, S3 and other backend infrastructure.',
       ],
     },
     {
       company: 'Freelance Developer',
       role: 'App Development',
-      dates: '2011 - 2016',
+      dates: '2011 - 2016 and 2024 - Present',
       description: [
         'Built a VR driving simulator for highlighting the dangers of Alcohol and driving.',
         'Various AR based app, including displaying interactive information on a real world brain model.',
@@ -118,6 +136,81 @@ function CVMain() {
     document.body.removeChild(link);
   }, []);
 
+  // Types
+  interface Skill {
+    skill: string;
+    years: number;
+  }
+
+  interface SkillCategory {
+    title: string;
+    skills: Skill[];
+  }
+
+  // Data
+  const skillsData: SkillCategory[] = [
+    {
+      title: 'FRONTEND',
+      skills: [
+        { skill: 'TypeScript', years: 7 },
+        { skill: 'React', years: 3 },
+        { skill: 'Three.js', years: 5 },
+        { skill: 'SASS', years: 6 },
+        { skill: 'Emotion', years: 4 },
+        { skill: 'MUI', years: 3 },
+        { skill: 'React Three Fiber', years: 3 },
+      ],
+    },
+    {
+      title: 'TESTING',
+      skills: [
+        { skill: 'Jest', years: 3 },
+        { skill: 'React Testing Library', years: 3 },
+        { skill: 'Cypress', years: 1 },
+        { skill: 'Storybook', years: 1 },
+        { skill: 'Log Rocket', years: 1 },
+      ],
+    },
+    {
+      title: 'MAPPING TECHNOLOGIES',
+      skills: [
+        { skill: 'Mapbox', years: 8 },
+        { skill: 'Cesium', years: 1 },
+      ],
+    },
+    {
+      title: 'STATE MANAGEMENT',
+      skills: [
+        { skill: 'Apollo', years: 3 },
+        { skill: 'GraphQL', years: 3 },
+        { skill: 'Zustand', years: 3 },
+      ],
+    },
+    {
+      title: 'Apps and Games',
+      skills: [
+        { skill: 'AR/VR', years: 8 },
+        { skill: 'Unity C#', years: 6 },
+        { skill: 'Android Java/Kotlin', years: 4 },
+        { skill: 'iOS', years: 2 },
+      ],
+    },
+    {
+      title: '3D',
+      skills: [
+        { skill: '3ds Max', years: 15 },
+        { skill: 'Blender', years: 5 },
+        { skill: 'Photoshop', years: 15 },
+        { skill: 'Unreal Engine', years: 4 },
+        { skill: 'Unity', years: 6 },
+        { skill: 'Zbrush', years: 3 },
+        { skill: 'Substance Painter', years: 3 },
+        { skill: 'Gaea 2.0', years: 2 },
+        { skill: 'Davinci Resolve', years: 2 },
+      ],
+    },
+  ];
+
   return (
     <SubPage title="CV / Resume" expand>
       <CVWrapper ref={cvWrapperRef}>
@@ -125,32 +218,98 @@ function CVMain() {
         <Section>
           <Row>
             <Column>
-              <Title>Technical Skills</Title>
-              <SkillsBox>
-                <SubTitle>Web</SubTitle>
+              <SuperTitle>Ian Hamblin</SuperTitle>
+              <SuperSubTitle>Full Stack Web Development & 3D</SuperSubTitle>
+            </Column>
+            <Column>
+              <ContactDetails>
                 <div>
-                  Typescript / React / Sass / Emotion / MUI / Apollo Three.js /
-                  React Three Fiber / Mapbox / Cesium AWS / Graphql / git / CI /
-                  CD / Docker / Nginx / apache
+                  <b>Email:</b> ihamblin@gmail.com
+                </div>
+                <div>
+                  <b>Phone:</b> 07882449285
+                </div>
+                <div>
+                  <b>LinkedIn:</b> linkedin.com/in/ihamblin
+                </div>
+                <div>
+                  <b>Portfolio:</b> https://ianhamblin.xyz
+                </div>
+              </ContactDetails>
+            </Column>
+          </Row>
+          <Row>
+            <Column>
+              <Title>Technical Skills</Title>
+
+              {skillsData.map((category) => (
+                <SkillsBox key={category.title}>
+                  <Tab indent={0}>
+                    {'const '}
+                    <SkillsCategory>{category.title}</SkillsCategory>
+                    {' = ['}
+                  </Tab>
+                  {category.skills.map((skill) => (
+                    <Tab indent={1}>
+                      {`{ skill: '`}
+                      <SkillsItem>{skill.skill}</SkillsItem>
+                      {`', years: ${skill.years} },`}
+                    </Tab>
+                  ))}
+                </SkillsBox>
+              ))}
+              <SkillsBox>
+                <SubTitle>Frontend</SubTitle>
+                <div>
+                  HTML <Years>(20 yrs)</Years> / CSS <Years>(20 yrs)</Years> /
+                  Javascript <Years>(20 yrs)</Years> / Typescript{' '}
+                  <Years>(8 yrs)</Years> / React <Years>(3 yrs)</Years> /
+                  Three.js <Years>(8 yrs)</Years> / Sass <Years>(3 yrs)</Years>{' '}
+                  / Emotion <Years>(3 yrs)</Years> / MUI <Years>(3 yrs)</Years>{' '}
+                  / React Three Fiber <Years>(1 yrs)</Years> / PHP{' '}
+                  <Years>(5 yrs)</Years>
+                </div>
+              </SkillsBox>
+              <SkillsBox>
+                <SubTitle>Testing</SubTitle>
+                <div>
+                  Jest (3 yrs) / React Testing Library (3 yrs) / Cypress (1 yrs)
+                  / Storybook (1 yrs) / Log Rocket (1 yrs)
+                </div>
+              </SkillsBox>
+              <SkillsBox>
+                <SubTitle>Map Technologies</SubTitle>
+                <div>Mapping/Geospatial: Mapbox (8 yrs) / Cesium ( 1 yr )</div>
+              </SkillsBox>
+              <SkillsBox>
+                <SubTitle>State Management</SubTitle>
+                <div>Apollo (3 yrs) / GraphQL (3 yrs) / Zustand (3 yrs)</div>
+              </SkillsBox>
+              <SkillsBox>
+                <SubTitle>Cloud/DevOps</SubTitle>
+                <div>
+                  AWS (8 yrs) / git (10 yrs) / CI-CD ( 8 yrs) / Docker (5 yrs) /
+                  Nginx (3 yrs) / apache(15 yrs)
                 </div>
               </SkillsBox>
               <SkillsBox>
                 <SubTitle>Apps and Games</SubTitle>
-                AR / VR / Unity c# / Android Java / Kotlin / ios
+                AR / VR / C# / Android Java / Kotlin / ios
               </SkillsBox>
               <SkillsBox>
                 <SubTitle>3D</SubTitle>
-                Modelling / Rendering / PBR Materials / Texturing / UV
-                Unwrapping
+                3ds Max / Blender / Photoshop / Unreal Engine / Unity / Three.js
+                / Zbrush / Substance Painter / Gaea 2.0 / Davinci Resolve
               </SkillsBox>
             </Column>
             <Column>
               <Title>About Me</Title>
               <p>
-                Hi, I'm Ian and i'm a devloper with a passion for visualisation
-                and user experience. I have a strong background in 3D
-                visualisation and have worked on a wide range of projects from
-                educational games to web based terrain analysis platforms.
+                Hi, I'm Ian and I'm a web developer with a particular interest
+                in 3D and earth mapping technologies. I built my first website
+                in 1999 and have kept up to date with the latest technologies
+                ever since, having developed industry standard applications in
+                my previous roles using react, three.js, mapbox and cesium.
               </p>
               <p>
                 My 20 year career has seen me work with a variety of platforms
@@ -159,14 +318,22 @@ function CVMain() {
                 learning and helping others achieve their goals.
               </p>
               <p>
-                I view myself as a highliy motivated, sociable, fast working and
-                adaptable individual. I have ocassionally taken responsibility
-                as a leader (like the time I captained my own dodgeball team!).
+                I am a highliy motivated, sociable, fast working and adaptable
+                individual that is looking for roles where I can contribute and
+                make a difference. I prefer office based work over remote when
+                possible. As a more senior developer I am looking to mentor and
+                help others and always like to contribute in meetings.
               </p>
               <p>
-                Outside of work I like to keep fit with cycling, walking,
-                spending time with my family, reading, gardening and building
-                Lego!
+                In my personal life, I like to keep active with cycling and
+                running. I once captained a local winning Dodgeball team. I am
+                currently training for the great north run in aid of Prostate
+                Cancer. I love to watch films, Formula 1 and football (I will
+                tell you who I support if I get the job), I like to keep up to
+                date with the latest tech on youtube and enjoy reading
+                influential books such as 'The Mom Test' and 'Million Dollar
+                Weekend'. Of course I also enjoy spending time with my family
+                and friends and spending too much money on Lego!
               </p>
             </Column>
           </Row>
