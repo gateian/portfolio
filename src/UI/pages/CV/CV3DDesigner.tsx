@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useRef } from 'react';
+import html2pdf from 'html2pdf.js';
 import {
   Column,
   ColumnLeft,
@@ -22,7 +23,6 @@ import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
 import StateContext from '../../../StateContext';
-import html2pdf from 'html2pdf.js';
 
 function CV3DDesigner() {
   const cvWrapperRef = useRef<HTMLDivElement>(null);
@@ -140,32 +140,32 @@ function CV3DDesigner() {
 
   const employmentHistory: EmploymentHistoryItem[] = [
     {
-        company: 'Freelance',
-        role: '3D Specialist',
-        dates: '2011 - 2016 & 2024 - Present',
-        description: [
-          'Produced 3D renders of the M-Sport Raptor Dakar Rally car for use in marketing materials.',
-          'Worked on Combat Air Patrol 2 flight simulator. Modelling cockpits, Aircraft and various supporting assets.',
-          'Helped build 3d interior design editor in three.js, including tiling editor',
-          'Implemented webrtc feed from browser to Blender in realtime, for high quality realtime rendering in the browser.',
-          'Created VR and AR experiences, including a driving simulator highlighting the dangers of drink driving and interactive medical visualisations.',
-          "Built 'Ocean Depths', a first person submarine journey for an exhibition, focusing on atmosphere, lighting and immersion.",
-          'Modelled detailed environments and hero assets such as the Queens University building in Belfast and aircraft for a flight simulator.',
-        ],
+      company: 'Freelance',
+      role: '3D Specialist',
+      dates: '2011 - 2016 & 2024 - Present',
+      description: [
+        'Produced 3D renders of the M-Sport Raptor Dakar Rally car for use in marketing materials.',
+        'Worked on Combat Air Patrol 2 flight simulator. Modelling cockpits, Aircraft and various supporting assets.',
+        'Helped build 3d interior design editor in three.js, including tiling editor',
+        'Implemented webrtc feed from browser to Blender in realtime, for high quality realtime rendering in the browser.',
+        'Created VR and AR experiences, including a driving simulator highlighting the dangers of drink driving and interactive medical visualisations.',
+        "Built 'Ocean Depths', a first person submarine journey for an exhibition, focusing on atmosphere, lighting and immersion.",
+        'Modelled detailed environments and hero assets such as the Queens University building in Belfast and aircraft for a flight simulator.',
+      ],
     },
     {
-        company: '3DEO',
-        role: 'Lead Visual Engineer',
-        dates: '2016 - 2024',
-        description: [
-          'Designed and built a browser-based realtime 3D terrain visualiser (TypeScript, Three.js, WebGL) for analysing underwater elevation data.',
-          'Turned complex geospatial and time-series data into clear interactive views, colour systems, and cross-sections that non-technical users could understand.',
-          'Improved core analysis workflows by reducing volumetric calculations from around 30 seconds to 0.1 seconds using GPU-accelerated techniques.',
-          'Developed methods to compare changes in elevation over time, blending datasets in realtime to tell clear visual stories.',
-          'Collaborated with ports and maritime clients to design simple, high-impact visual systems that support everyday decision making.',
-          'Delivered a realtime 3D flythrough of the Forth estuary showcased at COP26, combining cinematic camera work with live data overlays.',
-          'Worked across AWS (EC2, S3) and the wider web stack to ensure visuals were performant, reliable and easy to access in the browser.',
-        ],
+      company: '3DEO',
+      role: 'Lead Visual Engineer',
+      dates: '2016 - 2024',
+      description: [
+        'Designed and built a browser-based realtime 3D terrain visualiser (TypeScript, Three.js, WebGL) for analysing underwater elevation data.',
+        'Turned complex geospatial and time-series data into clear interactive views, colour systems, and cross-sections that non-technical users could understand.',
+        'Improved core analysis workflows by reducing volumetric calculations from around 30 seconds to 0.1 seconds using GPU-accelerated techniques.',
+        'Developed methods to compare changes in elevation over time, blending datasets in realtime to tell clear visual stories.',
+        'Collaborated with ports and maritime clients to design simple, high-impact visual systems that support everyday decision making.',
+        'Delivered a realtime 3D flythrough of the Forth estuary showcased at COP26, combining cinematic camera work with live data overlays.',
+        'Worked across AWS (EC2, S3) and the wider web stack to ensure visuals were performant, reliable and easy to access in the browser.',
+      ],
     },
     {
       company: 'Caspian Learning',
@@ -214,7 +214,9 @@ function CV3DDesigner() {
         <Section>
           <ColumnLeft>
             <SuperTitle>Ian Hamblin</SuperTitle>
-            <SuperSubTitle>Front-End Developer / 3D Graphics Specialist</SuperSubTitle>
+            <SuperSubTitle>
+              Front-End Developer / 3D Graphics Specialist
+            </SuperSubTitle>
 
             <ContactDetails>
               <div>
@@ -245,12 +247,12 @@ function CV3DDesigner() {
                     {`', years: ${skill.years} },`}
                   </Tab>
                 ))}
-                {']'}
+                ]
               </SkillsBox>
             ))}
 
-            <Column type={'dark'}>
-              <Title type={'dark'}>Education</Title>
+            <Column type="dark">
+              <Title type="dark">Education</Title>
               {education.map((edu) => (
                 <SubRow key={edu.date}>
                   <EduDate>{edu.date}</EduDate>
@@ -259,8 +261,8 @@ function CV3DDesigner() {
               ))}
             </Column>
 
-            <Column type={'dark'}>
-              <Title type={'dark'}>Interests and Achievements</Title>
+            <Column type="dark">
+              <Title type="dark">Interests and Achievements</Title>
               <List>
                 {interestsAndAchievements.map((desc, index) => (
                   <li key={index}>{desc}</li>
@@ -276,27 +278,30 @@ function CV3DDesigner() {
             <Column>
               <Title>Profile</Title>
               <p>
-                Front-end developer and 3D designer with over two decades of web experience
-                and a long-standing background in games and real-time graphics. I specialise
-                in building interactive 3D animated experiences in the browser. I also produce 
-                cinematic 3D animations for use in marketing and advertising.
+                Front-end developer and 3D designer with over two decades of web
+                experience and a long-standing background in games and real-time
+                graphics. I specialise in building interactive 3D animated
+                experiences in the browser. I also produce cinematic 3D
+                animations for use in marketing and advertising.
               </p>
               <p>
-                With over 20 years of experience working web and 3D, I have delivered a wide 
-                range of projects, for small and large corporate clients. I enjoy pushing myself to 
-                achieve the best possible results for my clients in as fast a time as possible. 
-                I am always looking for creative simple solutions to complex problems and I always
-                enjoy the buzz of producing high quality work that wow's my clients and achieves the desired results.
+                With over 20 years of experience working web and 3D, I have
+                delivered a wide range of projects, for small and large
+                corporate clients. I enjoy pushing myself to achieve the best
+                possible results for my clients in as fast a time as possible. I
+                am always looking for creative simple solutions to complex
+                problems and I always enjoy the buzz of producing high quality
+                work that wow's my clients and achieves the desired results.
               </p>
             </Column>
 
             <Column>
-                <Title>Highlights</Title>
-                <List>
-                  {highlights.map((desc, index) => (
-                    <li key={index}>{desc}</li>
-                  ))}
-                </List>
+              <Title>Highlights</Title>
+              <List>
+                {highlights.map((desc, index) => (
+                  <li key={index}>{desc}</li>
+                ))}
+              </List>
             </Column>
 
             <Column>
@@ -322,11 +327,11 @@ function CV3DDesigner() {
           </ColumnRight>
         </Section>
       </CVWrapper>
-      <DownloadButton onClick={handleDownload}>Download PDF Version</DownloadButton>
+      <DownloadButton onClick={handleDownload}>
+        Download PDF Version
+      </DownloadButton>
     </SubPage>
   );
 }
 
 export default CV3DDesigner;
-
-

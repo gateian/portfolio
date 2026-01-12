@@ -242,7 +242,7 @@ interface TabProps {
 
 export const Tab = styled.div<TabProps>((props) => ({
   position: 'relative',
-  left: props.indent * 10 + 'px',
+  left: `${props.indent * 10}px`,
 }));
 
 export const SkillsCategory = styled.span({

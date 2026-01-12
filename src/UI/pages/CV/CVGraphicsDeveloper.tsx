@@ -1,4 +1,6 @@
 import { useCallback, useContext, useEffect, useRef } from 'react';
+import html2pdf from 'html2pdf.js';
+
 import {
   Column,
   ColumnLeft,
@@ -22,7 +24,6 @@ import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
 import StateContext from '../../../StateContext';
-import html2pdf from 'html2pdf.js';
 
 function CVGraphicsDeveloper() {
   const cvWrapperRef = useRef<HTMLDivElement>(null);
@@ -214,12 +215,12 @@ function CVGraphicsDeveloper() {
                     {`', years: ${skill.years} },`}
                   </Tab>
                 ))}
-                {']'}
+                ]
               </SkillsBox>
             ))}
 
-            <Column type={'dark'}>
-              <Title type={'dark'}>Education</Title>
+            <Column type="dark">
+              <Title type="dark">Education</Title>
               {education.map((edu) => (
                 <SubRow key={edu.date}>
                   <EduDate>{edu.date}</EduDate>
@@ -228,8 +229,8 @@ function CVGraphicsDeveloper() {
               ))}
             </Column>
 
-            <Column type={'dark'}>
-              <Title type={'dark'}>Highlights</Title>
+            <Column type="dark">
+              <Title type="dark">Highlights</Title>
               <List>
                 {highlights.map((desc, index) => (
                   <li key={index}>{desc}</li>
