@@ -4,12 +4,12 @@ const PrintCV = () => {
   const generatePDF = async () => {
     const html2pdf = (await import('html2pdf.js')).default;
 
-    const element = document.querySelector('.cv-container');
+    const element = document.querySelector<HTMLElement>('.cv-container');
 
     const opt = {
-      margin: [10, 10, 10, 10],
+      margin: [10, 10, 10, 10] as [number, number, number, number],
       filename: 'Ian_Hamblin_CV_2025.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg' as const, quality: 0.98 },
       html2canvas: {
         scale: 2,
         useCORS: true,
@@ -18,13 +18,16 @@ const PrintCV = () => {
         letterRendering: true,
       },
       jsPDF: {
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait',
+        unit: 'mm' as const,
+        format: 'a4' as const,
+        orientation: 'portrait' as const,
       },
     };
 
     try {
+      if (!element) {
+        throw new Error('CV container not found');
+      }
       await html2pdf().set(opt).from(element).save();
       console.log('PDF generated successfully');
     } catch (error) {
