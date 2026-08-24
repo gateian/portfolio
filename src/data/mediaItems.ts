@@ -4,13 +4,10 @@ export type MediaItem = {
   alt?: string;
 };
 
-/** Keep in sync with the preload link in index.html */
-export const FIRST_VIDEO_SRC = '/videos/raptor_short_web.mp4';
-
 export const mediaItems: MediaItem[] = [
   {
     type: 'video',
-    src: FIRST_VIDEO_SRC,
+    src: '/videos/raptor_short_web.mp4',
   },
   {
     type: 'video',

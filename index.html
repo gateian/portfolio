@@ -3,9 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/mountains.svg" />
-    <!-- Keep in sync with FIRST_VIDEO_SRC in src/data/mediaItems.ts -->
+    <!-- Hero src is injected from mediaItems[0] by vite.config.ts -->
     <script>
       (function () {
+        var src = "__HERO_MEDIA_SRC__";
+        if (!src) {
+          return;
+        }
         var video = document.createElement("video");
         video.muted = true;
         video.defaultMuted = true;
@@ -13,13 +17,14 @@
         video.setAttribute("playsinline", "");
         video.preload = "auto";
         video.setAttribute("fetchpriority", "high");
-        video.src = "/videos/raptor_short_web.mp4";
+        video.src = src;
         video.style.width = "100%";
         video.style.height = "100%";
         video.style.objectFit = "cover";
         video.style.backgroundColor = "#000";
         video.load();
         window.__heroVideoEl = video;
+        window.__heroVideoSrc = src;
       })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />

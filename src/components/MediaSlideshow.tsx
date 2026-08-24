@@ -86,6 +86,14 @@ const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items, onReady }) => {
   const [isImagePanning, setIsImagePanning] = useState(false);
   const readyNotified = useRef(false);
 
+  const heroVideoSrc =
+    typeof window !== 'undefined' ? window.__heroVideoSrc : undefined;
+  const heroIndex = heroVideoSrc
+    ? items.findIndex(
+        (item) => item.type === 'video' && item.src === heroVideoSrc
+      )
+    : -1;
+
   const nextIndex = (currentIndex + 1) % items.length;
 
   const markReady = useCallback(() => {
@@ -113,11 +121,11 @@ const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items, onReady }) => {
 
   useEffect(() => {
     const preloaded = window.__heroVideoEl;
-    if (preloaded) {
-      videoRefs.current[0] = preloaded;
+    if (preloaded && heroIndex >= 0) {
+      videoRefs.current[heroIndex] = preloaded;
       setHeroVideo(preloaded);
     }
-  }, []);
+  }, [heroIndex]);
 
   useEffect(() => {
     const video = window.__heroVideoEl;
@@ -247,14 +255,14 @@ const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items, onReady }) => {
       return (
         <MediaElement className={isActive ? 'active' : ''} key={item.src}>
           {loadThis ? (
-            index === 0 && window.__heroVideoEl ? (
+            index === heroIndex && window.__heroVideoEl ? (
               <VideoSlot
                 ref={(container) => {
                   const hero = window.__heroVideoEl;
                   if (!hero) {
                     return;
                   }
-                  videoRefs.current[0] = hero;
+                  videoRefs.current[heroIndex] = hero;
                   if (container) {
                     if (hero.parentNode !== container) {
                       container.appendChild(hero);

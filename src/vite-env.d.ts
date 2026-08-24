@@ -2,4 +2,5 @@
 
 interface Window {
   __heroVideoEl?: HTMLVideoElement;
+  __heroVideoSrc?: string;
 }
