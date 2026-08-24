@@ -9,7 +9,8 @@ import CVGraphics from './pages/CV/CVGraphicsDeveloper';
 import CV3DDesigner from './pages/CV/CV3DDesigner';
 
 const ContentWrapper = styled.div({
-  width: '100vw',
+  width: '100%',
+  maxWidth: '100%',
   position: 'relative',
   display: 'flex',
   flexBasis: '100vh',

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 const ThreeContainer = styled.div({
-  width: '100vw',
+  width: '100%',
   height: '100vh',
   position: 'fixed',
   top: 0,
@@ -24,7 +24,8 @@ const Overlay = styled.div({
   alignItems: 'center',
   background: 'transparent',
   backgroundSize: '4px 4px',
-  overflow: 'auto',
+  overflowX: 'hidden',
+  overflowY: 'auto',
 });
 
 interface HeroBannerProps {
@@ -64,6 +65,7 @@ const FooterArea = styled.div<FooterAreaProps>((props) => ({
   width: '100%',
   height: '100%',
   padding: '10px',
+  boxSizing: 'border-box',
 }));
 
 export {
