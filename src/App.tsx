@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import './App.css';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import StateContext, { StateProvider } from './StateContext';
 import {
@@ -31,6 +31,12 @@ const AppWrapper = styled('div')({
 
 function AppContent() {
   const { isUIVisible, isFullPage } = useContext(StateContext);
+
+  useEffect(() => {
+    if (isFullPage) {
+      dismissInitialLoader();
+    }
+  }, [isFullPage]);
 
   return (
     <AppWrapper>
