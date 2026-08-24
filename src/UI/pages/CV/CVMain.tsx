@@ -1,9 +1,8 @@
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   Column,
   ContactDetails,
   CVWrapper,
-  DownloadButton,
   List,
   Row,
   Section,
@@ -23,10 +22,9 @@ import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
 import StateContext from '../../../StateContext';
+import PrintCV from '../../PrintCV/PrintCV';
 
 function CVMain() {
-  const cvWrapperRef = useRef<HTMLDivElement>(null);
-
   const { setIsFullPage } = useContext(StateContext);
 
   useEffect(() => {
@@ -127,15 +125,6 @@ function CVMain() {
     },
   ];
 
-  const handleDownload = useCallback(() => {
-    const link = document.createElement('a');
-    link.href = '/Ian_Hamblin_CV.pdf';
-    link.download = 'Ian_Hamblin_CV.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, []);
-
   // Types
   interface Skill {
     skill: string;
@@ -213,7 +202,7 @@ function CVMain() {
 
   return (
     <SubPage title="CV / Resume" expand>
-      <CVWrapper ref={cvWrapperRef}>
+      <CVWrapper>
         <SectionRight />
         <Section>
           <Row>
@@ -371,9 +360,7 @@ function CVMain() {
           </Row>
         </Section>
       </CVWrapper>
-      <DownloadButton onClick={handleDownload}>
-        Download PDF Version
-      </DownloadButton>
+      <PrintCV />
     </SubPage>
   );
 }

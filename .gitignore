@@ -31,3 +31,4 @@ codegen.env
 coverage/
 cypress/videos/
 cypress/screenshots/
+tsconfig.tsbuildinfo

@@ -8,7 +8,8 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "strict": false,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["vite/client"]
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "src/data/mediaItems.ts"]
 }
