@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   Column,
   ContactDetails,
@@ -22,7 +22,6 @@ import SubPage from '../../SubPage/SubPage';
 import PrintCV from '../../PrintCV/PrintCV';
 
 function CVArtMain() {
-  const cvWrapperRef = useRef<HTMLDivElement>(null);
   const { setIsFullPage } = useContext(StateContext);
 
   useEffect(() => {
@@ -126,7 +125,7 @@ function CVArtMain() {
 
   return (
     <SubPage title="CV / Resume" expand>
-      <CVWrapper ref={cvWrapperRef} className="cv-container">
+      <CVWrapper>
         <SectionRight />
         <Section>
           <Row>

@@ -1,13 +1,10 @@
-import { useCallback, useContext, useEffect, useRef } from 'react';
-import html2pdf from 'html2pdf.js';
-
+import { useContext, useEffect } from 'react';
 import {
   Column,
   ColumnLeft,
   ColumnRight,
   ContactDetails,
   CVWrapper,
-  DownloadButton,
   EduDate,
   List,
   Section,
@@ -24,10 +21,9 @@ import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
 import StateContext from '../../../StateContext';
+import PrintCV from '../../PrintCV/PrintCV';
 
 function CVGraphicsDeveloper() {
-  const cvWrapperRef = useRef<HTMLDivElement>(null);
-
   const { setIsFullPage } = useContext(StateContext);
 
   useEffect(() => {
@@ -37,30 +33,6 @@ function CVGraphicsDeveloper() {
       setIsFullPage(false);
     };
   }, [setIsFullPage]);
-
-  const handleDownload = useCallback(() => {
-    const element = cvWrapperRef.current;
-
-    if (element) {
-      const opt = {
-        margin: 1,
-        filename: 'Ian_Hamblin_CV_Graphics.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          letterRendering: true,
-        },
-        jsPDF: {
-          unit: 'mm',
-          format: 'a4',
-          orientation: 'portrait',
-        },
-      } as const;
-
-      html2pdf().set(opt).from(element).save();
-    }
-  }, []);
 
   interface Skill {
     skill: string;
@@ -178,7 +150,7 @@ function CVGraphicsDeveloper() {
 
   return (
     <SubPage title="CV / Resume — Graphics Developer" expand>
-      <CVWrapper ref={cvWrapperRef}>
+      <CVWrapper>
         <Section>
           <ColumnLeft>
             <SuperTitle>Ian Hamblin</SuperTitle>
@@ -269,9 +241,7 @@ function CVGraphicsDeveloper() {
           </ColumnRight>
         </Section>
       </CVWrapper>
-      <DownloadButton onClick={handleDownload}>
-        Download PDF Version
-      </DownloadButton>
+      <PrintCV />
     </SubPage>
   );
 }

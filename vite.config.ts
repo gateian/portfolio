@@ -7,17 +7,6 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules/three')) {
-            return 'three';
-          }
-        },
-      },
-    },
-  },
   plugins: [
     react({
       jsxImportSource: '@emotion/react',
@@ -26,14 +15,4 @@ export default defineConfig({
       },
     }),
   ],
-  resolve: {
-    alias: {
-      three: 'three',
-      'three/examples/jsm/loaders/RGBELoader':
-        'three/examples/jsm/loaders/RGBELoader.js',
-    },
-  },
-  optimizeDeps: {
-    include: ['three', '@react-three/drei'],
-  },
 });

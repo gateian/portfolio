@@ -11,9 +11,6 @@ import {
 } from './StyledComponents';
 import ContentArea from './UI/ContentArea';
 import TitleBanner from './UI/TitleBanner';
-import { DebugStateProvider } from './debug/DebugStateContext';
-import { isDebugMode } from './utils/generalUtils';
-import Debug2D from './debug/Debug2D';
 import MediaSlideshow from './components/MediaSlideshow';
 import AppBar from './UI/AppBar/AppBar';
 import Footer from './UI/Footer/Footer';
@@ -77,8 +74,6 @@ const mediaItems: MediaItemsProps[] = [
 ];
 
 function AppContent() {
-  const isDebug = isDebugMode();
-
   const [isVisible, setIsVisible] = useState(false);
   const { isUIVisible, isFullPage } = useContext(StateContext);
 
@@ -99,8 +94,6 @@ function AppContent() {
       window.removeEventListener('initialLoaderRemoved', handleLoaderRemoved);
     };
   }, []);
-
-  console.log('isFullPage', isFullPage);
 
   return (
     <AppWrapper visible={isVisible}>
@@ -124,7 +117,6 @@ function AppContent() {
           <Footer />
         </FooterArea>
       </Overlay>
-      {isDebug ? <Debug2D /> : null}
     </AppWrapper>
   );
 }
@@ -133,9 +125,7 @@ function App() {
   return (
     <BrowserRouter>
       <StateProvider>
-        <DebugStateProvider>
-          <AppContent />
-        </DebugStateProvider>
+        <AppContent />
       </StateProvider>
     </BrowserRouter>
   );

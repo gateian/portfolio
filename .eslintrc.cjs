@@ -88,43 +88,6 @@ module.exports = {
     // Fix unescaped entities
     'react/no-unescaped-entities': 'off',
 
-    // Add time to allowed React properties
-    'react/no-unknown-property': [
-      'error',
-      {
-        ignore: [
-          'position',
-          'args',
-          'object',
-          'attach',
-          'geometry',
-          'rotation',
-          'intensity',
-          'castShadow',
-          'receiveShadow',
-          'depthTest',
-          'map',
-          'transparent',
-          'renderOrder',
-          'envMap',
-          'metalness',
-          'roughness',
-          'envMapIntensity',
-          'reflectivity',
-          'wireframe',
-          'visible',
-          'time',
-          'shadow-mapSize-width',
-          'shadow-mapSize-height',
-          'shadow-camera-far',
-          'shadow-camera-left',
-          'shadow-camera-right',
-          'shadow-camera-top',
-          'shadow-camera-bottom',
-        ],
-      },
-    ],
-
     // Keep existing rules
     'linebreak-style': 'off',
     'import/no-extraneous-dependencies': 'off',

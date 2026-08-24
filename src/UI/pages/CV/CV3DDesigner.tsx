@@ -1,12 +1,10 @@
-import { useCallback, useContext, useEffect, useRef } from 'react';
-import html2pdf from 'html2pdf.js';
+import { useContext, useEffect } from 'react';
 import {
   Column,
   ColumnLeft,
   ColumnRight,
   ContactDetails,
   CVWrapper,
-  DownloadButton,
   EduDate,
   List,
   Section,
@@ -23,10 +21,9 @@ import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
 import StateContext from '../../../StateContext';
+import PrintCV from '../../PrintCV/PrintCV';
 
 function CV3DDesigner() {
-  const cvWrapperRef = useRef<HTMLDivElement>(null);
-
   const { setIsFullPage } = useContext(StateContext);
 
   useEffect(() => {
@@ -36,34 +33,6 @@ function CV3DDesigner() {
       setIsFullPage(false);
     };
   }, [setIsFullPage]);
-
-  const handleDownload = useCallback(() => {
-    const element = cvWrapperRef.current;
-
-    if (element) {
-      const opt = {
-        margin: 1,
-        filename: 'Ian_Hamblin_CV_3D_Designer.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          letterRendering: true,
-        },
-        jsPDF: {
-          unit: 'mm',
-          format: 'a4',
-          orientation: 'portrait',
-        },
-        pagebreak: {
-          mode: ['css', 'legacy'],
-          before: '#employment-page-break',
-        },
-      } as const;
-
-      html2pdf().set(opt).from(element).save();
-    }
-  }, []);
 
   interface Skill {
     skill: string;
@@ -210,7 +179,7 @@ function CV3DDesigner() {
 
   return (
     <SubPage title="CV / Resume — Front-End 3D Designer" expand>
-      <CVWrapper ref={cvWrapperRef}>
+      <CVWrapper>
         <Section>
           <ColumnLeft>
             <SuperTitle>Ian Hamblin</SuperTitle>
@@ -327,9 +296,7 @@ function CV3DDesigner() {
           </ColumnRight>
         </Section>
       </CVWrapper>
-      <DownloadButton onClick={handleDownload}>
-        Download PDF Version
-      </DownloadButton>
+      <PrintCV />
     </SubPage>
   );
 }

@@ -1,13 +1,10 @@
-import { useCallback, useContext, useEffect, useRef } from 'react';
-import html2pdf from 'html2pdf.js';
-
+import { useContext, useEffect } from 'react';
 import {
   Column,
   ColumnLeft,
   ColumnRight,
   ContactDetails,
   CVWrapper,
-  DownloadButton,
   EduDate,
   List,
   Section,
@@ -24,10 +21,9 @@ import CVEmploymentBox from './CVEmploymentBox';
 import { EmploymentHistoryItem } from './CVInterfaces';
 import SubPage from '../../SubPage/SubPage';
 import StateContext from '../../../StateContext';
+import PrintCV from '../../PrintCV/PrintCV';
 
 function CVMain() {
-  const cvWrapperRef = useRef<HTMLDivElement>(null);
-
   const { setIsFullPage } = useContext(StateContext);
 
   useEffect(() => {
@@ -134,68 +130,6 @@ function CVMain() {
     },
   ];
 
-  //   const handleDownload = useCallback(() => {
-  //     const input = cvWrapperRef.current;
-
-  //     if (input) {
-  //       console.log('windowHeight', input.scrollHeight);
-  //       if (input) {
-  //         html2canvas(input, {
-  //           windowWidth: input.scrollWidth,
-  //           height: input.scrollHeight,
-  //           windowHeight: input.scrollHeight,
-  //         }).then((canvas) => {
-  //           const imgData = canvas.toDataURL('image/png');
-  //           const link = document.createElement('a');
-  //           //   link.href = imgData;
-  //           //   link.download = 'Ian_Hamblin_CV.png';
-  //           //   link.click();
-  //           const pdf = new jsPDF();
-  //           const imgProps = pdf.getImageProperties(imgData);
-  //           const pdfWidth = imgProps.width;
-  //           const pdfHeight = imgProps.height;
-  //           pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-  //           pdf.save('Ian_Hamblin_CV.pdf');
-  //         });
-  //       }
-  //     }
-  //   }, []);
-
-  const handleDownload = useCallback(() => {
-    const element = cvWrapperRef.current;
-
-    if (element) {
-      const opt = {
-        margin: 1,
-        filename: 'Ian_Hamblin_CV.pdf',
-        image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          letterRendering: true,
-        },
-        jsPDF: {
-          unit: 'mm' as const,
-          format: 'a4' as const,
-          orientation: 'portrait' as const,
-        },
-      };
-
-      // Promise-based conversion
-      html2pdf().set(opt).from(element).save();
-
-      // If you need more control over the process:
-      // html2pdf()
-      //   .set(opt)
-      //   .from(element)
-      //   .toPdf()
-      //   .output('datauristring')
-      //   .then((pdfAsString) => {
-      //     // Do something with the PDF string
-      //   });
-    }
-  }, []);
-
   interface Skill {
     skill: string;
     years: number;
@@ -289,7 +223,7 @@ function CVMain() {
 
   return (
     <SubPage title="CV / Resume" expand>
-      <CVWrapper ref={cvWrapperRef}>
+      <CVWrapper>
         <Section>
           <ColumnLeft>
             <SuperTitle>Ian Hamblin</SuperTitle>
@@ -392,9 +326,7 @@ function CVMain() {
           </ColumnRight>
         </Section>
       </CVWrapper>
-      <DownloadButton onClick={handleDownload}>
-        Download PDF Version
-      </DownloadButton>
+      <PrintCV />
     </SubPage>
   );
 }
