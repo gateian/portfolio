@@ -360,7 +360,7 @@ function CVMain() {
           </Row>
         </Section>
       </CVWrapper>
-      <PrintCV />
+      <PrintCV file="Ian_Hamblin_CV.pdf" />
     </SubPage>
   );
 }

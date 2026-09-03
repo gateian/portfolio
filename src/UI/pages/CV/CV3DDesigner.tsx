@@ -296,7 +296,7 @@ function CV3DDesigner() {
           </ColumnRight>
         </Section>
       </CVWrapper>
-      <PrintCV />
+      <PrintCV file="Ian_Hamblin_CV_3D.pdf" />
     </SubPage>
   );
 }

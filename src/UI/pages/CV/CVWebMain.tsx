@@ -326,7 +326,7 @@ function CVMain() {
           </ColumnRight>
         </Section>
       </CVWrapper>
-      <PrintCV />
+      <PrintCV file="Ian_Hamblin_CV_Web.pdf" />
     </SubPage>
   );
 }

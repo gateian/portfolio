@@ -233,7 +233,7 @@ function CVArtMain() {
           </Row>
         </Section>
       </CVWrapper>
-      <PrintCV />
+      <PrintCV file="Ian_Hamblin_CV_Art.pdf" />
     </SubPage>
   );
 }

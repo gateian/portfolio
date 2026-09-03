@@ -241,7 +241,7 @@ function CVGraphicsDeveloper() {
           </ColumnRight>
         </Section>
       </CVWrapper>
-      <PrintCV />
+      <PrintCV file="Ian_Hamblin_CV_Graphics.pdf" />
     </SubPage>
   );
 }
