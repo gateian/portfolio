@@ -48,12 +48,12 @@ function CV3DDesigner() {
     {
       title: 'FRONT-END & UI',
       skills: [
-        { skill: 'HTML', years: 21 },
-        { skill: 'CSS', years: 21 },
+        { skill: 'HTML', years: 22 },
+        { skill: 'CSS', years: 22 },
         { skill: 'JavaScript', years: 21 },
-        { skill: 'TypeScript', years: 10 },
-        { skill: 'React', years: 6 },
-        { skill: 'Three.js', years: 8 },
+        { skill: 'TypeScript', years: 9 },
+        { skill: 'React', years: 5 },
+        { skill: 'Three.js', years: 9 },
         { skill: 'React Three Fiber', years: 4 },
         { skill: 'SASS', years: 7 },
         { skill: 'Emotion', years: 5 },
@@ -63,11 +63,11 @@ function CV3DDesigner() {
     {
       title: '3D & VISUAL DESIGN',
       skills: [
-        { skill: 'Three.js / WebGL', years: 8 },
+        { skill: 'Three.js / WebGL', years: 9 },
         { skill: 'Blender', years: 6 },
         { skill: '3ds Max', years: 16 },
         { skill: 'Photoshop', years: 16 },
-        { skill: 'Unreal Engine', years: 3 },
+        { skill: 'Unreal Engine', years: 5 },
         { skill: 'Unity', years: 7 },
         { skill: 'Substance Painter', years: 4 },
       ],
@@ -84,13 +84,13 @@ function CV3DDesigner() {
       skills: [
         { skill: 'AR/VR', years: 9 },
         { skill: 'Unity C#', years: 7 },
-        { skill: 'Android Java/Kotlin', years: 2 },
-        { skill: 'iOS', years: 1 },
-        { skill: 'AWS', years: 6 },
+        { skill: 'Android Java/Kotlin', years: 5 },
+        { skill: 'iOS', years: 3 },
+        { skill: 'AWS', years: 9 },
         { skill: 'Git', years: 11 },
-        { skill: 'CI/CD', years: 5 },
-        { skill: 'Docker', years: 4 },
-        { skill: 'Nginx/Apache', years: 6 },
+        { skill: 'CI/CD', years: 9 },
+        { skill: 'Docker', years: 6 },
+        { skill: 'Nginx/Apache', years: 7 },
       ],
     },
   ];
@@ -108,6 +108,17 @@ function CV3DDesigner() {
   ];
 
   const employmentHistory: EmploymentHistoryItem[] = [
+    {
+      company: 'Insight UK',
+      role: 'Creative Developer (Contract)',
+      dates: 'December 2025 - March 2026',
+      description: [
+        'Modelled, sourced and art directed the 3D and 2D graphics for a high fidelity digital dashboard.',
+        'Created futuristic, movie quality visuals in Unreal Engine and Three.js.',
+        'Developed AI driven storytelling to present complex business data compellingly.',
+        'Delivered to a fixed deadline for a high stakes client presentation.',
+      ],
+    },
     {
       company: 'Freelance',
       role: '3D Specialist',
