@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import './App.css';
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import StateContext, { StateProvider } from './StateContext';
 import {
@@ -12,6 +12,7 @@ import {
 import ContentArea from './UI/ContentArea';
 import TitleBanner from './UI/TitleBanner';
 import MediaSlideshow from './components/MediaSlideshow';
+import ProjectInfoPanel from './components/ProjectInfoPanel';
 import AppBar from './UI/AppBar/AppBar';
 import Footer from './UI/Footer/Footer';
 import { mediaItems } from './data/mediaItems';
@@ -31,6 +32,11 @@ const AppWrapper = styled('div')({
 
 function AppContent() {
   const { isUIVisible, isFullPage } = useContext(StateContext);
+  const [mediaIndex, setMediaIndex] = useState(0);
+
+  const handleMediaIndexChange = useCallback((index: number) => {
+    setMediaIndex(index);
+  }, []);
 
   useEffect(() => {
     if (isFullPage) {
@@ -38,10 +44,16 @@ function AppContent() {
     }
   }, [isFullPage]);
 
+  const activeMediaItem = mediaItems[mediaIndex] ?? mediaItems[0];
+
   return (
     <AppWrapper>
       {isFullPage == false ? (
-        <MediaSlideshow items={mediaItems} onReady={dismissInitialLoader} />
+        <MediaSlideshow
+          items={mediaItems}
+          onReady={dismissInitialLoader}
+          onIndexChange={handleMediaIndexChange}
+        />
       ) : null}
       <Overlay>
         <HeroBanner isVisible={isUIVisible} isDisabled={isFullPage}>
@@ -57,6 +69,13 @@ function AppContent() {
           <Route path="/cvgraphics" element={<ContentArea />} />
           <Route path="/cv3d" element={<ContentArea />} />
         </Routes>
+        {activeMediaItem ? (
+          <ProjectInfoPanel
+            item={activeMediaItem}
+            isVisible={isUIVisible}
+            isDisabled={isFullPage}
+          />
+        ) : null}
         <FooterArea isDisabled={isFullPage}>
           <AppBar />
           <Footer />

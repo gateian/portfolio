@@ -5,6 +5,7 @@ import type { MediaItem } from '../data/mediaItems';
 interface MediaSlideshowProps {
   items: MediaItem[];
   onReady?: () => void;
+  onIndexChange?: (index: number) => void;
 }
 
 const SlideshowContainer = styled.div({
@@ -77,7 +78,11 @@ function isHeroBuffered(video: HTMLVideoElement): boolean {
   return bufferedEnd >= duration * 0.9;
 }
 
-const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items, onReady }) => {
+const MediaSlideshow: React.FC<MediaSlideshowProps> = ({
+  items,
+  onReady,
+  onIndexChange,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [heroReady, setHeroReady] = useState(false);
   const [hasStartedPlayback, setHasStartedPlayback] = useState(false);
@@ -85,6 +90,10 @@ const MediaSlideshow: React.FC<MediaSlideshowProps> = ({ items, onReady }) => {
   const [heroVideo, setHeroVideo] = useState<HTMLVideoElement | null>(null);
   const [isImagePanning, setIsImagePanning] = useState(false);
   const readyNotified = useRef(false);
+
+  useEffect(() => {
+    onIndexChange?.(currentIndex);
+  }, [currentIndex, onIndexChange]);
 
   const heroVideoSrc =
     typeof window !== 'undefined' ? window.__heroVideoSrc : undefined;
