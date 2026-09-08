@@ -9,49 +9,37 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     environment:
-      name: demo
-      url: ${{ steps.deploy_to_pages.outputs.github_pages_url }}
+      name: production
+      url: https://ianhamblin.xyz
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run Linter
         run: npm run lint
 
-      - name: Vite Github Pages Deployer
-        # You may pin to the exact commit or the version.
-        # uses: skywarth/vite-github-pages-deployer@894ef807567d82fa238bd3d47009bd360910e11a
-        uses: skywarth/vite-github-pages-deployer@v1.4.0
-        id: deploy_to_pages
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
         with:
-          # Public base path string for vite, this affects the routing, history and asset links. Make sure to provide appropriately since Github Pages stores your app in a directory under a subdomain.
-          public_base_path: "/" # optional, default is ""
-          # Which folder do you want your Github Page to use as root directory. Usually it is your build output directory such as ./dist
-          build_path: "./dist" # optional, default is ./dist
-          # Node env that will be used for the installation of dependencies. It is imperative you use an environment that has 'vite' as dependency. Commonly, that is 'dev'.
-          #install_phase_node_env: "dev" # optional, default is dev
-          # Node env that will be used for build phase.
-          #build_phase_node_env: "production" # optional, default is production
-          # Your preference of package manager: 'npm' and 'yarn' are possible values.
-          #package_manager: "npm" # optional, default is npm
-          # Desired name for the Deployment environment. It is also the exposed artifact name which contains the build output (dist).
-          #artifact_name: "github-pages" # optional, default is github-pages
-          # Controls the debug mode, boolean, true is for on. When turned on, it'll output certain information on certain steps. Mainly used for development, but use it as you please to inspect your env and variables.
-          #debug_mode: "false" # optional, default is false
+          # Repo secret: Cloudflare API token with the "Edit Cloudflare Workers" template.
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: deploy

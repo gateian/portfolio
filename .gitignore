@@ -32,3 +32,6 @@ coverage/
 cypress/videos/
 cypress/screenshots/
 tsconfig.tsbuildinfo
+
+.wrangler
+.dev.vars*

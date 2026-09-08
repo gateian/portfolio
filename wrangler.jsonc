@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ianhamblin-portfolio",
+  "compatibility_date": "2026-09-08",
+  "account_id": "f0468aa00d393184e1c3b906d34dcbd1",
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  // Custom domains attach on deploy once the GitHub Pages A/CNAME records
+  // for ianhamblin.xyz and www are deleted in Cloudflare DNS.
+  "routes": [
+    { "pattern": "ianhamblin.xyz", "custom_domain": true },
+    { "pattern": "www.ianhamblin.xyz", "custom_domain": true }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
