@@ -5,11 +5,14 @@ import { mediaItems } from './src/data/mediaItems';
 function injectHeroMediaSrc(): Plugin {
   const firstItem = mediaItems[0];
   const src = firstItem?.type === 'video' ? firstItem.src : '';
+  const poster = firstItem?.type === 'video' ? (firstItem.poster ?? '') : '';
 
   return {
     name: 'inject-hero-media-src',
     transformIndexHtml(html) {
-      return html.replaceAll('__HERO_MEDIA_SRC__', src);
+      return html
+        .replaceAll('__HERO_MEDIA_SRC__', src)
+        .replaceAll('__HERO_POSTER_SRC__', poster);
     },
   };
 }

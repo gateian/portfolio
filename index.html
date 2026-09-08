@@ -10,6 +10,7 @@
         if (!src) {
           return;
         }
+        var poster = "__HERO_POSTER_SRC__";
         var video = document.createElement("video");
         video.muted = true;
         video.defaultMuted = true;
@@ -17,6 +18,9 @@
         video.setAttribute("playsinline", "");
         video.preload = "auto";
         video.setAttribute("fetchpriority", "high");
+        if (poster) {
+          video.poster = poster;
+        }
         video.src = src;
         video.style.width = "100%";
         video.style.height = "100%";
@@ -29,19 +33,13 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Only the Kanit weights actually used in the app (100-500, upright).
+         Kanit italics are unused: every italic in the UI is Zuume, which is
+         self-hosted below. Roboto and Kulim Park were loaded but referenced
+         nowhere, so they are dropped entirely. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500&display=swap"
       rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&family=Kulim+Park:wght@700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
     />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
