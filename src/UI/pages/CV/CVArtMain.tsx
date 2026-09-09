@@ -34,6 +34,17 @@ function CVArtMain() {
 
   const employmentHistory: EmploymentHistoryItem[] = [
     {
+      company: 'Insight UK',
+      role: 'Creative Developer (Contract)',
+      dates: 'December 2025 - March 2026',
+      description: [
+        'Created futuristic, movie quality visuals for a high fidelity digital dashboard.',
+        'Modelled and sourced the 3D and 2D graphics, and art directed the overall look.',
+        'Worked in Unreal Engine and Three.js to present complex business data compellingly.',
+        'Delivered to a fixed deadline for a high stakes client presentation.',
+      ],
+    },
+    {
       company: '3DEO',
       role: '3D Engineer',
       dates: '2016 - 2024',
@@ -233,7 +244,7 @@ function CVArtMain() {
           </Row>
         </Section>
       </CVWrapper>
-      <PrintCV />
+      <PrintCV file="Ian_Hamblin_CV_Art.pdf" />
     </SubPage>
   );
 }

@@ -37,6 +37,18 @@ function CVMain() {
 
   const employmentHistory: EmploymentHistoryItem[] = [
     {
+      company: 'Insight UK',
+      role: 'Creative Developer (Contract)',
+      dates: 'December 2025 - March 2026',
+      description: [
+        'Built a high fidelity digital dashboard presenting complex business data as a rich, compelling visual narrative.',
+        'Created futuristic, movie quality visuals using Unreal Engine and Three.js.',
+        'Developed AI driven storytelling to guide viewers through complex datasets.',
+        'Modelled and sourced the 3D and 2D graphics for the project.',
+        'Delivered to a fixed deadline for a high stakes client presentation.',
+      ],
+    },
+    {
       company: '3DEO',
       role: 'Lead Visual Engineer',
       dates: '2016 - 2024',
@@ -141,61 +153,61 @@ function CVMain() {
     {
       title: 'FRONTEND',
       skills: [
-        { skill: 'TypeScript', years: 7 },
-        { skill: 'React', years: 3 },
-        { skill: 'Three.js', years: 5 },
-        { skill: 'SASS', years: 6 },
-        { skill: 'Emotion', years: 4 },
-        { skill: 'MUI', years: 3 },
-        { skill: 'React Three Fiber', years: 3 },
+        { skill: 'TypeScript', years: 9 },
+        { skill: 'React', years: 5 },
+        { skill: 'Three.js', years: 9 },
+        { skill: 'SASS', years: 7 },
+        { skill: 'Emotion', years: 5 },
+        { skill: 'MUI', years: 4 },
+        { skill: 'React Three Fiber', years: 4 },
       ],
     },
     {
       title: 'TESTING',
       skills: [
-        { skill: 'Jest', years: 3 },
-        { skill: 'React Testing Library', years: 3 },
-        { skill: 'Cypress', years: 1 },
-        { skill: 'Storybook', years: 1 },
-        { skill: 'Log Rocket', years: 1 },
+        { skill: 'Jest', years: 4 },
+        { skill: 'React Testing Library', years: 4 },
+        { skill: 'Cypress', years: 2 },
+        { skill: 'Storybook', years: 2 },
+        { skill: 'Log Rocket', years: 2 },
       ],
     },
     {
       title: 'MAPPING TECHNOLOGIES',
       skills: [
-        { skill: 'Mapbox', years: 8 },
-        { skill: 'Cesium', years: 1 },
+        { skill: 'Mapbox', years: 9 },
+        { skill: 'Cesium', years: 2 },
       ],
     },
     {
       title: 'STATE MANAGEMENT',
       skills: [
-        { skill: 'Apollo', years: 3 },
-        { skill: 'GraphQL', years: 3 },
-        { skill: 'Zustand', years: 3 },
+        { skill: 'Apollo', years: 4 },
+        { skill: 'GraphQL', years: 4 },
+        { skill: 'Zustand', years: 4 },
       ],
     },
     {
       title: 'Apps and Games',
       skills: [
-        { skill: 'AR/VR', years: 8 },
-        { skill: 'Unity C#', years: 6 },
-        { skill: 'Android Java/Kotlin', years: 4 },
-        { skill: 'iOS', years: 2 },
+        { skill: 'AR/VR', years: 9 },
+        { skill: 'Unity C#', years: 7 },
+        { skill: 'Android Java/Kotlin', years: 5 },
+        { skill: 'iOS', years: 3 },
       ],
     },
     {
       title: '3D',
       skills: [
-        { skill: '3ds Max', years: 15 },
-        { skill: 'Blender', years: 5 },
-        { skill: 'Photoshop', years: 15 },
-        { skill: 'Unreal Engine', years: 4 },
-        { skill: 'Unity', years: 6 },
-        { skill: 'Zbrush', years: 3 },
-        { skill: 'Substance Painter', years: 3 },
-        { skill: 'Gaea 2.0', years: 2 },
-        { skill: 'Davinci Resolve', years: 2 },
+        { skill: '3ds Max', years: 16 },
+        { skill: 'Blender', years: 6 },
+        { skill: 'Photoshop', years: 16 },
+        { skill: 'Unreal Engine', years: 5 },
+        { skill: 'Unity', years: 7 },
+        { skill: 'Zbrush', years: 4 },
+        { skill: 'Substance Painter', years: 4 },
+        { skill: 'Gaea 2.0', years: 3 },
+        { skill: 'Davinci Resolve', years: 3 },
       ],
     },
   ];
@@ -360,7 +372,7 @@ function CVMain() {
           </Row>
         </Section>
       </CVWrapper>
-      <PrintCV />
+      <PrintCV file="Ian_Hamblin_CV.pdf" />
     </SubPage>
   );
 }
