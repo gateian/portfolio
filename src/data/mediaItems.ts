@@ -10,6 +10,14 @@ export type MediaItem = {
 
 export const mediaItems: MediaItem[] = [
   {
+    type: 'image',
+    src: '/images/zippytown.webp',
+    title: 'Zippy Town',
+    description:
+      'A realtime cartoon city running in the browser. Built in Three.js with DRACO compressed meshes, LOD and post processing.',
+    url: 'https://zippy.town/',
+  },
+  {
     type: 'video',
     src: '/videos/raptor_short_web.mp4',
     poster: '/posters/raptor_short_web.webp',

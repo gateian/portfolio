@@ -63,7 +63,7 @@ function CVArtMain() {
         'Various AR based app, including displaying interactive information on a real world brain model.',
         'Worked on Sixty5 app for helping farmers spray fields using GPS data.',
         'Developed my skills in client management and personal organisation.',
-        "Created 'Toon Town 3D' live wallpaper app for android. A little cartoon city as a mobile wallpaper.",
+        "Modelled and art directed 'Zippy Town 3D', a stylised cartoon city shipped as an Android live wallpaper and a realtime showcase site at zippy.town.",
         'Built detailed model of Queens University building in Belfast.',
       ],
     },

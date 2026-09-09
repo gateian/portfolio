@@ -40,6 +40,7 @@ function CVMain() {
       role: '3D and Code',
       dates: '2011 - 2016 & 2024 - Present',
       description: [
+        "Created 'Zippy Town 3D', a cartoon city live wallpaper for Android, with a full Three.js showcase site at zippy.town using DRACO compressed meshes, LOD and post processing.",
         'Built python based Blender addons for art asset exporting and importing',
         'Helped develop 3d interior design editor in three.js, including tiling editor',
         'Implemented webrtc feed from browser to Blender in realtime, for high quality realtime rendering',
@@ -50,7 +51,6 @@ function CVMain() {
         'Worked on Combat Air Patrol 2 flight simulator. Modelling cockpits, Aircraft and various supporting assets.',
         "Created 'Ocean Depths' app for an exhibition. A first person journey into the depths of the ocean in a submarine.",
         'Developed my skills in client management and personal organisation.',
-        "Created 'Toon Town 3D' live wallpaper app for android. A little cartoon city as a mobile wallpaper.",
         'Built detailed model of Queens University building in Belfast.',
       ],
     },
