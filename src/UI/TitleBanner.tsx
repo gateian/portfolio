@@ -38,7 +38,7 @@ function TitleBanner() {
   return (
     <TitleBannerWrapper>
       <NamePlate>Ian Hamblin</NamePlate>
-      <SubTitle>3D Graphics Specialist</SubTitle>
+      <SubTitle>3D Graphics and Creative Development</SubTitle>
     </TitleBannerWrapper>
   );
 }

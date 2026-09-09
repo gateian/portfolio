@@ -142,7 +142,7 @@ function CVArtMain() {
           <Row>
             <Column>
               <SuperTitle>Ian Hamblin</SuperTitle>
-              <SuperSubTitle>3D Graphics Specialist</SuperSubTitle>
+              <SuperSubTitle>3D Graphics and Creative Developer</SuperSubTitle>
             </Column>
             <Column>
               <ContactDetails>
