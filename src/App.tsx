@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import './App.css';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import StateContext, { StateProvider } from './StateContext';
 import {
@@ -12,6 +12,8 @@ import {
 import ContentArea from './UI/ContentArea';
 import TitleBanner from './UI/TitleBanner';
 import MediaSlideshow from './components/MediaSlideshow';
+import type { MediaSlideshowHandle } from './components/MediaSlideshow';
+import MediaProgressBar from './components/MediaProgressBar';
 import ProjectInfoPanel from './components/ProjectInfoPanel';
 import AppBar from './UI/AppBar/AppBar';
 import Footer from './UI/Footer/Footer';
@@ -33,10 +35,20 @@ const AppWrapper = styled('div')({
 function AppContent() {
   const { isUIVisible, isFullPage } = useContext(StateContext);
   const [mediaIndex, setMediaIndex] = useState(0);
+  const slideshowRef = useRef<MediaSlideshowHandle>(null);
 
   const handleMediaIndexChange = useCallback((index: number) => {
     setMediaIndex(index);
   }, []);
+
+  const handleMediaSelect = useCallback((index: number) => {
+    slideshowRef.current?.select(index);
+  }, []);
+
+  const readMediaProgress = useCallback(
+    () => slideshowRef.current?.getProgress() ?? 0,
+    []
+  );
 
   useEffect(() => {
     if (isFullPage) {
@@ -50,6 +62,7 @@ function AppContent() {
     <AppWrapper>
       {isFullPage == false ? (
         <MediaSlideshow
+          ref={slideshowRef}
           items={mediaItems}
           onReady={dismissInitialLoader}
           onIndexChange={handleMediaIndexChange}
@@ -76,6 +89,14 @@ function AppContent() {
             isDisabled={isFullPage}
           />
         ) : null}
+        <MediaProgressBar
+          labels={mediaItems.map((item) => item.title)}
+          currentIndex={mediaIndex}
+          getProgress={readMediaProgress}
+          onSelect={handleMediaSelect}
+          isVisible={isUIVisible}
+          isDisabled={isFullPage}
+        />
         <FooterArea isDisabled={isFullPage}>
           <AppBar />
           <Footer />

@@ -9,7 +9,6 @@ export type MediaItem = {
 };
 
 export const mediaItems: MediaItem[] = [
-  
   {
     type: 'video',
     src: '/videos/raptor_short_web.mp4',
@@ -19,7 +18,7 @@ export const mediaItems: MediaItem[] = [
       'Marketing CG renders of the M-Sport Ford Raptor for the Dakar Rally.',
     url: 'https://www.msport-raptor.com/',
   },
-  
+
   {
     type: 'video',
     src: '/videos/cap2.mp4',
