@@ -56,7 +56,7 @@ function CVMain() {
         'Built python based Blender addons for art asset exporting and importing',
         'Helped develop 3d interior design editor in three.js, including tiling editor',
         'Implemented webrtc feed from browser to Blender in realtime, for high quality realtime rendering',
-        'Generated 3D renders of the M-Sport Raptor Dakar Rally car for use in marketing materials.',
+        'Produced the photorealistic hero render sequence for the M-Sport Ford Raptor T1+ Dakar Rally site, from supplied CAD data through Unreal Engine materials and lighting. The site won Awwwards Site of the Day.',
         'Built a VR driving simulator for highlighting the dangers of Alcohol and driving.',
         'Various AR based app, including displaying interactive information on a real world brain model.',
         'Worked on Sixty5 app for helping farmers spray fields using GPS data.',

@@ -67,7 +67,7 @@ function CVArtMain() {
       role: 'App Development',
       dates: '2011 - 2016 and 2024 - Present',
       description: [
-        'Generated 3D renders of the M-Sport Raptor Dakar Rally car for use in marketing materials.',
+        'Produced the photorealistic hero render sequence for the M-Sport Ford Raptor T1+ Dakar Rally site: took the supplied CAD model into Unreal Engine, built the materials, lit the vehicle and applied the official livery. The site won Awwwards Site of the Day.',
         'Worked on Combat Air Patrol 2 flight simulator. Modelling cockpits, Aircraft and various supporting assets.',
         "Created 'Ocean Depths' app for an exhibition. A first person journey into the depths of the ocean in a submarine.",
         'Built a VR driving simulator for highlighting the dangers of Alcohol and driving.',

@@ -124,7 +124,7 @@ function CV3DDesigner() {
       role: '3D Specialist',
       dates: '2011 - 2016 & 2024 - Present',
       description: [
-        'Produced 3D renders of the M-Sport Raptor Dakar Rally car for use in marketing materials.',
+        'Produced the photorealistic hero render sequence for the M-Sport Ford Raptor T1+ Dakar Rally site, taking the supplied CAD model into Unreal Engine for materials and lighting. The site won Awwwards Site of the Day.',
         'Worked on Combat Air Patrol 2 flight simulator. Modelling cockpits, Aircraft and various supporting assets.',
         'Helped build 3d interior design editor in three.js, including tiling editor',
         'Implemented webrtc feed from browser to Blender in realtime, for high quality realtime rendering in the browser.',
