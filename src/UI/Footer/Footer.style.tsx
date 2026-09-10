@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { MEDIA_WIDTH_LARGE } from '../Theme';
+import { MEDIA_WIDTH_LARGE, MEDIA_WIDTH_SMALL } from '../Theme';
 
 export const FooterContainer = styled.footer({
   position: 'relative',
@@ -20,7 +20,6 @@ export const FooterContent = styled.div<FooterContentProps>((props) => ({
   margin: '0 auto',
   padding: '0',
   backgroundColor: 'rgba(0, 0, 0, 0.3)',
-
   opacity: props.isVisible ? 1 : 0,
   transition: 'opacity 0.3s ease-in-out',
 }));
@@ -30,7 +29,9 @@ export const FlexContainer = styled.div({
   flexWrap: 'wrap',
   alignItems: 'center',
   justifyContent: 'space-between',
+  minHeight: '3.25rem',
   fontSize: '0.875rem',
+  margin: '0rem 1rem',
   color: 'white',
   [`@media (max-width: ${MEDIA_WIDTH_LARGE})`]: {
     flexDirection: 'column',
@@ -76,7 +77,7 @@ export const SocialContainer = styled.div({
   // Was 1.75rem. At that size this row alone was 42px tall, which pushed the
   // stacked mobile footer up into AppBarWrapper. Desktop is untouched: above
   // 650px this inherits 0.875rem from FlexContainer.
-  '@media (max-width: 650px)': {
+  [`@media (max-width: ${MEDIA_WIDTH_SMALL})`]: {
     fontSize: '0.8rem',
   },
 });

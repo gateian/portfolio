@@ -78,7 +78,6 @@ const FooterArea = styled.div<FooterAreaProps>((props) => ({
   width: '100%',
   marginTop: 'auto',
   flexShrink: 0,
-  padding: '0.5rem 1rem 0.5rem',
   boxSizing: 'border-box',
   gap: '0.75rem',
   pointerEvents: 'none',

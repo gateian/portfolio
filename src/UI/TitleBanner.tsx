@@ -19,6 +19,9 @@ const TitleBannerWrapper = styled.div({
   flexDirection: 'column',
   justifyContent: 'center',
   marginTop: '40px',
+  [`@media (max-width: ${MEDIA_WIDTH_SMALL})`]: {
+    marginTop: '10px',
+  },
 });
 
 const NamePlate = styled.div({
@@ -28,6 +31,9 @@ const NamePlate = styled.div({
   padding: '0.5rem 2rem 0rem 2rem',
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
   textShadow: '0px 0px 6px rgba(0,0,0,0.8)',
+  [`@media (max-height: ${MEDIA_HEIGHT_MEDIUM})`]: {
+    fontSize: '4rem',
+  },
   [`@media (max-height: ${MEDIA_HEIGHT_LARGE})`]: {
     fontSize: '6rem',
   },
@@ -38,14 +44,12 @@ const NamePlate = styled.div({
     fontSize: '3rem',
   },
   [`@media (max-width: ${MEDIA_WIDTH_SMALL})`]: {
-    fontSize: '2rem',
+    fontSize: '2.5rem',
     border: '2px solid white',
     padding: '0.1rem 2rem 0rem 2rem',
   },
 
-  [`@media (max-height: ${MEDIA_HEIGHT_MEDIUM})`]: {
-    fontSize: '4rem',
-  },
+  
 });
 
 const SubTitle = styled.div({
