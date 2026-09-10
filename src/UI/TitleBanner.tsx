@@ -48,8 +48,6 @@ const NamePlate = styled.div({
     border: '2px solid white',
     padding: '0.1rem 2rem 0rem 2rem',
   },
-
-  
 });
 
 const SubTitle = styled.div({
