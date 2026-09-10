@@ -72,6 +72,7 @@ function CVMain() {
       dates: '2011 - 2016 and 2024 - Present',
       description: [
         "Created 'Zippy Town 3D', a cartoon city live wallpaper for Android, with a full Three.js showcase site at zippy.town using DRACO compressed meshes, LOD and post processing.",
+        'Produced the photorealistic hero render sequence for the M-Sport Ford Raptor T1+ Dakar Rally site, taking the supplied CAD model into Unreal Engine for materials and lighting. The site won Awwwards Site of the Day.',
         'Built a VR driving simulator for highlighting the dangers of Alcohol and driving.',
         'Various AR based app, including displaying interactive information on a real world brain model.',
         'Worked on Sixty5 app for helping farmers spray fields using GPS data.',
