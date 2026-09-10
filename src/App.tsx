@@ -13,8 +13,8 @@ import {
 } from './StyledComponents';
 import ContentArea from './UI/ContentArea';
 import TitleBanner from './UI/TitleBanner';
-import MediaSlideshow from './UI/components/MediaSlideshow';
-import type { MediaSlideshowHandle } from './UI/components/MediaSlideshow';
+import ViewingHall from './UI/components/ViewingHall/ViewingHall';
+import type { ViewingHallHandle } from './UI/components/ViewingHall/ViewingHall';
 import MediaProgressBar from './UI/components/MediaProgressBar/MediaProgressBar';
 import ProjectInfoPanel from './UI/components/ProjectInfoPanel/ProjectInfoPanel';
 import AppBar from './UI/AppBar/AppBar';
@@ -37,18 +37,18 @@ const AppWrapper = styled('div')({
 function AppContent() {
   const { isUIVisible, isFullPage } = useContext(StateContext);
   const [mediaIndex, setMediaIndex] = useState(0);
-  const slideshowRef = useRef<MediaSlideshowHandle>(null);
+  const hallRef = useRef<ViewingHallHandle>(null);
 
   const handleMediaIndexChange = useCallback((index: number) => {
     setMediaIndex(index);
   }, []);
 
   const handleMediaSelect = useCallback((index: number) => {
-    slideshowRef.current?.select(index);
+    hallRef.current?.select(index);
   }, []);
 
   const readMediaProgress = useCallback(
-    () => slideshowRef.current?.getProgress() ?? 0,
+    () => hallRef.current?.getProgress() ?? 0,
     []
   );
 
@@ -63,8 +63,8 @@ function AppContent() {
   return (
     <AppWrapper>
       {isFullPage == false ? (
-        <MediaSlideshow
-          ref={slideshowRef}
+        <ViewingHall
+          ref={hallRef}
           items={mediaItems}
           onReady={dismissInitialLoader}
           onIndexChange={handleMediaIndexChange}
