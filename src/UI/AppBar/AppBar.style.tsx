@@ -9,7 +9,7 @@ export const AppBarWrapper = styled.div<AppBarWrapperProps>((props) => ({
   zIndex: 100,
   pointerEvents: 'auto',
   position: 'absolute',
-  bottom: '5rem',
+  bottom: '3rem',
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
   display: 'flex',
   flexDirection: 'row',
