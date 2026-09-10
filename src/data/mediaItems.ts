@@ -1,6 +1,8 @@
 export type MediaItem = {
   type: 'video' | 'image';
   src: string;
+  /** Pre-blurred, low-res plate used only in the floor reflection pass. */
+  reflectSrc?: string;
   alt?: string;
   title: string;
   description: string;
@@ -13,6 +15,7 @@ export const mediaItems: MediaItem[] = [
     //M-Sport Raptor
     type: 'video',
     src: '/videos/raptor_short_web.mp4',
+    reflectSrc: '/videos/raptor_short_web_reflect.mp4',
     poster: '/posters/raptor_short_web.webp',
     title: 'M-Sport Raptor',
     description:
@@ -24,6 +27,7 @@ export const mediaItems: MediaItem[] = [
     //Combat Air Patrol 2
     type: 'video',
     src: '/videos/cap2.mp4',
+    reflectSrc: '/videos/cap2_reflect.mp4',
     poster: '/posters/cap2.webp',
     title: 'Combat Air Patrol 2',
     description:
@@ -34,6 +38,7 @@ export const mediaItems: MediaItem[] = [
     //Car Visualisation
     type: 'video',
     src: '/videos/carvis.mp4',
+    reflectSrc: '/videos/carvis_reflect.mp4',
     poster: '/posters/carvis.webp',
     title: 'Car Visualisation',
     description:
@@ -42,6 +47,7 @@ export const mediaItems: MediaItem[] = [
   {
     type: 'video',
     src: '/videos/3deo_vis.mp4',
+    reflectSrc: '/videos/3deo_vis_reflect.mp4',
     title: 'Bathymetry Visualisation',
     description:
       'Real-time, industrial-standard bathymetry visualisation built in Three.js.',
@@ -50,6 +56,7 @@ export const mediaItems: MediaItem[] = [
     //Zippy Town
     type: 'video',
     src: '/videos/zippy_town.mp4',
+    reflectSrc: '/videos/zippy_town_reflect.mp4',
     poster: '/posters/zippy_town.webp',
     title: 'Zippy Town',
     description:
@@ -60,6 +67,7 @@ export const mediaItems: MediaItem[] = [
     //Cyberpunk City
     type: 'video',
     src: '/videos/Cyberpunkcity005.mp4',
+    reflectSrc: '/videos/Cyberpunkcity005_reflect.mp4',
     poster: '/posters/Cyberpunkcity005.webp',
     title: 'Cyberpunk City',
     description:
@@ -69,6 +77,7 @@ export const mediaItems: MediaItem[] = [
     //Mountain Vista
     type: 'video',
     src: '/videos/mountain.mp4',
+    reflectSrc: '/videos/mountain_reflect.mp4',
     poster: '/posters/mountain.webp',
     title: 'Mountain Vista',
     description:
@@ -78,6 +87,7 @@ export const mediaItems: MediaItem[] = [
     //Tower Approach
     type: 'video',
     src: '/videos/tower.mp4',
+    reflectSrc: '/videos/tower_reflect.mp4',
     poster: '/posters/tower.webp',
     title: 'Tower Approach',
     description:

@@ -43,6 +43,11 @@ const HallCanvas = styled.canvas({
   display: 'block',
   width: '100%',
   height: '100%',
+  touchAction: 'none',
+  cursor: 'grab',
+  '&:active': {
+    cursor: 'grabbing',
+  },
 });
 
 // Hidden host so video elements stay in the document (helps iOS autoplay).
@@ -59,6 +64,14 @@ const HERO_READY_TIMEOUT_MS = 8000;
 const IMAGE_DURATION_MS = 8000;
 const VIDEO_MAX_DURATION_S = 10;
 
+function playMuted(video: HTMLVideoElement) {
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    return playPromise.catch(() => undefined);
+  }
+  return Promise.resolve();
+}
+
 const ViewingHall = forwardRef<ViewingHallHandle, ViewingHallProps>(
   function ViewingHall({ items, onReady, onIndexChange }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -66,6 +79,7 @@ const ViewingHall = forwardRef<ViewingHallHandle, ViewingHallProps>(
     const mediaHostRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<ViewingHallScene | null>(null);
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+    const reflectVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
     const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -251,7 +265,10 @@ const ViewingHall = forwardRef<ViewingHallHandle, ViewingHallProps>(
           if (cancelled) {
             return;
           }
-          scene.setScreenMap(createImageTexture(image));
+          const texture = createImageTexture(image);
+          scene.setScreenMap(texture);
+          // Still frames: reuse the same plate in the mirror (no separate blur asset).
+          scene.setReflectMap(createImageTexture(image));
         };
 
         if (cached?.complete) {
@@ -284,11 +301,19 @@ const ViewingHall = forwardRef<ViewingHallHandle, ViewingHallProps>(
         return undefined;
       }
 
+      const reflectElement = reflectVideoRefs.current[currentIndex];
+
       scene.setScreenMap(createVideoTexture(videoElement));
+      if (reflectElement) {
+        scene.setReflectMap(createVideoTexture(reflectElement));
+      } else {
+        scene.setReflectMap(null);
+      }
 
       const onTimeUpdate = () => {
         if (videoElement.currentTime >= VIDEO_MAX_DURATION_S) {
           videoElement.pause();
+          reflectElement?.pause();
           handleMediaEnd();
         }
       };
@@ -297,18 +322,15 @@ const ViewingHall = forwardRef<ViewingHallHandle, ViewingHallProps>(
         if (videoElement.currentTime > 0.05) {
           videoElement.currentTime = 0;
         }
-        const playPromise = videoElement.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setHasStartedPlayback(true);
-            })
-            .catch((error) => {
-              console.error('Video playback failed:', error);
-              setHasStartedPlayback(true);
-            });
-        } else {
+        if (reflectElement && reflectElement.currentTime > 0.05) {
+          reflectElement.currentTime = 0;
+        }
+
+        void playMuted(videoElement).then(() => {
           setHasStartedPlayback(true);
+        });
+        if (reflectElement) {
+          void playMuted(reflectElement);
         }
       };
 
@@ -326,6 +348,7 @@ const ViewingHall = forwardRef<ViewingHallHandle, ViewingHallProps>(
         videoElement.removeEventListener('canplay', playCurrent);
         videoElement.removeEventListener('error', handleMediaEnd);
         videoElement.pause();
+        reflectElement?.pause();
       };
     }, [currentIndex, items, handleMediaEnd, heroReady, sceneReady]);
 
@@ -339,9 +362,14 @@ const ViewingHall = forwardRef<ViewingHallHandle, ViewingHallProps>(
 
           if (index === currentIndexRef.current) {
             const element = videoRefs.current[index];
+            const reflect = reflectVideoRefs.current[index];
             if (element) {
               element.currentTime = 0;
-              void element.play().catch(() => undefined);
+              void playMuted(element);
+            }
+            if (reflect) {
+              reflect.currentTime = 0;
+              void playMuted(reflect);
             }
             imageStartRef.current = performance.now();
             return;
@@ -382,24 +410,42 @@ const ViewingHall = forwardRef<ViewingHallHandle, ViewingHallProps>(
               return null;
             }
 
-            if (index === heroIndex && window.__heroVideoEl) {
-              return null;
-            }
+            const sharp =
+              index === heroIndex && window.__heroVideoEl ? null : (
+                <video
+                  key={item.src}
+                  ref={(el) => {
+                    videoRefs.current[index] = el;
+                  }}
+                  src={item.src}
+                  poster={item.poster}
+                  muted
+                  playsInline
+                  preload="auto"
+                  onEnded={handleMediaEnd}
+                  crossOrigin="anonymous"
+                />
+              );
 
-            return (
+            const reflect = item.reflectSrc ? (
               <video
-                key={item.src}
+                key={`${item.src}-reflect`}
                 ref={(el) => {
-                  videoRefs.current[index] = el;
+                  reflectVideoRefs.current[index] = el;
                 }}
-                src={item.src}
-                poster={item.poster}
+                src={item.reflectSrc}
                 muted
                 playsInline
                 preload="auto"
-                onEnded={handleMediaEnd}
                 crossOrigin="anonymous"
               />
+            ) : null;
+
+            return (
+              <span key={`media-${item.src}`}>
+                {sharp}
+                {reflect}
+              </span>
             );
           })}
         </MediaHost>
