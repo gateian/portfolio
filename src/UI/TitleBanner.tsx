@@ -1,4 +1,11 @@
 import styled from '@emotion/styled';
+import {
+  MEDIA_WIDTH_LARGE,
+  MEDIA_WIDTH_MEDIUM,
+  MEDIA_WIDTH_SMALL,
+  MEDIA_HEIGHT_MEDIUM,
+  MEDIA_HEIGHT_LARGE,
+} from './Theme';
 
 const TitleBannerWrapper = styled.div({
   fontSize: '4rem',
@@ -21,7 +28,22 @@ const NamePlate = styled.div({
   padding: '0.5rem 2rem 0rem 2rem',
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
   textShadow: '0px 0px 6px rgba(0,0,0,0.8)',
-  '@media (max-width: 650px)': {
+  [`@media (max-height: ${MEDIA_HEIGHT_LARGE})`]: {
+    fontSize: '6rem',
+  },
+  [`@media (max-width: ${MEDIA_WIDTH_LARGE})`]: {
+    fontSize: '5rem',
+  },
+  [`@media (max-width: ${MEDIA_WIDTH_MEDIUM})`]: {
+    fontSize: '3rem',
+  },
+  [`@media (max-width: ${MEDIA_WIDTH_SMALL})`]: {
+    fontSize: '2rem',
+    border: '2px solid white',
+    padding: '0.1rem 2rem 0rem 2rem',
+  },
+
+  [`@media (max-height: ${MEDIA_HEIGHT_MEDIUM})`]: {
     fontSize: '4rem',
   },
 });
@@ -32,6 +54,12 @@ const SubTitle = styled.div({
   fontWeight: 300,
   fontStyle: 'normal',
   textShadow: '0px 0px 6px rgba(0,0,0,1.0)',
+  [`@media (max-width: ${MEDIA_WIDTH_SMALL})`]: {
+    fontSize: '1rem',
+  },
+  [`@media (max-width: ${MEDIA_WIDTH_MEDIUM})`]: {
+    fontSize: '1.1rem',
+  },
 });
 
 function TitleBanner() {

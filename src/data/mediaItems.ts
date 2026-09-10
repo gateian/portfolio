@@ -10,16 +10,18 @@ export type MediaItem = {
 
 export const mediaItems: MediaItem[] = [
   {
+    //M-Sport Raptor
     type: 'video',
     src: '/videos/raptor_short_web.mp4',
     poster: '/posters/raptor_short_web.webp',
     title: 'M-Sport Raptor',
     description:
-      'Marketing CG renders of the M-Sport Ford Raptor for the Dakar Rally.',
+      'CG renders of the M-Sport Ford Raptor for the award winning Ryze Agency website.',
     url: 'https://www.msport-raptor.com/',
   },
 
   {
+    //Combat Air Patrol 2
     type: 'video',
     src: '/videos/cap2.mp4',
     poster: '/posters/cap2.webp',
@@ -29,6 +31,7 @@ export const mediaItems: MediaItem[] = [
     url: 'https://store.steampowered.com/app/347170/Combat_Air_Patrol_2_Military_Flight_Simulator/',
   },
   {
+    //Car Visualisation
     type: 'video',
     src: '/videos/carvis.mp4',
     poster: '/posters/carvis.webp',
@@ -41,18 +44,20 @@ export const mediaItems: MediaItem[] = [
     src: '/videos/3deo_vis.mp4',
     title: 'Bathymetry Visualisation',
     description:
-      'Real-time bathymetry visualisation built in Three.js with DRACO compressed meshes, LOD and post processing.',
+      'Real-time, industrial-standard bathymetry visualisation built in Three.js.',
   },
   {
+    //Zippy Town
     type: 'video',
     src: '/videos/zippy_town.mp4',
     poster: '/posters/zippy_town.webp',
     title: 'Zippy Town',
     description:
-      'A realtime cartoon city running in the browser. Built in Three.js with DRACO compressed meshes, LOD and post processing.',
+      'A realtime cartoon city running in the browser. Built in Three.js.',
     url: 'https://zippy.town/',
   },
   {
+    //Cyberpunk City
     type: 'video',
     src: '/videos/Cyberpunkcity005.mp4',
     poster: '/posters/Cyberpunkcity005.webp',
@@ -61,6 +66,7 @@ export const mediaItems: MediaItem[] = [
       'Atmospheric city flythrough built for real-time and cinematic presentation.',
   },
   {
+    //Mountain Vista
     type: 'video',
     src: '/videos/mountain.mp4',
     poster: '/posters/mountain.webp',
@@ -69,6 +75,7 @@ export const mediaItems: MediaItem[] = [
       'Environment lighting and camera work across a large-scale landscape scene.',
   },
   {
+    //Tower Approach
     type: 'video',
     src: '/videos/tower.mp4',
     poster: '/posters/tower.webp',

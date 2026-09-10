@@ -1,13 +1,14 @@
 import styled from '@emotion/styled';
+import { MEDIA_WIDTH_LARGE } from '../Theme';
 
 export const FooterContainer = styled.footer({
+  position: 'relative',
   width: '100%',
-  padding: '0.5rem 0',
-  marginTop: '3rem',
-  position: 'absolute',
-  bottom: 0,
+  padding: '0',
+  margin: 0,
   zIndex: 100,
   pointerEvents: 'auto',
+  flexShrink: 0,
 });
 
 interface FooterContentProps {
@@ -17,8 +18,8 @@ interface FooterContentProps {
 export const FooterContent = styled.div<FooterContentProps>((props) => ({
   maxWidth: '72rem',
   margin: '0 auto',
-  padding: '0 1rem',
-  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  padding: '0',
+  backgroundColor: 'rgba(0, 0, 0, 0.3)',
 
   opacity: props.isVisible ? 1 : 0,
   transition: 'opacity 0.3s ease-in-out',
@@ -31,7 +32,7 @@ export const FlexContainer = styled.div({
   justifyContent: 'space-between',
   fontSize: '0.875rem',
   color: 'white',
-  '@media (max-width: 650px)': {
+  [`@media (max-width: ${MEDIA_WIDTH_LARGE})`]: {
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -45,6 +46,7 @@ export const Copyright = styled.p({
 export const AttributionSection = styled.div({
   display: 'flex',
   alignItems: 'center',
+  fontSize: '0.7rem',
   marginRight: '1.5rem',
   '& span:first-of-type': {
     marginRight: '0.5rem',
@@ -53,7 +55,7 @@ export const AttributionSection = styled.div({
 
 export const AttributionText = styled.span({
   color: '#ddd',
-  '@media (max-width: 696px)': {
+  [`@media (max-width: ${MEDIA_WIDTH_LARGE})`]: {
     marginRight: '1rem',
   },
   '& a': {
@@ -71,8 +73,11 @@ export const SocialContainer = styled.div({
   gap: '1rem',
   marginRight: '3rem',
 
+  // Was 1.75rem. At that size this row alone was 42px tall, which pushed the
+  // stacked mobile footer up into AppBarWrapper. Desktop is untouched: above
+  // 650px this inherits 0.875rem from FlexContainer.
   '@media (max-width: 650px)': {
-    fontSize: '1.75rem',
+    fontSize: '0.8rem',
   },
 });
 
@@ -83,12 +88,8 @@ export const ContactButton = styled.button({
   cursor: 'pointer',
   padding: '0',
   textDecoration: 'underline',
-  fontSize: '0.875rem',
   '&:hover': {
     color: '#ddd',
-  },
-  '@media (max-width: 650px)': {
-    fontSize: '1.75rem',
   },
 });
 

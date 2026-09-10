@@ -3,10 +3,8 @@ import {
   Icon3DSMax,
   IconBlender2,
   IconDavinciResolve,
-  IconPhotoshop,
   IconUnity,
   IconUnrealEngine,
-  IconZBrush,
   IconLinkedIn,
   IconThreeJs,
   IconReact,
@@ -33,11 +31,6 @@ const AppBarItems: AppBarItemsProps[] = [
     type: 'icon',
     name: 'Blender',
     icon: <IconBlender2 />,
-  },
-  {
-    type: 'icon',
-    name: 'Photoshop',
-    icon: <IconPhotoshop />,
   },
   {
     type: 'icon',

@@ -7,7 +7,7 @@ import {
   useImperativeHandle,
 } from 'react';
 import styled from '@emotion/styled';
-import type { MediaItem } from '../data/mediaItems';
+import type { MediaItem } from '../../data/mediaItems';
 
 interface MediaSlideshowProps {
   items: MediaItem[];

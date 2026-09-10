@@ -8,13 +8,15 @@ import {
   HeroBanner,
   HeroBannerSideColumn,
   FooterArea,
+  BottomChrome,
+  ProjectCluster,
 } from './StyledComponents';
 import ContentArea from './UI/ContentArea';
 import TitleBanner from './UI/TitleBanner';
-import MediaSlideshow from './components/MediaSlideshow';
-import type { MediaSlideshowHandle } from './components/MediaSlideshow';
-import MediaProgressBar from './components/MediaProgressBar';
-import ProjectInfoPanel from './components/ProjectInfoPanel';
+import MediaSlideshow from './UI/components/MediaSlideshow';
+import type { MediaSlideshowHandle } from './UI/components/MediaSlideshow';
+import MediaProgressBar from './UI/components/MediaProgressBar/MediaProgressBar';
+import ProjectInfoPanel from './UI/components/ProjectInfoPanel/ProjectInfoPanel';
 import AppBar from './UI/AppBar/AppBar';
 import Footer from './UI/Footer/Footer';
 import { mediaItems } from './data/mediaItems';
@@ -82,23 +84,28 @@ function AppContent() {
           <Route path="/cvgraphics" element={<ContentArea />} />
           <Route path="/cv3d" element={<ContentArea />} />
         </Routes>
-        {activeMediaItem ? (
-          <ProjectInfoPanel
-            item={activeMediaItem}
-            isVisible={isUIVisible}
-            isDisabled={isFullPage}
-          />
-        ) : null}
-        <MediaProgressBar
-          labels={mediaItems.map((item) => item.title)}
-          currentIndex={mediaIndex}
-          getProgress={readMediaProgress}
-          onSelect={handleMediaSelect}
-          isVisible={isUIVisible}
-          isDisabled={isFullPage}
-        />
         <FooterArea isDisabled={isFullPage}>
-          <AppBar />
+          <BottomChrome>
+            <ProjectCluster>
+              {activeMediaItem ? (
+                <ProjectInfoPanel
+                  item={activeMediaItem}
+                  isVisible={isUIVisible}
+                  isDisabled={isFullPage}
+                >
+                  <MediaProgressBar
+                    labels={mediaItems.map((item) => item.title)}
+                    currentIndex={mediaIndex}
+                    getProgress={readMediaProgress}
+                    onSelect={handleMediaSelect}
+                    isVisible={isUIVisible}
+                    isDisabled={isFullPage}
+                  />
+                </ProjectInfoPanel>
+              ) : null}
+            </ProjectCluster>
+            <AppBar />
+          </BottomChrome>
           <Footer />
         </FooterArea>
       </Overlay>

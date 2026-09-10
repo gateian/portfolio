@@ -90,7 +90,7 @@ function Footer() {
           <AttributionSection>
             <span>Built with:</span>
             <AttributionText>
-              React • Emotion • Typescript • Icons by{' '}
+              React • Typescript • Icons by{' '}
               <a target="_blank" href="https://icons8.com" rel="noreferrer">
                 Icons8
               </a>
@@ -98,9 +98,7 @@ function Footer() {
           </AttributionSection>
 
           <SocialContainer>
-            <ContactButton onClick={handleContactClick}>
-              Contact Me
-            </ContactButton>
+            <ContactButton onClick={handleContactClick}>Contact</ContactButton>
 
             <SocialLink
               href="https://github.com/gateian"
