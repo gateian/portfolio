@@ -119,12 +119,13 @@ function CVGraphicsDeveloper() {
       role: 'Graphics Engineer / 3D Generalist',
       dates: '2011 - 2016 & 2024 - Present',
       description: [
+        "Shipped 'Zippy Town 3D' end to end — an Android live wallpaper and a realtime Three.js showcase at zippy.town — to a mobile GPU budget using DRACO compressed meshes, LOD, SMAA and post processing.",
         'Unity C# graphics: authored shaders (ShaderLab/HLSL), configured URP/HDRP, and tuned lighting/post-processing.',
         'Developed Three.js based editors and realtime viewers; implemented tiling and material workflows.',
         'Created Python + Blender add-ons for streamlined asset export/import pipelines.',
         'Built VR driving simulator and multiple AR experiences (Unity + Web); integrated live sensor/geo data.',
         'Implemented WebRTC pipeline from browser to Blender for high-quality realtime rendering.',
-        'Produced marketing CG renders (e.g., M‑Sport Raptor Dakar); modelled complex assets.',
+        'Produced the photoreal hero render sequence for the M‑Sport Ford Raptor T1+ Dakar site: CAD ingest, Unreal materials and lighting. The site won Awwwards Site of the Day.',
       ],
     },
     {

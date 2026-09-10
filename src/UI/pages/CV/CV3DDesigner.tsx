@@ -124,6 +124,7 @@ function CV3DDesigner() {
       role: '3D Specialist',
       dates: '2011 - 2016 & 2024 - Present',
       description: [
+        "Created 'Zippy Town 3D', a stylised cartoon city shipped as an Android live wallpaper and a realtime Three.js showcase at zippy.town — modelled, textured and built end to end, to a mobile performance budget using DRACO compressed meshes, LOD and post processing.",
         'Produced the photorealistic hero render sequence for the M-Sport Ford Raptor T1+ Dakar Rally site, taking the supplied CAD model into Unreal Engine for materials and lighting. The site won Awwwards Site of the Day.',
         'Worked on Combat Air Patrol 2 flight simulator. Modelling cockpits, Aircraft and various supporting assets.',
         'Helped build 3d interior design editor in three.js, including tiling editor',
