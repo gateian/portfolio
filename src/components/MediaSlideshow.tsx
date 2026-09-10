@@ -84,6 +84,9 @@ const HERO_READY_TIMEOUT_MS = 8000;
 // How long a still image stays on screen before advancing.
 const IMAGE_DURATION_MS = 8000;
 
+// Hard cap on video playback. Clips shorter than this still end naturally.
+const VIDEO_MAX_DURATION_S = 10;
+
 const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
   function MediaSlideshow({ items, onReady, onIndexChange }, ref) {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -122,7 +125,15 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
       onReady?.();
     }, [onReady]);
 
+    // Guards against `ended` and the 10s cap both firing for the same clip,
+    // which would skip the next item (functional setState updaters chain).
+    const advancingRef = useRef(false);
+
     const handleMediaEnd = useCallback(() => {
+      if (advancingRef.current) {
+        return;
+      }
+      advancingRef.current = true;
       setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
     }, [items.length]);
 
@@ -217,6 +228,7 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
     }, [items, markReady, heroVideo]);
 
     useEffect(() => {
+      advancingRef.current = false;
       const currentItem = items[currentIndex];
 
       if (currentItem.type === 'image') {
@@ -245,6 +257,13 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
         return undefined;
       }
 
+      const onTimeUpdate = () => {
+        if (videoElement.currentTime >= VIDEO_MAX_DURATION_S) {
+          videoElement.pause();
+          handleMediaEnd();
+        }
+      };
+
       const playCurrent = () => {
         if (videoElement.currentTime > 0.05) {
           videoElement.currentTime = 0;
@@ -264,6 +283,8 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
         }
       };
 
+      videoElement.addEventListener('timeupdate', onTimeUpdate);
+
       if (videoElement.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
         playCurrent();
       } else {
@@ -272,6 +293,7 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
       }
 
       return () => {
+        videoElement.removeEventListener('timeupdate', onTimeUpdate);
         videoElement.removeEventListener('canplay', playCurrent);
         videoElement.removeEventListener('error', handleMediaEnd);
         // Stop the outgoing clip. The hero in particular is reused rather than
@@ -315,7 +337,11 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
           if (!element || !element.duration || Number.isNaN(element.duration)) {
             return 0;
           }
-          return Math.min(element.currentTime / element.duration, 1);
+          const cappedDuration = Math.min(
+            element.duration,
+            VIDEO_MAX_DURATION_S
+          );
+          return Math.min(element.currentTime / cappedDuration, 1);
         },
       }),
       [items]

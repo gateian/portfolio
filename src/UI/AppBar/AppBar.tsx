@@ -8,6 +8,8 @@ import {
   IconUnrealEngine,
   IconZBrush,
   IconLinkedIn,
+  IconThreeJs,
+  IconReact,
 } from './AppBar.icons';
 import { AppBarWrapper } from './AppBar.style';
 import AppBarButton from './AppBarButton';
@@ -54,8 +56,13 @@ const AppBarItems: AppBarItemsProps[] = [
   },
   {
     type: 'icon',
-    name: 'Z Brush',
-    icon: <IconZBrush />,
+    name: 'Three.js',
+    icon: <IconThreeJs />,
+  },
+  {
+    type: 'icon',
+    name: 'React',
+    icon: <IconReact />,
   },
   {
     type: 'button',

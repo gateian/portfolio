@@ -30,6 +30,21 @@ export const mediaItems: MediaItem[] = [
   },
   {
     type: 'video',
+    src: '/videos/carvis.mp4',
+    poster: '/posters/carvis.webp',
+    title: 'Car Visualisation',
+    description:
+      'Product-style automotive visualisation with cinematic camera movement.',
+  },
+  {
+    type: 'video',
+    src: '/videos/3deo_vis.mp4',
+    title: 'Bathymetry Visualisation',
+    description:
+      'Real-time bathymetry visualisation built in Three.js with DRACO compressed meshes, LOD and post processing.',
+  },
+  {
+    type: 'video',
     src: '/videos/zippy_town.mp4',
     poster: '/posters/zippy_town.webp',
     title: 'Zippy Town',
@@ -60,27 +75,5 @@ export const mediaItems: MediaItem[] = [
     title: 'Tower Approach',
     description:
       'Architectural focal point with dramatic lighting and aerial camera path.',
-  },
-  {
-    type: 'image',
-    src: '/images/harrier.webp',
-    title: 'Harrier Cockpit',
-    description:
-      'High-detail cockpit interior modelled and textured for close-up presentation.',
-  },
-  {
-    type: 'image',
-    src: '/images/ShrineRender2.webp',
-    title: 'Shrine',
-    description:
-      'Mood-driven environment render exploring light, material and composition.',
-  },
-  {
-    type: 'video',
-    src: '/videos/carvis.mp4',
-    poster: '/posters/carvis.webp',
-    title: 'Car Visualisation',
-    description:
-      'Product-style automotive visualisation with cinematic camera movement.',
   },
 ];
