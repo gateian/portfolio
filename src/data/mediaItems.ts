@@ -12,8 +12,8 @@ export const mediaItems: MediaItem[] = [
   {
     //M-Sport Raptor
     type: 'video',
-    src: '/videos/raptor_short_web.mp4',
-    poster: '/posters/raptor_short_web.webp',
+    src: '/videos/m-sport-ford-raptor-dakar-rally-60fps_web.mp4',
+    poster: '/posters/m-sport-ford-raptor-dakar-rally-60fps_web.webp',
     title: 'M-Sport Raptor',
     description:
       'CG renders of the M-Sport Ford Raptor for the award winning Ryze Agency website.',
@@ -49,7 +49,7 @@ export const mediaItems: MediaItem[] = [
   {
     //Zippy Town
     type: 'video',
-    src: '/videos/zippy_town.mp4',
+    src: '/videos/Zippy_town_60fps.mp4',
     poster: '/posters/zippy_town.webp',
     title: 'Zippy Town',
     description:
