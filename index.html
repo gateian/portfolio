@@ -92,52 +92,134 @@
         opacity: 0;
       }
 
-      .loader-title {
-        color: white;
-        font-size: 1rem;
-        margin-bottom: 1rem;
-        font-family: "kanit", sans-serif;
+      /* Loader: one SVG so every ring shares the same centre (50,50). */
+      .loader {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.1rem;
       }
 
-      .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid #f3f3f3;
-        border-top: 5px solid #1a1a1a00;
-        border-bottom: 5px solid #1a1a1a00;
-        border-radius: 50%;
-        animation: spin 2s linear infinite;
+      .loader-mark {
+        display: block;
+        width: 76px;
+        height: 76px;
+        overflow: visible;
       }
 
-      .loading-spinner2 {
-        width: 40px;
-        height: 40px;
-        border: 2px solid #f3f3f3;
-        border-top: 5px solid #1a1a1a00;
-        border-bottom: 5px solid #1a1a1a00;
-        border-radius: 50%;
-        animation: spin-reverse 1s linear infinite;
-        position: relative;
-        top: -55px;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
+      @media (max-width: 600px) {
+        .loader-mark {
+          width: 64px;
+          height: 64px;
         }
+      }
 
-        100% {
+      .loader-mark circle {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 1;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+      }
+
+      .loader-mark .ring {
+        transform-box: view-box;
+        transform-origin: 50px 50px;
+        animation: loader-spin linear infinite;
+      }
+
+      .loader-mark .track {
+        stroke-opacity: 0.12;
+      }
+
+      /* r=46: one long arc, slow, clockwise */
+      .loader-mark .ring-outer {
+        stroke-dasharray: 72 217;
+        animation-duration: 2.8s;
+      }
+
+      /* r=34: two arcs, counter-clockwise */
+      .loader-mark .ring-mid {
+        stroke-opacity: 0.75;
+        stroke-dasharray: 38 68.8;
+        animation-duration: 1.9s;
+        animation-direction: reverse;
+      }
+
+      /* r=22: short fast arc, clockwise */
+      .loader-mark .ring-inner {
+        stroke-opacity: 0.55;
+        stroke-dasharray: 22 116.2;
+        animation-duration: 1.2s;
+      }
+
+      .loader-mark .dot {
+        fill: #fff;
+        stroke: none;
+        transform-box: view-box;
+        transform-origin: 50px 50px;
+        animation: loader-dot 1.4s ease-in-out infinite;
+      }
+
+      .loader-mark .dot-halo {
+        stroke-opacity: 0.6;
+        transform-box: view-box;
+        transform-origin: 50px 50px;
+        animation: loader-halo 1.4s ease-out infinite;
+      }
+
+      .loader-title {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: "Zuume", "Kanit", sans-serif;
+        font-weight: 300;
+        font-size: 0.85rem;
+        letter-spacing: 0.4em;
+        /* letter-spacing adds trailing space; offset it to stay centred */
+        margin-right: -0.4em;
+        text-transform: uppercase;
+      }
+
+      @keyframes loader-spin {
+        to {
           transform: rotate(360deg);
         }
       }
 
-      @keyframes spin-reverse {
-        0% {
-          transform: rotate(0deg);
-        }
-
+      @keyframes loader-dot {
+        0%,
         100% {
-          transform: rotate(-360deg);
+          transform: scale(0.7);
+          opacity: 0.55;
+        }
+        50% {
+          transform: scale(1.15);
+          opacity: 1;
+        }
+      }
+
+      @keyframes loader-halo {
+        0% {
+          transform: scale(0.4);
+          opacity: 0.8;
+        }
+        70%,
+        100% {
+          transform: scale(1.6);
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .loader-mark .ring {
+          animation-duration: 8s;
+        }
+        .loader-mark .dot,
+        .loader-mark .dot-halo {
+          animation: none;
+        }
+        .loader-mark .dot-halo {
+          opacity: 0;
         }
       }
 
@@ -156,10 +238,23 @@
   </head>
 
   <body>
-    <div id="initial-loader">
-      <h1 class="loader-title">Loading</h1>
-      <div class="loading-spinner"></div>
-      <div class="loading-spinner2"></div>
+    <div id="initial-loader" role="status" aria-live="polite">
+      <div class="loader">
+        <svg
+          class="loader-mark"
+          viewBox="0 0 100 100"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <circle class="track" cx="50" cy="50" r="46" />
+          <circle class="ring ring-outer" cx="50" cy="50" r="46" />
+          <circle class="ring ring-mid" cx="50" cy="50" r="34" />
+          <circle class="ring ring-inner" cx="50" cy="50" r="22" />
+          <circle class="dot-halo" cx="50" cy="50" r="7" />
+          <circle class="dot" cx="50" cy="50" r="3.2" />
+        </svg>
+        <p class="loader-title">Loading</p>
+      </div>
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

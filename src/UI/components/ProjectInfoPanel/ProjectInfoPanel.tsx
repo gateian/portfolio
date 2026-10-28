@@ -11,6 +11,7 @@ import {
   CalloutLink,
   CalloutKicker,
   CalloutLabel,
+  CalloutArrow,
 } from './ProjectInfoPanel.style';
 
 interface ProjectInfoPanelProps {
@@ -92,7 +93,7 @@ function ProjectInfoPanel({
         >
           <CalloutKicker aria-hidden>Read</CalloutKicker>
           <CalloutLabel>{breakdown.label}</CalloutLabel>
-          <Arrow aria-hidden>→</Arrow>
+          <CalloutArrow aria-hidden>→</CalloutArrow>
         </CalloutLink>
       ) : null}
       {children}

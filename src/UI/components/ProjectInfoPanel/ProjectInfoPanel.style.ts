@@ -145,9 +145,63 @@ export const Arrow = styled.span({
   lineHeight: 1,
 });
 
+// Attention pulse for the technical breakdown callout. One 2.6s beat:
+// the border brightens, two hairline rings radiate out and fade, a light
+// sheen sweeps across and the arrow nudges right, then it rests.
+const CALLOUT_BEAT = '2.6s';
+
+const calloutRing = keyframes({
+  '0%': {
+    outlineOffset: '0px',
+    outlineColor: 'rgba(225, 245, 255, 1)',
+  },
+  '28%': {
+    outlineOffset: '8px',
+    outlineColor: 'rgba(210, 240, 255, 0.55)',
+  },
+  '60%, 100%': {
+    outlineOffset: '16px',
+    outlineColor: 'rgba(210, 240, 255, 0)',
+  },
+});
+
+const calloutBorder = keyframes({
+  '0%, 45%, 100%': {
+    borderColor: 'rgba(190, 235, 255, 0.85)',
+    boxShadow: '0 0 0 rgba(140, 220, 255, 0)',
+  },
+  '8%': {
+    borderColor: '#fff',
+    boxShadow: '0 0 16px rgba(140, 220, 255, 0.5)',
+  },
+});
+
+const calloutSheen = keyframes({
+  '0%': { backgroundPosition: '160% 0' },
+  '45%, 100%': { backgroundPosition: '-60% 0' },
+});
+
+const arrowNudge = keyframes({
+  '0%, 40%, 100%': { transform: 'translateX(0)' },
+  '12%': { transform: 'translateX(5px)' },
+  '22%': { transform: 'translateX(0)' },
+  '30%': { transform: 'translateX(3px)' },
+});
+
+const calloutRingLayer = {
+  content: '""',
+  position: 'absolute',
+  inset: '-1px',
+  pointerEvents: 'none',
+  outline: '1px solid rgba(210, 240, 255, 0)',
+  outlineOffset: '0px',
+  animation: `${calloutRing} ${CALLOUT_BEAT} ease-out infinite`,
+} as const;
+
 export const CalloutLink = styled(Link, {
   shouldForwardProp: (prop) => prop !== 'fading',
 })<{ fading: boolean }>(({ fading }) => ({
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   gap: '0.75rem',
@@ -158,6 +212,11 @@ export const CalloutLink = styled(Link, {
   padding: '0.55rem 1.1rem',
   border: '1px solid rgba(190, 235, 255, 0.85)',
   backgroundColor: 'rgba(10, 30, 40, 0.55)',
+  backgroundImage:
+    'linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.16) 50%, transparent 62%)',
+  backgroundSize: '250% 100%',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: '160% 0',
   backdropFilter: 'blur(2px)',
   color: '#fff',
   textDecoration: 'none',
@@ -175,6 +234,12 @@ export const CalloutLink = styled(Link, {
   transform: fading ? 'translateY(6px)' : 'translateY(0)',
   transition:
     'opacity 0.45s ease, transform 0.45s ease, background-color 0.2s ease, border-color 0.2s ease',
+  animation: `${calloutBorder} ${CALLOUT_BEAT} ease-out infinite, ${calloutSheen} ${CALLOUT_BEAT} ease-in-out infinite`,
+  '&::before': calloutRingLayer,
+  '&::after': {
+    ...calloutRingLayer,
+    animationDelay: '0.35s',
+  },
   '&:hover, &:focus-visible': {
     backgroundColor: 'rgba(140, 220, 255, 0.22)',
     borderColor: '#fff',
@@ -183,11 +248,33 @@ export const CalloutLink = styled(Link, {
     outline: '2px solid #fff',
     outlineOffset: '2px',
   },
+  '@media (prefers-reduced-motion: reduce)': {
+    animation: 'none',
+    backgroundImage: 'none',
+    borderColor: '#fff',
+    boxShadow: '0 0 14px rgba(140, 220, 255, 0.4)',
+    '&::before': {
+      animation: 'none',
+      outlineColor: 'rgba(210, 240, 255, 0.45)',
+      outlineOffset: '3px',
+    },
+    '&::after': { animation: 'none', display: 'none' },
+  },
   [`@media (max-height: ${MEDIA_HEIGHT_MEDIUM})`]: {
     minHeight: '2.4rem',
     fontSize: '0.9rem',
   },
 }));
+
+export const CalloutArrow = styled.span({
+  fontSize: '1.25rem',
+  lineHeight: 1,
+  display: 'inline-block',
+  animation: `${arrowNudge} ${CALLOUT_BEAT} ease-in-out infinite`,
+  '@media (prefers-reduced-motion: reduce)': {
+    animation: 'none',
+  },
+});
 
 export const CalloutKicker = styled.span({
   flexShrink: 0,
