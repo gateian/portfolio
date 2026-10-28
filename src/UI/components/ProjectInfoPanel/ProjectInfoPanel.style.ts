@@ -176,9 +176,21 @@ const calloutBorder = keyframes({
   },
 });
 
-const calloutSheen = keyframes({
-  '0%': { backgroundPosition: '160% 0' },
-  '45%, 100%': { backgroundPosition: '-60% 0' },
+// A light streak that crosses the whole box once per beat, just after the
+// border flash. The fill streak (transform) and the border glint
+// (background-position) share keyframe stops and easing, so they stay locked
+// together: both carry the band's centre from -22% to 122% of the box width,
+// i.e. from just clear of the left edge to just clear of the right.
+const SHEEN_EASE = 'cubic-bezier(0.35, 0, 0.65, 1)';
+
+const calloutStreak = keyframes({
+  '0%, 6%': { transform: 'translateX(-72%)' },
+  '60%, 100%': { transform: 'translateX(72%)' },
+});
+
+const calloutGlint = keyframes({
+  '0%, 6%': { backgroundPosition: '86% 0' },
+  '60%, 100%': { backgroundPosition: '14% 0' },
 });
 
 const arrowNudge = keyframes({
@@ -212,11 +224,6 @@ export const CalloutLink = styled(Link, {
   padding: '0.55rem 1.1rem',
   border: '1px solid rgba(190, 235, 255, 0.85)',
   backgroundColor: 'rgba(10, 30, 40, 0.55)',
-  backgroundImage:
-    'linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.16) 50%, transparent 62%)',
-  backgroundSize: '250% 100%',
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: '160% 0',
   backdropFilter: 'blur(2px)',
   color: '#fff',
   textDecoration: 'none',
@@ -234,7 +241,7 @@ export const CalloutLink = styled(Link, {
   transform: fading ? 'translateY(6px)' : 'translateY(0)',
   transition:
     'opacity 0.45s ease, transform 0.45s ease, background-color 0.2s ease, border-color 0.2s ease',
-  animation: `${calloutBorder} ${CALLOUT_BEAT} ease-out infinite, ${calloutSheen} ${CALLOUT_BEAT} ease-in-out infinite`,
+  animation: `${calloutBorder} ${CALLOUT_BEAT} ease-out infinite`,
   '&::before': calloutRingLayer,
   '&::after': {
     ...calloutRingLayer,
@@ -250,7 +257,6 @@ export const CalloutLink = styled(Link, {
   },
   '@media (prefers-reduced-motion: reduce)': {
     animation: 'none',
-    backgroundImage: 'none',
     borderColor: '#fff',
     boxShadow: '0 0 14px rgba(140, 220, 255, 0.4)',
     '&::before': {
@@ -265,6 +271,47 @@ export const CalloutLink = styled(Link, {
     fontSize: '0.9rem',
   },
 }));
+
+// Clipping layer for the sheen. The link itself can't clip (its rings draw
+// outside it), so the streak lives in this inset, overflow-hidden child.
+export const CalloutShine = styled.span({
+  position: 'absolute',
+  inset: 0,
+  overflow: 'hidden',
+  pointerEvents: 'none',
+  // Diagonal band across the fill: soft wide falloff with a brighter core.
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    backgroundImage:
+      'linear-gradient(105deg, transparent 28%, rgba(255, 255, 255, 0.12) 38%, rgba(255, 255, 255, 0.45) 46%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0.45) 54%, rgba(255, 255, 255, 0.12) 62%, transparent 72%)',
+    transform: 'translateX(-72%)',
+    animation: `${calloutStreak} ${CALLOUT_BEAT} ${SHEEN_EASE} infinite`,
+  },
+  // The same band, masked down to the 1px border, so the top and bottom edges
+  // glint white as the streak passes along them.
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    // Slightly heavier than the 1px border it rides on, so the glint reads.
+    padding: '1.5px',
+    backgroundImage:
+      'linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.6) 46%, #fff 50%, rgba(255, 255, 255, 0.6) 54%, transparent 62%)',
+    backgroundSize: '300% 100%',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '86% 0',
+    WebkitMask:
+      'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+    WebkitMaskComposite: 'xor',
+    mask: 'linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)',
+    animation: `${calloutGlint} ${CALLOUT_BEAT} ${SHEEN_EASE} infinite`,
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    display: 'none',
+  },
+});
 
 export const CalloutArrow = styled.span({
   fontSize: '1.25rem',

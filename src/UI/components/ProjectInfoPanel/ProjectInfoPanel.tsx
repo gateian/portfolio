@@ -12,6 +12,7 @@ import {
   CalloutKicker,
   CalloutLabel,
   CalloutArrow,
+  CalloutShine,
 } from './ProjectInfoPanel.style';
 
 interface ProjectInfoPanelProps {
@@ -91,6 +92,7 @@ function ProjectInfoPanel({
           onFocus={() => onCalloutEngage?.(true)}
           onBlur={() => onCalloutEngage?.(false)}
         >
+          <CalloutShine aria-hidden />
           <CalloutKicker aria-hidden>Read</CalloutKicker>
           <CalloutLabel>{breakdown.label}</CalloutLabel>
           <CalloutArrow aria-hidden>→</CalloutArrow>

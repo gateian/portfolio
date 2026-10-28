@@ -14,13 +14,23 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // started rendering rather than blocking the first paint.
 // The project key is public by design (it ships in the client bundle).
 if (import.meta.env.PROD) {
-  import('posthog-js').then(({ default: posthog }) => {
-    posthog.init('phc_wdbFUqbwv4WXkiHJBgdT5bkEkxkrXs8r5dLahXqE7RMf', {
-      api_host: 'https://eu.i.posthog.com',
-      // Includes capture_pageview: 'history_change', so React Router
-      // navigations are tracked as pageviews.
-      defaults: '2026-08-30',
-      person_profiles: 'identified_only',
+  const initAnalytics = () => {
+    import('posthog-js').then(({ default: posthog }) => {
+      posthog.init('phc_wdbFUqbwv4WXkiHJBgdT5bkEkxkrXs8r5dLahXqE7RMf', {
+        api_host: 'https://eu.i.posthog.com',
+        // Includes capture_pageview: 'history_change', so React Router
+        // navigations are tracked as pageviews.
+        defaults: '2026-08-30',
+        person_profiles: 'identified_only',
+      });
     });
-  });
+  };
+  // Keep the first reel clip's download uncontended: start analytics once the
+  // hero is ready (or straight away on pages that don't load it).
+  const hero = window.__hero;
+  if (hero && hero.status !== 'idle') {
+    hero.onReady(initAnalytics);
+  } else {
+    initAnalytics();
+  }
 }

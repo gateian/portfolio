@@ -84,10 +84,14 @@ const Image = styled.div<{ src: string }>(({ src }) => ({
   },
 }));
 
-// Safety net only. The hero normally becomes ready via `canplay`, which fires
-// in a fraction of a second; this just stops a media error or a stalled fetch
-// from leaving the loading overlay up indefinitely.
-const HERO_READY_TIMEOUT_MS = 8000;
+// Safety net only. The bootstrap script in index.html resolves the hero
+// itself (fully downloaded, or its own 22s timeout / error fallback); this
+// just guarantees the loading overlay can't outlive a broken bootstrap.
+const HERO_READY_TIMEOUT_MS = 30000;
+
+// A video counts as fully buffered once its buffered range reaches this close
+// to the end of what will actually be played.
+const BUFFERED_END_TOLERANCE_S = 0.25;
 
 // How long a still image stays on screen before advancing.
 const IMAGE_DURATION_MS = 8000;
@@ -178,15 +182,57 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
       }
     }, [paused, handleMediaEnd]);
 
+    // Index of the item whose media is fully buffered. Only then does the next
+    // item start downloading, so it never competes with the clip on screen
+    // (with no range support, a preloading clip pulls its entire file).
+    const [bufferedIndex, setBufferedIndex] = useState<number | null>(null);
+
     const shouldLoad = (index: number) => {
       if (index === currentIndex) {
         return true;
       }
-      if (!hasStartedPlayback) {
+      if (!hasStartedPlayback || bufferedIndex !== currentIndex) {
         return false;
       }
       return index === nextIndex;
     };
+
+    useEffect(() => {
+      if (!hasStartedPlayback) {
+        return undefined;
+      }
+      if (items[currentIndex]?.type !== 'video') {
+        setBufferedIndex(currentIndex);
+        return undefined;
+      }
+      const element = videoRefs.current[currentIndex];
+      if (!element) {
+        return undefined;
+      }
+
+      const events = ['progress', 'loadedmetadata', 'canplaythrough'];
+      const check = () => {
+        const { duration, buffered } = element;
+        if (!duration || Number.isNaN(duration)) {
+          return;
+        }
+        const needed =
+          Math.min(duration, VIDEO_MAX_DURATION_S) - BUFFERED_END_TOLERANCE_S;
+        for (let i = 0; i < buffered.length; i += 1) {
+          if (buffered.end(i) >= needed) {
+            setBufferedIndex(currentIndex);
+            events.forEach((name) => element.removeEventListener(name, check));
+            return;
+          }
+        }
+      };
+
+      events.forEach((name) => element.addEventListener(name, check));
+      check();
+      return () => {
+        events.forEach((name) => element.removeEventListener(name, check));
+      };
+    }, [currentIndex, hasStartedPlayback, items, heroVideo]);
 
     useEffect(() => {
       const preloaded = window.__heroVideoEl;
@@ -235,36 +281,26 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
         return undefined;
       }
 
-      const video = heroVideo;
-      if (!video) {
+      if (!heroVideo) {
         return undefined;
       }
 
-      // Reveal as soon as playback can start, rather than waiting on buffered
-      // ranges. A paused video only buffers a few seconds ahead before firing
-      // `suspend` and halting the fetch, so any "mostly downloaded" test
-      // deadlocks against the playback gate below: it waits on buffering that
-      // only resumes once playback starts, which in turn waits on this flag.
-      //
-      // `canplay` rather than `canplaythrough`: the latter needs the browser to
-      // predict the *whole* clip will play without stalling, which can never be
-      // true when the connection is slower than the video's bitrate, so it falls
-      // through to HERO_READY_TIMEOUT_MS on exactly the connections that can
-      // least afford the wait. Measured reveal on a 3 Mbps link: 9.0s -> 1.0s.
-      //
-      // Check readyState synchronously first: the event usually fires before
-      // this component mounts, so the listener alone would miss it.
-      if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+      // Hold the loader until the bootstrap reports the first clip can play
+      // through: downloaded in full, or given up on after its timeout/error.
+      const hero = window.__hero;
+      if (!hero) {
         markReady();
         return undefined;
       }
-
-      video.addEventListener('canplay', markReady);
-      video.addEventListener('error', markReady);
-
+      let cancelled = false;
+      hero.start();
+      hero.onReady(() => {
+        if (!cancelled) {
+          markReady();
+        }
+      });
       return () => {
-        video.removeEventListener('canplay', markReady);
-        video.removeEventListener('error', markReady);
+        cancelled = true;
       };
     }, [items, markReady, heroVideo]);
 
