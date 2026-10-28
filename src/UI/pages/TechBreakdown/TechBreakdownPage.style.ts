@@ -49,7 +49,10 @@ export const TopBar = styled.nav({
   justifyContent: 'space-between',
   gap: '1rem',
   padding: '0.75rem clamp(1rem, 4vw, 2.5rem)',
+  // Room for the fixed site menu toggle, which sits inside this bar.
+  paddingRight: '4.75rem',
   backgroundColor: 'rgba(0, 0, 0, 0.72)',
+  '@media (max-width: 600px)': { paddingRight: '4rem' },
   backdropFilter: 'blur(6px)',
   borderBottom: `1px solid ${LINE}`,
 });
@@ -61,6 +64,8 @@ export const TopBarLabel = styled.span({
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+  // Phones: the back button and menu toggle need the room.
+  '@media (max-width: 480px)': { display: 'none' },
 });
 
 export const OutlineButton = styled.button({

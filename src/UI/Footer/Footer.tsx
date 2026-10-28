@@ -14,6 +14,8 @@ import {
 } from './Footer.style';
 import ToastNotification from '../Toast/ToastNotifcation';
 import EmailModal from '../Modal/Modal';
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from '../../data/site';
+import { copyToClipboard } from '../../utils/clipboard';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -25,50 +27,7 @@ function Footer() {
     setShowModal(true);
   };
 
-  const email = 'ihamblin@gmail.com';
-
-  const copyToClipboard = async (text: string) => {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      try {
-        await navigator.clipboard.writeText(text);
-        return true;
-      } catch (err) {
-        console.error('Clipboard API failed:', err);
-      }
-    }
-
-    // Fallback for older browsers and mobile devices
-    try {
-      // Create temporary textarea
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-
-      // Make it invisible
-      textArea.style.position = 'fixed';
-      textArea.style.top = '0';
-      textArea.style.left = '0';
-      textArea.style.width = '2em';
-      textArea.style.height = '2em';
-      textArea.style.padding = '0';
-      textArea.style.border = 'none';
-      textArea.style.outline = 'none';
-      textArea.style.boxShadow = 'none';
-      textArea.style.background = 'transparent';
-
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-
-      // Try to copy using the older command
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textArea);
-
-      return successful;
-    } catch (err) {
-      console.error('Fallback clipboard method failed:', err);
-      return false;
-    }
-  };
+  const email = CONTACT_EMAIL;
 
   const handleCopyEmail = async () => {
     const success = await copyToClipboard(email);
@@ -101,14 +60,14 @@ function Footer() {
             <ContactButton onClick={handleContactClick}>Contact</ContactButton>
 
             <SocialLink
-              href="https://github.com/gateian"
+              href={GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
             >
               GitHub
             </SocialLink>
             <SocialLink
-              href="https://linkedin.com/in/ihamblin"
+              href={LINKEDIN_URL}
               target="_blank"
               rel="noopener noreferrer"
             >

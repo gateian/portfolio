@@ -38,6 +38,13 @@ export const defaultMeta: RouteMeta = {
 
 export const routeMeta: RouteMeta[] = [
   {
+    path: '/about',
+    title: 'About | Ian Hamblin',
+    description:
+      'Ian Hamblin: 3D graphics and technical art. Shaders, real-time rendering, and the tools and pipelines that get art from Blender onto real hardware.',
+    type: 'website',
+  },
+  {
     path: '/tech/zippy-town',
     title: 'Zippy Town: Blender → Android Pipeline | Ian Hamblin',
     description:

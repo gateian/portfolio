@@ -22,6 +22,8 @@ import Footer from './UI/Footer/Footer';
 import { mediaItems } from './data/mediaItems';
 import { dismissInitialLoader } from './utils/initialLoader';
 import TechBreakdownPage from './UI/pages/TechBreakdown/TechBreakdownPage';
+import AboutPage from './UI/pages/About/AboutPage';
+import SiteMenu from './UI/SiteMenu/SiteMenu';
 
 const AppWrapper = styled('div')({
   margin: 0,
@@ -62,8 +64,9 @@ function AppContent() {
   }, [isFullPage]);
 
   const activeMediaItem = mediaItems[mediaIndex] ?? mediaItems[0];
-  const rotationPaused =
-    !!activeMediaItem?.techBreakdown?.pauseRotation || calloutEngaged;
+  // Only hold while someone is actually on the callout; the slideshow caps
+  // the hold and moves on shortly after they leave.
+  const rotationPaused = calloutEngaged;
 
   return (
     <AppWrapper>
@@ -93,6 +96,7 @@ function AppContent() {
           <Route path="/cvgraphics" element={<ContentArea />} />
           <Route path="/cv3d" element={<ContentArea />} />
           <Route path="/tech/:slug" element={<TechBreakdownPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
         <FooterArea isDisabled={isFullPage}>
           <BottomChrome>
@@ -120,6 +124,7 @@ function AppContent() {
           <Footer />
         </FooterArea>
       </Overlay>
+      <SiteMenu />
     </AppWrapper>
   );
 }
