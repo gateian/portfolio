@@ -30,8 +30,8 @@ export const mediaItems: MediaItem[] = [
   {
     //Zippy Town
     type: 'video',
-    src: '/videos/Zippy_town_60fps.mp4',
-    poster: '/posters/zippy_town.webp',
+    src: '/videos/ZippyTown_NewTextures_Clip2.mp4',
+    poster: '/posters/zippy_town_newtextures.webp',
     title: 'Zippy Town',
     description:
       'A realtime cartoon city in the browser (Three.js) and as a native Android live wallpaper.',

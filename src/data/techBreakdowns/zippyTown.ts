@@ -16,8 +16,8 @@ export const zippyTownBreakdown: TechBreakdown = {
   summary:
     'One Blender scene, two renderers: a custom Blender add-on bakes Cycles lighting into lightmaps, a small export server compresses everything to KTX2, and the same assets ship to a three.js website and a native Filament live wallpaper on Android.',
   hero: {
-    video: '/videos/Zippy_town_60fps.mp4',
-    poster: '/posters/zippy_town.webp',
+    video: '/videos/ZippyTown_NewTextures_Clip2.mp4',
+    poster: '/posters/zippy_town_newtextures.webp',
     alt: 'Zippy Town: a cartoon city with traffic and boats, rendered in real time',
   },
   links: [{ label: 'zippy.town', href: 'https://zippy.town/' }],
