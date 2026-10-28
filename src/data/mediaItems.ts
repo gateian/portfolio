@@ -1,3 +1,5 @@
+import { VideoCrop, ZIPPY_NEW_TEXTURES_CROP } from './videoCrop';
+
 export type MediaItem = {
   type: 'video' | 'image';
   src: string;
@@ -6,6 +8,8 @@ export type MediaItem = {
   description: string;
   url?: string;
   poster?: string;
+  /** Zoom to hide capture artefacts at the clip's edges. */
+  crop?: VideoCrop;
   /** Optional deep-dive page, shown as a callout next to the info panel. */
   techBreakdown?: {
     path: string;
@@ -32,6 +36,7 @@ export const mediaItems: MediaItem[] = [
     type: 'video',
     src: '/videos/ZippyTown_NewTextures_Clip2.mp4',
     poster: '/posters/zippy_town_newtextures.webp',
+    crop: ZIPPY_NEW_TEXTURES_CROP,
     title: 'Zippy Town',
     description:
       'A realtime cartoon city in the browser (Three.js) and as a native Android live wallpaper.',

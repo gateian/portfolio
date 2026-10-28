@@ -8,28 +8,34 @@
       // Hero video bootstrap. Runs before the app bundle so the first reel clip
       // starts downloading immediately.
       //
-      // The whole clip is fetched into memory before the loader is dismissed.
+      // The whole clip is fetched into memory before the loader is dismissed,
+      // however long that takes: the reel never starts on a clip that can stall.
       // Gating on `canplay` (or a paused <video>'s own buffering) revealed the
       // reel after a second or so, and the 9 Mbps clip then stalled repeatedly
-      // on 4G. A blob is also immune to the host ignoring Range requests (the
-      // Workers asset server answers every Range with a full 200), loops for
-      // free, and gives an exact progress figure for the loader.
+      // on 4G. A blob also sidesteps the host ignoring Range requests (the
+      // Workers asset server answers every Range with a full 200), loops without
+      // re-downloading, and gives an exact progress figure for the loader.
       //
-      // Fallbacks, so the loader can never hang: after HERO_TIMEOUT_MS, or on a
-      // fetch / decode error, the download is abandoned and the clip streams
-      // from its URL as before.
+      // There is no overall time limit. Only a real failure falls back to
+      // streaming from the URL: a network error, or no bytes at all for
+      // STALL_MS. The fetch is retried once first, resuming from the bytes
+      // already held when the server honours Range.
       (function () {
         var src = "__HERO_MEDIA_SRC__";
         if (!src) {
           return;
         }
         var poster = "__HERO_POSTER_SRC__";
-        var HERO_TIMEOUT_MS = 22000;
+        var STALL_MS = 30000;
+        var MAX_ATTEMPTS = 2;
+        var RETRY_DELAY_MS = 1000;
         var video = document.createElement("video");
         video.muted = true;
         video.defaultMuted = true;
         video.playsInline = true;
+        video.setAttribute("muted", "");
         video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
         // No src yet: nothing downloads until start() decides how.
         video.preload = "auto";
         if (poster) {
@@ -45,7 +51,7 @@
           src: src,
           // idle -> loading -> ready
           status: "idle",
-          // How it became ready: blob | timeout | error | nofetch
+          // How it became ready: blob | stall | error | decode | nofetch
           mode: null,
           readyAt: 0,
           callbacks: [],
@@ -62,13 +68,33 @@
         window.__heroVideoEl = video;
         window.__heroVideoSrc = src;
 
+        // Download state, kept across a retry so partial bytes survive it.
+        var chunks = [];
+        var received = 0;
+        var total = 0;
+        var type = "video/mp4";
+        var attempt = 0;
+
         function setProgress(fraction) {
           var bar = document.getElementById("loader-progress");
-          if (!bar) {
-            return;
+          var label = document.getElementById("loader-percent");
+          if (bar) {
+            bar.classList.remove("is-indeterminate");
+            bar.classList.add("is-active");
+            bar.style.setProperty("--progress", String(fraction));
           }
-          bar.classList.add("is-active");
-          bar.style.setProperty("--progress", String(fraction));
+          if (label) {
+            label.classList.add("is-active");
+            label.textContent = Math.floor(fraction * 100) + "%";
+          }
+        }
+
+        // No Content-Length: show activity without inventing a figure.
+        function setIndeterminate() {
+          var bar = document.getElementById("loader-progress");
+          if (bar) {
+            bar.classList.add("is-active", "is-indeterminate");
+          }
         }
 
         function finish(mode) {
@@ -86,9 +112,125 @@
         }
 
         function streamFromNetwork(mode) {
+          chunks = [];
           video.src = src;
           video.load();
           finish(mode);
+        }
+
+        function playBlob(blob) {
+          // The URL stays live for the page's lifetime: the hero element keeps
+          // using it every time the reel loops back round.
+          var url = URL.createObjectURL(blob);
+          var done = false;
+          var onCanPlay = function () {
+            if (done) {
+              return;
+            }
+            done = true;
+            video.removeEventListener("error", onError);
+            finish("blob");
+          };
+          // e.g. a browser that won't play a blob URL: stream instead.
+          var onError = function () {
+            if (done) {
+              return;
+            }
+            done = true;
+            video.removeEventListener("canplay", onCanPlay);
+            URL.revokeObjectURL(url);
+            streamFromNetwork("decode");
+          };
+          video.addEventListener("canplay", onCanPlay);
+          video.addEventListener("error", onError);
+          video.src = url;
+          video.load();
+        }
+
+        function download() {
+          attempt++;
+          var controller = window.AbortController
+            ? new AbortController()
+            : null;
+          var stalled = false;
+          var stallTimer = 0;
+          // Re-armed on every chunk: only a silent connection trips it.
+          function armStall() {
+            clearTimeout(stallTimer);
+            stallTimer = setTimeout(function () {
+              stalled = true;
+              if (controller) {
+                controller.abort();
+              }
+            }, STALL_MS);
+          }
+          var resumeFrom = received;
+          var init = {};
+          if (controller) {
+            init.signal = controller.signal;
+          }
+          if (resumeFrom > 0) {
+            init.headers = { Range: "bytes=" + resumeFrom + "-" };
+          }
+          armStall();
+
+          fetch(src, init)
+            .then(function (res) {
+              if (!res.ok) {
+                throw new Error("HTTP " + res.status);
+              }
+              armStall();
+              if (resumeFrom > 0 && res.status !== 206) {
+                // Range ignored: the body is the whole file again.
+                chunks = [];
+                received = 0;
+              }
+              if (received === 0) {
+                type = res.headers.get("content-type") || type;
+                // Content-Length is only the body size when it isn't encoded.
+                total = res.headers.get("content-encoding")
+                  ? 0
+                  : Number(res.headers.get("content-length")) || 0;
+              }
+              if (total > 0) {
+                setProgress(Math.min(received / total, 1));
+              } else {
+                setIndeterminate();
+              }
+              if (!res.body || !res.body.getReader) {
+                // No streaming reads: no stall detection either, so just wait.
+                clearTimeout(stallTimer);
+                return res.blob();
+              }
+              var reader = res.body.getReader();
+              function pump() {
+                return reader.read().then(function (step) {
+                  if (step.done) {
+                    clearTimeout(stallTimer);
+                    var blob = new Blob(chunks, { type: type });
+                    chunks = [];
+                    return blob;
+                  }
+                  armStall();
+                  chunks.push(step.value);
+                  received += step.value.length;
+                  if (total > 0) {
+                    setProgress(Math.min(received / total, 1));
+                  }
+                  return pump();
+                });
+              }
+              return pump();
+            })
+            .then(playBlob)
+            .catch(function () {
+              clearTimeout(stallTimer);
+              if (attempt < MAX_ATTEMPTS) {
+                setTimeout(download, RETRY_DELAY_MS);
+              } else {
+                streamFromNetwork(stalled ? "stall" : "error");
+              }
+            });
         }
 
         function start() {
@@ -100,91 +242,7 @@
             streamFromNetwork("nofetch");
             return;
           }
-          var controller = window.AbortController
-            ? new AbortController()
-            : null;
-          var settled = false;
-          var timer = setTimeout(function () {
-            if (settled) {
-              return;
-            }
-            settled = true;
-            if (controller) {
-              controller.abort();
-            }
-            streamFromNetwork("timeout");
-          }, HERO_TIMEOUT_MS);
-
-          fetch(src, controller ? { signal: controller.signal } : undefined)
-            .then(function (res) {
-              if (!res.ok) {
-                throw new Error("HTTP " + res.status);
-              }
-              var type = res.headers.get("content-type") || "video/mp4";
-              var total = Number(res.headers.get("content-length")) || 0;
-              // Content-Length is only the body size when it isn't encoded.
-              var measurable =
-                total > 0 &&
-                !res.headers.get("content-encoding") &&
-                res.body &&
-                res.body.getReader;
-              if (!measurable) {
-                return res.blob();
-              }
-              var reader = res.body.getReader();
-              var chunks = [];
-              var received = 0;
-              function pump() {
-                return reader.read().then(function (step) {
-                  if (step.done) {
-                    return new Blob(chunks, { type: type });
-                  }
-                  chunks.push(step.value);
-                  received += step.value.length;
-                  setProgress(Math.min(received / total, 1));
-                  return pump();
-                });
-              }
-              return pump();
-            })
-            .then(function (blob) {
-              if (settled) {
-                return;
-              }
-              var url = URL.createObjectURL(blob);
-              var onCanPlay = function () {
-                if (settled) {
-                  return;
-                }
-                settled = true;
-                clearTimeout(timer);
-                video.removeEventListener("error", onError);
-                finish("blob");
-              };
-              // e.g. a browser that won't play a blob URL: stream instead.
-              var onError = function () {
-                if (settled) {
-                  return;
-                }
-                settled = true;
-                clearTimeout(timer);
-                video.removeEventListener("canplay", onCanPlay);
-                URL.revokeObjectURL(url);
-                streamFromNetwork("error");
-              };
-              video.addEventListener("canplay", onCanPlay, { once: true });
-              video.addEventListener("error", onError, { once: true });
-              video.src = url;
-              video.load();
-            })
-            .catch(function () {
-              if (settled) {
-                return;
-              }
-              settled = true;
-              clearTimeout(timer);
-              streamFromNetwork("error");
-            });
+          download();
         }
 
         // Full pages such as /tech/... don't show the reel on arrival; the
@@ -366,6 +424,42 @@
         transition: transform 0.25s linear;
       }
 
+      /* No Content-Length: a short segment drifts across instead. */
+      .loader-progress.is-indeterminate {
+        overflow: hidden;
+      }
+
+      .loader-progress.is-indeterminate span {
+        width: 30%;
+        transform: translateX(-100%);
+        transition: none;
+        animation: loader-indeterminate 1.4s ease-in-out infinite;
+      }
+
+      @keyframes loader-indeterminate {
+        to {
+          transform: translateX(340%);
+        }
+      }
+
+      .loader-percent {
+        margin: 0;
+        min-height: 1em;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: "Kanit", sans-serif;
+        font-weight: 200;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        margin-right: -0.2em;
+        font-variant-numeric: tabular-nums;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .loader-percent.is-active {
+        opacity: 1;
+      }
+
       @keyframes loader-spin {
         to {
           transform: rotate(360deg);
@@ -407,6 +501,9 @@
         .loader-mark .dot-halo {
           opacity: 0;
         }
+        .loader-progress.is-indeterminate span {
+          animation-duration: 4s;
+        }
       }
 
       html,
@@ -443,6 +540,7 @@
         <div class="loader-progress" id="loader-progress" aria-hidden="true">
           <span></span>
         </div>
+        <p class="loader-percent" id="loader-percent" aria-hidden="true"></p>
       </div>
     </div>
     <div id="root"></div>

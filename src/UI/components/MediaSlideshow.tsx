@@ -8,6 +8,7 @@ import {
 } from 'react';
 import styled from '@emotion/styled';
 import type { MediaItem } from '../../data/mediaItems';
+import { videoCropStyle } from '../../data/videoCrop';
 
 interface MediaSlideshowProps {
   items: MediaItem[];
@@ -43,6 +44,7 @@ const SlideshowContainer = styled.div({
 
 const MediaElement = styled.div({
   position: 'absolute',
+  overflow: 'hidden',
   top: 0,
   left: 0,
   width: '100%',
@@ -84,9 +86,10 @@ const Image = styled.div<{ src: string }>(({ src }) => ({
   },
 }));
 
-// Safety net only. The bootstrap script in index.html resolves the hero
-// itself (fully downloaded, or its own 22s timeout / error fallback); this
-// just guarantees the loading overlay can't outlive a broken bootstrap.
+// Safety net for when the bootstrap script in index.html is missing. When it
+// is present it alone decides when the hero is ready (fully downloaded, or a
+// real network failure), with no time limit, so slow connections still get
+// the whole clip before the reel starts.
 const HERO_READY_TIMEOUT_MS = 30000;
 
 // A video counts as fully buffered once its buffered range reaches this close
@@ -262,6 +265,9 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
     }, [handleMediaEnd, heroIndex]);
 
     useEffect(() => {
+      if (window.__hero) {
+        return undefined;
+      }
       const timeoutId = window.setTimeout(markReady, HERO_READY_TIMEOUT_MS);
       return () => window.clearTimeout(timeoutId);
     }, [markReady]);
@@ -286,7 +292,7 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
       }
 
       // Hold the loader until the bootstrap reports the first clip can play
-      // through: downloaded in full, or given up on after its timeout/error.
+      // through: downloaded in full, or given up on after a network failure.
       const hero = window.__hero;
       if (!hero) {
         markReady();
@@ -457,6 +463,7 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
                   }}
                   src={item.src}
                   poster={item.poster}
+                  style={videoCropStyle(item.crop)}
                   muted
                   playsInline
                   preload="auto"

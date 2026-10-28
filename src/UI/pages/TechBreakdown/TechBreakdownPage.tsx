@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import StateContext from '../../../StateContext';
 import { techBreakdowns } from '../../../data/techBreakdowns';
+import { videoCropStyle } from '../../../data/videoCrop';
 import type {
   BreakdownFact,
   BreakdownMedia,
@@ -224,6 +225,7 @@ function Breakdown({ data }: { data: TechBreakdown }) {
           <HeroVideo
             src={data.hero.video}
             poster={data.hero.poster}
+            style={videoCropStyle(data.hero.crop)}
             autoPlay={!reducedMotion}
             muted
             loop
@@ -232,7 +234,11 @@ function Breakdown({ data }: { data: TechBreakdown }) {
             aria-label={data.hero.alt}
           />
         ) : data.hero.poster ? (
-          <HeroImage src={data.hero.poster} alt={data.hero.alt} />
+          <HeroImage
+            src={data.hero.poster}
+            alt={data.hero.alt}
+            style={videoCropStyle(data.hero.crop)}
+          />
         ) : null}
         <HeroShade />
         <HeroText>

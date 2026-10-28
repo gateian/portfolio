@@ -1,3 +1,4 @@
+import { ZIPPY_NEW_TEXTURES_CROP } from '../videoCrop';
 import type { TechBreakdown } from './types';
 
 /*
@@ -18,6 +19,7 @@ export const zippyTownBreakdown: TechBreakdown = {
   hero: {
     video: '/videos/ZippyTown_NewTextures_Clip2.mp4',
     poster: '/posters/zippy_town_newtextures.webp',
+    crop: ZIPPY_NEW_TEXTURES_CROP,
     alt: 'Zippy Town: a cartoon city with traffic and boats, rendered in real time',
   },
   links: [{ label: 'zippy.town', href: 'https://zippy.town/' }],

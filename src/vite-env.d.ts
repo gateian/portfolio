@@ -5,7 +5,7 @@ interface HeroLoader {
   el: HTMLVideoElement;
   src: string;
   status: 'idle' | 'loading' | 'ready';
-  mode: 'blob' | 'timeout' | 'error' | 'nofetch' | null;
+  mode: 'blob' | 'stall' | 'error' | 'decode' | 'nofetch' | null;
   readyAt: number;
   /** Runs `cb` once the hero may be shown (immediately if it already can). */
   onReady: (cb: () => void) => void;

@@ -1,3 +1,5 @@
+import type { VideoCrop } from '../videoCrop';
+
 /**
  * Data model for a "technical breakdown" page (/tech/:slug).
  *
@@ -72,6 +74,8 @@ export type TechBreakdown = {
   hero: {
     video?: string;
     poster?: string;
+    /** Zoom to hide capture artefacts at the clip's edges. */
+    crop?: VideoCrop;
     alt: string;
   };
   links?: { label: string; href: string }[];
