@@ -153,15 +153,3 @@ export const LinkCellButton = styled.button(linkCell, {
   margin: 0,
   '&:focus:not(:focus-visible)': { outline: 'none' },
 });
-
-export const Looking = styled.ul({
-  margin: '1.5rem 0 0',
-  padding: 0,
-  listStyle: 'none',
-  maxWidth: '46rem',
-  '& li': {
-    padding: '0.6rem 0 0.6rem 1.1rem',
-    borderLeft: `1px solid ${LINE}`,
-    marginBottom: '0.5rem',
-  },
-});

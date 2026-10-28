@@ -14,8 +14,6 @@ import {
   Section,
   SectionIntro,
   SectionTitle,
-  TodoNote,
-  TodoTag,
   TopBar,
   TopBarLabel,
 } from '../TechBreakdown/TechBreakdownPage.style';
@@ -26,7 +24,6 @@ import {
   LinkCellButton,
   LinkCellStyle,
   LinkGrid,
-  Looking,
   Name,
   Photo,
   Prose,
@@ -86,15 +83,6 @@ const SKILLS: { title: string; items: string[] }[] = [
     items: ['C# (Unity)', 'TypeScript / JavaScript', 'React', 'Node.js'],
   },
 ];
-
-function Todo({ children }: { children: string }) {
-  return (
-    <TodoNote>
-      <TodoTag>TODO(Ian)</TodoTag>
-      {children}
-    </TodoNote>
-  );
-}
 
 /** True once the portrait has loaded; stays false if the file is missing. */
 function usePhoto(src: string) {
@@ -226,27 +214,6 @@ function AboutPage() {
               </div>
             ))}
           </SkillGrid>
-        </Section>
-
-        <Section aria-labelledby="about-looking">
-          <SectionTitle id="about-looking">
-            What I&apos;m looking for
-          </SectionTitle>
-          <Looking>
-            <li>
-              Technical Artist and graphics roles where art and engineering
-              meet: shaders, lighting, and tools that keep artists in their DCC.
-            </li>
-            <li>
-              Teams working to a fixed memory and frame budget on real hardware,
-              including console.
-            </li>
-          </Looking>
-          <Todo>
-            Confirm the roles you want, location / remote preference, and
-            whether you're open to permanent, contract or both. This is drafted
-            from the site tagline and the Zippy Town breakdown.
-          </Todo>
         </Section>
 
         <Section aria-labelledby="about-links">
