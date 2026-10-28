@@ -119,7 +119,10 @@ const linkCell = {
   cursor: 'pointer',
   font: 'inherit',
   transition: 'background-color 0.2s ease',
-  '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.07)' },
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    borderColor: LINE,
+  },
   '&:focus-visible': { outline: '1px solid #fff', outlineOffset: '-1px' },
   '& .k': {
     display: 'block',

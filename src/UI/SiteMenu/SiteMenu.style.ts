@@ -39,7 +39,11 @@ export const MenuButton = styled.button<{ isFaded?: boolean; isOpen: boolean }>(
     opacity: isFaded ? 0 : 1,
     pointerEvents: isFaded ? 'none' : 'auto',
     transition: `opacity 0.3s ease, background-color 0.2s ease`,
-    '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.14)' },
+    // Override the global Vite button:hover border colour.
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.14)',
+      borderColor: 'rgba(255, 255, 255, 0.9)',
+    },
     '&:focus-visible': { outline: '2px solid #fff', outlineOffset: '2px' },
     '&:focus:not(:focus-visible)': { outline: 'none' },
     '@media (max-width: 600px)': { right: '0.75rem' },
@@ -156,6 +160,9 @@ const itemLink = {
     paddingLeft: '0.6rem',
   },
   '&:focus-visible': { outline: '1px solid #fff', outlineOffset: '-1px' },
+  '&:focus:not(:focus-visible)': { outline: 'none' },
+  borderRadius: 0,
+  font: 'inherit',
   '&[aria-current="page"] .label::after': {
     content: '""',
     display: 'inline-block',
