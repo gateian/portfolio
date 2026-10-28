@@ -8,6 +8,7 @@ import {
 import StateContext from '../../../StateContext';
 import { techBreakdowns } from '../../../data/techBreakdowns';
 import { videoCropStyle } from '../../../data/videoCrop';
+import { useBreakdownAnalytics } from './useBreakdownAnalytics';
 import type {
   BreakdownFact,
   BreakdownMedia,
@@ -15,6 +16,7 @@ import type {
   TechBreakdown,
 } from '../../../data/techBreakdowns/types';
 import {
+  AppCta,
   Arrow,
   BlockLabel,
   BudgetCard,
@@ -37,6 +39,7 @@ import {
   HeroText,
   HeroTitle,
   HeroImage,
+  HeroLinks,
   HeroVideo,
   ImageFrame,
   Inner,
@@ -44,7 +47,7 @@ import {
   Lane,
   LaneLabel,
   LaneRow,
-  LinkRow,
+  LegalNote,
   NodeButton,
   NodeLabel,
   NodeTool,
@@ -56,6 +59,7 @@ import {
   PlaceholderFrame,
   PlaceholderIcon,
   PlaceholderLabel,
+  PlayBadgeLink,
   Point,
   PointList,
   ResultPara,
@@ -108,6 +112,51 @@ function MediaSlot({ media }: { media: BreakdownMedia }) {
   );
 }
 
+const PLAY_BADGE_SRC = '/badges/google-play-badge.png';
+
+/**
+ * Google Play listing URL. The `referrer` is passed through to the Play
+ * Console's install attribution, so installs from this page show up there.
+ */
+function playStoreHref(packageName: string, placement: string) {
+  const referrer = new URLSearchParams({
+    utm_source: 'ianhamblin.xyz',
+    utm_medium: 'tech_breakdown',
+    utm_content: placement,
+  }).toString();
+  return `https://play.google.com/store/apps/details?${new URLSearchParams({
+    id: packageName,
+    referrer,
+  }).toString()}`;
+}
+
+function PlayBadge({
+  packageName,
+  placement,
+  onClick,
+}: {
+  packageName: string;
+  placement: 'hero' | 'footer';
+  onClick: (href: string) => void;
+}) {
+  const href = playStoreHref(packageName, placement);
+  return (
+    <PlayBadgeLink
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => onClick(href)}
+    >
+      <img
+        src={PLAY_BADGE_SRC}
+        alt="Get it on Google Play"
+        width={646}
+        height={250}
+      />
+    </PlayBadgeLink>
+  );
+}
+
 function prefersReducedMotion() {
   return (
     typeof window !== 'undefined' &&
@@ -120,7 +169,7 @@ function PipelineDiagram({
   onSelect,
 }: {
   nodes: PipelineNode[];
-  onSelect: (stageId: string) => void;
+  onSelect: (node: PipelineNode) => void;
 }) {
   const lanes: { id: PipelineNode['lane']; label: string }[] = [
     { id: 'web', label: 'Web · zippy.town' },
@@ -135,7 +184,7 @@ function PipelineDiagram({
           <NodeButton
             type="button"
             lane={node.lane}
-            onClick={() => onSelect(node.stageId)}
+            onClick={() => onSelect(node)}
           >
             <NodeLabel>{node.label}</NodeLabel>
             <NodeTool>{node.tool}</NodeTool>
@@ -175,6 +224,7 @@ function Breakdown({ data }: { data: TechBreakdown }) {
   const location = useLocation();
   const pageRef = useRef<HTMLElement>(null);
   const reducedMotion = useMemo(prefersReducedMotion, []);
+  const trackBreakdown = useBreakdownAnalytics(data.slug, pageRef, location);
 
   useEffect(() => {
     const previous = document.title;
@@ -191,16 +241,35 @@ function Breakdown({ data }: { data: TechBreakdown }) {
 
   // Arrived from the reel: go back so the reel resumes where it was.
   // Deep-linked straight here: there is nothing to go back to, so go home.
-  const backToReel = () => {
-    if (location.key !== 'default') {
+  const backToReel = (placement: 'top_bar' | 'footer') => {
+    const hasHistory = location.key !== 'default';
+    trackBreakdown('back_to_reel_clicked', {
+      placement,
+      destination: hasHistory ? 'previous_page' : 'home',
+    });
+    if (hasHistory) {
       navigate(-1);
     } else {
       navigate('/');
     }
   };
 
-  const scrollToStage = (stageId: string) => {
-    const target = document.getElementById(stageId);
+  const trackPlayStore = (placement: 'hero' | 'footer') => (href: string) =>
+    trackBreakdown('play_store_clicked', {
+      placement,
+      package_name: data.playStore?.packageName,
+      url: href,
+    });
+
+  const scrollToStage = (node: PipelineNode) => {
+    trackBreakdown('tech_breakdown_pipeline_step_clicked', {
+      step_id: node.id,
+      step_label: node.label,
+      step_tool: node.tool,
+      lane: node.lane,
+      stage_id: node.stageId,
+    });
+    const target = document.getElementById(node.stageId);
     if (!target) {
       return;
     }
@@ -212,9 +281,14 @@ function Breakdown({ data }: { data: TechBreakdown }) {
   };
 
   return (
-    <Page ref={pageRef} tabIndex={-1} aria-labelledby="breakdown-title">
+    <Page
+      ref={pageRef}
+      tabIndex={-1}
+      aria-labelledby="breakdown-title"
+      data-ph-scroll-root
+    >
       <TopBar aria-label="Breakdown">
-        <OutlineButton type="button" onClick={backToReel}>
+        <OutlineButton type="button" onClick={() => backToReel('top_bar')}>
           <span aria-hidden>←</span> Back to reel
         </OutlineButton>
         <TopBarLabel>Technical breakdown</TopBarLabel>
@@ -246,26 +320,44 @@ function Breakdown({ data }: { data: TechBreakdown }) {
             <Kicker>{data.project} · Technical breakdown</Kicker>
             <HeroTitle id="breakdown-title">{data.title}</HeroTitle>
             <HeroSummary>{data.summary}</HeroSummary>
-            {data.links?.length ? (
-              <LinkRow>
-                {data.links.map((link) => (
+            {data.links?.length || data.playStore ? (
+              <HeroLinks>
+                {data.playStore ? (
+                  <PlayBadge
+                    packageName={data.playStore.packageName}
+                    placement="hero"
+                    onClick={trackPlayStore('hero')}
+                  />
+                ) : null}
+                {data.links?.map((link) => (
                   <TextLink
                     key={link.href}
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      trackBreakdown('external_link_clicked', {
+                        url: link.href,
+                        label: link.label,
+                        placement: 'hero',
+                      })
+                    }
                   >
                     {link.label} ↗
                   </TextLink>
                 ))}
-              </LinkRow>
+              </HeroLinks>
             ) : null}
           </Inner>
         </HeroText>
       </Hero>
 
       <Inner>
-        <Section aria-labelledby="pipeline-title">
+        <Section
+          aria-labelledby="pipeline-title"
+          data-track-section="pipeline"
+          data-track-title="The pipeline"
+        >
           <SectionTitle id="pipeline-title">The pipeline</SectionTitle>
           <SectionIntro>
             Everything starts in one Blender scene. A build machine turns it
@@ -280,6 +372,8 @@ function Breakdown({ data }: { data: TechBreakdown }) {
             id={stage.id}
             tabIndex={-1}
             aria-labelledby={`${stage.id}-title`}
+            data-track-section={stage.id}
+            data-track-title={stage.title}
           >
             <StageGrid flip={index % 2 === 1}>
               <div>
@@ -333,7 +427,12 @@ function Breakdown({ data }: { data: TechBreakdown }) {
           </Section>
         ))}
 
-        <Section id="budgets" aria-labelledby="budgets-title">
+        <Section
+          id="budgets"
+          aria-labelledby="budgets-title"
+          data-track-section="budgets"
+          data-track-title="Constraints & budgets"
+        >
           <SectionTitle id="budgets-title">Constraints & budgets</SectionTitle>
           <SectionIntro>{data.budgets.intro}</SectionIntro>
           <BudgetGrid>
@@ -362,7 +461,12 @@ function Breakdown({ data }: { data: TechBreakdown }) {
           </BudgetGrid>
         </Section>
 
-        <Section id="closing" aria-labelledby="closing-title">
+        <Section
+          id="closing"
+          aria-labelledby="closing-title"
+          data-track-section="closing"
+          data-track-title={data.closing.title}
+        >
           <SectionTitle id="closing-title">{data.closing.title}</SectionTitle>
           {data.closing.intro ? (
             <SectionIntro>{data.closing.intro}</SectionIntro>
@@ -380,8 +484,32 @@ function Breakdown({ data }: { data: TechBreakdown }) {
           ))}
         </Section>
 
+        {data.playStore ? (
+          <Section
+            id="get-the-app"
+            aria-labelledby="get-the-app-title"
+            data-track-section="get-the-app"
+            data-track-title={data.playStore.title}
+          >
+            <SectionTitle id="get-the-app-title">
+              {data.playStore.title}
+            </SectionTitle>
+            <AppCta>
+              <p>{data.playStore.body}</p>
+              <PlayBadge
+                packageName={data.playStore.packageName}
+                placement="footer"
+                onClick={trackPlayStore('footer')}
+              />
+            </AppCta>
+            <LegalNote>
+              Google Play and the Google Play logo are trademarks of Google LLC.
+            </LegalNote>
+          </Section>
+        ) : null}
+
         <PageFooter>
-          <OutlineButton type="button" onClick={backToReel}>
+          <OutlineButton type="button" onClick={() => backToReel('footer')}>
             <span aria-hidden>←</span> Back to reel
           </OutlineButton>
           <span>Ian Hamblin · {data.project}</span>
@@ -407,7 +535,8 @@ function TechBreakdownPage() {
     return <Navigate to="/" replace />;
   }
 
-  return <Breakdown data={data} />;
+  // Keyed so each breakdown gets its own view (and analytics view id).
+  return <Breakdown key={data.slug} data={data} />;
 }
 
 export default TechBreakdownPage;

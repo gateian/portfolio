@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { setAnalyticsClient } from './analytics';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -22,6 +23,11 @@ if (import.meta.env.PROD) {
         // navigations are tracked as pageviews.
         defaults: '2026-08-30',
         person_profiles: 'identified_only',
+        // The tech breakdown pages scroll inside their own element rather
+        // than the window, so point PostHog's $pageleave scroll depth at it.
+        scroll_root_selector: ['[data-ph-scroll-root]', 'html'],
+        // Replays any custom events captured before PostHog had loaded.
+        loaded: setAnalyticsClient,
       });
     });
   };

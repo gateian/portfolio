@@ -1,5 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { track } from '../../../analytics';
 import type { MediaItem } from '../../../data/mediaItems';
+import type { BreakdownLinkState } from '../../pages/TechBreakdown/useBreakdownAnalytics';
 import {
   PanelAnchor,
   PanelShell,
@@ -86,7 +88,16 @@ function ProjectInfoPanel({
       {breakdown ? (
         <CalloutLink
           to={breakdown.path}
+          state={{ from: 'reel' } satisfies BreakdownLinkState}
           fading={fading}
+          onClick={() =>
+            track('tech_breakdown_cta_clicked', {
+              breakdown: breakdown.path.replace(/^\/tech\//, ''),
+              source: 'reel',
+              label: breakdown.label,
+              reel_item: displayedItem.title,
+            })
+          }
           onMouseEnter={() => onCalloutEngage?.(true)}
           onMouseLeave={() => onCalloutEngage?.(false)}
           onFocus={() => onCalloutEngage?.(true)}

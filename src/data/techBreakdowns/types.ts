@@ -79,6 +79,18 @@ export type TechBreakdown = {
     alt: string;
   };
   links?: { label: string; href: string }[];
+  /**
+   * The project's Google Play listing. Shown as a "Get it on Google Play"
+   * badge in the hero and in a short call to action at the end of the page.
+   */
+  playStore?: {
+    /** Package name / applicationId from the app's build.gradle. */
+    packageName: string;
+    /** Heading for the call to action at the end of the page. */
+    title: string;
+    /** One or two lines aimed at the readers most likely to install it. */
+    body: string;
+  };
   pipeline: PipelineNode[];
   stages: BreakdownStage[];
   budgets: {

@@ -587,3 +587,56 @@ export const PageFooter = styled.footer({
   color: MUTED,
   fontSize: '0.85rem',
 });
+
+/* Google Play ------------------------------------------------------------ */
+
+export const HeroLinks = styled(LinkRow)({
+  alignItems: 'center',
+  gap: '1.25rem',
+  marginTop: '1.25rem',
+});
+
+/**
+ * Google's badge artwork, unmodified. The PNG includes Google's required
+ * clear space around the badge, so the negative margin lines the visible
+ * badge up with the text column.
+ */
+export const PlayBadgeLink = styled.a({
+  display: 'inline-block',
+  lineHeight: 0,
+  margin: '-0.55rem -0.6rem',
+  borderRadius: '0.6rem',
+  transition: 'transform 0.2s ease, filter 0.2s ease',
+  '& img': {
+    display: 'block',
+    height: '3.75rem',
+    width: 'auto',
+  },
+  '&:hover': { filter: 'brightness(1.12)' },
+  '&:focus-visible': { outline: '2px solid #fff', outlineOffset: '-4px' },
+  '@media (prefers-reduced-motion: no-preference)': {
+    '&:hover': { transform: 'translateY(-1px)' },
+  },
+});
+
+export const AppCta = styled.div({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '1.25rem 2rem',
+  padding: '1.5rem 1.5rem 1.5rem 1.75rem',
+  borderLeft: `2px solid ${ACCENT}`,
+  backgroundColor: 'rgba(140, 220, 255, 0.05)',
+  '& p': {
+    margin: 0,
+    maxWidth: '38rem',
+    color: 'rgba(255, 255, 255, 0.85)',
+  },
+});
+
+export const LegalNote = styled.p({
+  margin: '0.75rem 0 0',
+  fontSize: '0.7rem',
+  color: 'rgba(255, 255, 255, 0.4)',
+});

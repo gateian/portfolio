@@ -23,6 +23,13 @@ export const zippyTownBreakdown: TechBreakdown = {
     alt: 'Zippy Town: a cartoon city with traffic and boats, rendered in real time',
   },
   links: [{ label: 'zippy.town', href: 'https://zippy.town/' }],
+  // applicationId in app/build.gradle; listing checked live on Google Play
+  // ("Zippy Town 3D Live Wallpaper") in October 2026.
+  playStore: {
+    packageName: 'digital.overvieweffect.zippytown',
+    title: 'Try it on your phone',
+    body: 'Android developer? Install the live wallpaper to see the Filament renderer, ASTC textures and baked lighting from this page running on your own device.',
+  },
 
   pipeline: [
     {
