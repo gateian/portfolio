@@ -6,6 +6,13 @@ export type MediaItem = {
   description: string;
   url?: string;
   poster?: string;
+  /** Optional deep-dive page, shown as a callout next to the info panel. */
+  techBreakdown?: {
+    path: string;
+    label: string;
+    /** Hold the reel on this item instead of auto-advancing. */
+    pauseRotation?: boolean;
+  };
 };
 
 export const mediaItems: MediaItem[] = [
@@ -20,6 +27,21 @@ export const mediaItems: MediaItem[] = [
     url: 'https://www.msport-raptor.com/',
   },
 
+  {
+    //Zippy Town
+    type: 'video',
+    src: '/videos/Zippy_town_60fps.mp4',
+    poster: '/posters/zippy_town.webp',
+    title: 'Zippy Town',
+    description:
+      'A realtime cartoon city in the browser (Three.js) and as a native Android live wallpaper.',
+    url: 'https://zippy.town/',
+    techBreakdown: {
+      path: '/tech/zippy-town',
+      label: 'Technical Breakdown: Blender → Android Pipeline',
+      pauseRotation: true,
+    },
+  },
   {
     //Combat Air Patrol 2
     type: 'video',
@@ -45,16 +67,6 @@ export const mediaItems: MediaItem[] = [
     title: 'Bathymetry Visualisation',
     description:
       'Real-time, industrial-standard bathymetry visualisation built in Three.js.',
-  },
-  {
-    //Zippy Town
-    type: 'video',
-    src: '/videos/Zippy_town_60fps.mp4',
-    poster: '/posters/zippy_town.webp',
-    title: 'Zippy Town',
-    description:
-      'A realtime cartoon city running in the browser. Built in Three.js.',
-    url: 'https://zippy.town/',
   },
   {
     //Cyberpunk City

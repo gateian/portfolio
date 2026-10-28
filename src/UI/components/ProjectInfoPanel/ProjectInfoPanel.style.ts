@@ -1,5 +1,24 @@
 import { MEDIA_HEIGHT_MEDIUM, MEDIA_BOTTOM_SIDE_BY_SIDE } from '../../Theme';
 import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
+import { Link } from 'react-router-dom';
+
+// Soft breathing glow for items that have a technical breakdown.
+const panelGlow = keyframes({
+  '0%, 100%': {
+    boxShadow:
+      '0 0 12px rgba(0, 0, 0, 0.45), 0 0 0 rgba(140, 220, 255, 0), inset 0 0 0 rgba(140, 220, 255, 0)',
+    borderColor: 'rgba(255, 255, 255, 0.75)',
+  },
+  '50%': {
+    boxShadow:
+      '0 0 12px rgba(0, 0, 0, 0.45), 0 0 18px rgba(140, 220, 255, 0.45), inset 0 0 14px rgba(140, 220, 255, 0.12)',
+    borderColor: 'rgba(190, 235, 255, 0.95)',
+  },
+});
+
+const STATIC_GLOW =
+  '0 0 12px rgba(0, 0, 0, 0.45), 0 0 14px rgba(140, 220, 255, 0.35)';
 
 interface PanelAnchorProps {
   isVisible: boolean;
@@ -29,7 +48,7 @@ export const PanelAnchor = styled.div<PanelAnchorProps>(
   })
 );
 
-export const PanelShell = styled.div({
+const panelShellBase = {
   display: 'flex',
   alignItems: 'stretch',
   width: '100%',
@@ -41,7 +60,23 @@ export const PanelShell = styled.div({
   boxShadow: '0 0 12px rgba(0, 0, 0, 0.45)',
   overflow: 'hidden',
   boxSizing: 'border-box',
-});
+} as const;
+
+export const PanelShell = styled.div<{ highlight?: boolean }>(
+  ({ highlight }) => ({
+    ...panelShellBase,
+    ...(highlight
+      ? {
+          animation: `${panelGlow} 2.8s ease-in-out infinite`,
+          '@media (prefers-reduced-motion: reduce)': {
+            animation: 'none',
+            boxShadow: STATIC_GLOW,
+            borderColor: 'rgba(190, 235, 255, 0.95)',
+          },
+        }
+      : {}),
+  })
+);
 
 export const Content = styled.div<{ fading: boolean }>(({ fading }) => ({
   flex: 1,
@@ -108,4 +143,62 @@ export const LinkButton = styled.a<{ fading: boolean }>(({ fading }) => ({
 export const Arrow = styled.span({
   fontSize: '1.25rem',
   lineHeight: 1,
+});
+
+export const CalloutLink = styled(Link, {
+  shouldForwardProp: (prop) => prop !== 'fading',
+})<{ fading: boolean }>(({ fading }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.75rem',
+  width: '100%',
+  flexShrink: 0,
+  boxSizing: 'border-box',
+  minHeight: '2.75rem',
+  padding: '0.55rem 1.1rem',
+  border: '1px solid rgba(190, 235, 255, 0.85)',
+  backgroundColor: 'rgba(10, 30, 40, 0.55)',
+  backdropFilter: 'blur(2px)',
+  color: '#fff',
+  textDecoration: 'none',
+  fontFamily: '"Zuume", sans-serif',
+  fontWeight: 300,
+  fontSize: '1.05rem',
+  lineHeight: 1.15,
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
+  textShadow: '0px 0px 6px rgba(0,0,0,0.85)',
+  cursor: 'pointer',
+  WebkitTapHighlightColor: 'transparent',
+  touchAction: 'manipulation',
+  opacity: fading ? 0 : 1,
+  transform: fading ? 'translateY(6px)' : 'translateY(0)',
+  transition:
+    'opacity 0.45s ease, transform 0.45s ease, background-color 0.2s ease, border-color 0.2s ease',
+  '&:hover, &:focus-visible': {
+    backgroundColor: 'rgba(140, 220, 255, 0.22)',
+    borderColor: '#fff',
+  },
+  '&:focus-visible': {
+    outline: '2px solid #fff',
+    outlineOffset: '2px',
+  },
+  [`@media (max-height: ${MEDIA_HEIGHT_MEDIUM})`]: {
+    minHeight: '2.4rem',
+    fontSize: '0.9rem',
+  },
+}));
+
+export const CalloutKicker = styled.span({
+  flexShrink: 0,
+  fontSize: '0.75rem',
+  letterSpacing: '0.12em',
+  padding: '0.15rem 0.45rem',
+  border: '1px solid rgba(190, 235, 255, 0.7)',
+  color: 'rgba(210, 240, 255, 0.95)',
+});
+
+export const CalloutLabel = styled.span({
+  flex: 1,
+  minWidth: 0,
 });

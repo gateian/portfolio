@@ -13,6 +13,14 @@ interface MediaSlideshowProps {
   items: MediaItem[];
   onReady?: () => void;
   onIndexChange?: (index: number) => void;
+  /**
+   * Hold on the current item instead of auto-advancing. A video loops and a
+   * still image stays up; rotation resumes once this goes false again.
+   * Manual selection still works while paused.
+   */
+  paused?: boolean;
+  /** Item to start on, e.g. when coming back from a page that hid the reel. */
+  initialIndex?: number;
 }
 
 export interface MediaSlideshowHandle {
@@ -88,8 +96,13 @@ const IMAGE_DURATION_MS = 8000;
 const VIDEO_MAX_DURATION_S = 10;
 
 const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
-  function MediaSlideshow({ items, onReady, onIndexChange }, ref) {
-    const [currentIndex, setCurrentIndex] = useState(0);
+  function MediaSlideshow(
+    { items, onReady, onIndexChange, paused = false, initialIndex = 0 },
+    ref
+  ) {
+    const [currentIndex, setCurrentIndex] = useState(() =>
+      initialIndex >= 0 && initialIndex < items.length ? initialIndex : 0
+    );
     const [heroReady, setHeroReady] = useState(false);
     const [hasStartedPlayback, setHasStartedPlayback] = useState(false);
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -99,8 +112,13 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
     // Wall-clock start of the current still image, for progress reporting.
     const imageStartRef = useRef(0);
     // Mirrors currentIndex so the imperative handle below doesn't go stale.
-    const currentIndexRef = useRef(0);
+    const currentIndexRef = useRef(currentIndex);
     currentIndexRef.current = currentIndex;
+    // Read inside the end-of-media handler, so it can't go stale.
+    const pausedRef = useRef(paused);
+    pausedRef.current = paused;
+    // Set when an item finished while paused, so unpausing moves straight on.
+    const heldRef = useRef(false);
 
     useEffect(() => {
       onIndexChange?.(currentIndex);
@@ -133,9 +151,32 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
       if (advancingRef.current) {
         return;
       }
+      if (pausedRef.current) {
+        const index = currentIndexRef.current;
+        const element =
+          items[index]?.type === 'video' ? videoRefs.current[index] : null;
+        if (element) {
+          // Loop the clip rather than leaving a frozen last frame.
+          element.currentTime = 0;
+          void element.play().catch(() => undefined);
+        } else {
+          heldRef.current = true;
+        }
+        return;
+      }
       advancingRef.current = true;
+      heldRef.current = false;
       setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-    }, [items.length]);
+    }, [items]);
+
+    // A still image that ran out while paused advances as soon as rotation
+    // resumes; a looping video just runs on to its next natural end.
+    useEffect(() => {
+      if (!paused && heldRef.current) {
+        heldRef.current = false;
+        handleMediaEnd();
+      }
+    }, [paused, handleMediaEnd]);
 
     const shouldLoad = (index: number) => {
       if (index === currentIndex) {
@@ -229,6 +270,7 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
 
     useEffect(() => {
       advancingRef.current = false;
+      heldRef.current = false;
       const currentItem = items[currentIndex];
 
       if (currentItem.type === 'image') {

@@ -21,6 +21,7 @@ import AppBar from './UI/AppBar/AppBar';
 import Footer from './UI/Footer/Footer';
 import { mediaItems } from './data/mediaItems';
 import { dismissInitialLoader } from './utils/initialLoader';
+import TechBreakdownPage from './UI/pages/TechBreakdown/TechBreakdownPage';
 
 const AppWrapper = styled('div')({
   margin: 0,
@@ -38,6 +39,8 @@ function AppContent() {
   const { isUIVisible, isFullPage } = useContext(StateContext);
   const [mediaIndex, setMediaIndex] = useState(0);
   const slideshowRef = useRef<MediaSlideshowHandle>(null);
+  // Pointer or keyboard focus is on the technical breakdown callout.
+  const [calloutEngaged, setCalloutEngaged] = useState(false);
 
   const handleMediaIndexChange = useCallback((index: number) => {
     setMediaIndex(index);
@@ -59,6 +62,8 @@ function AppContent() {
   }, [isFullPage]);
 
   const activeMediaItem = mediaItems[mediaIndex] ?? mediaItems[0];
+  const rotationPaused =
+    !!activeMediaItem?.techBreakdown?.pauseRotation || calloutEngaged;
 
   return (
     <AppWrapper>
@@ -68,6 +73,10 @@ function AppContent() {
           items={mediaItems}
           onReady={dismissInitialLoader}
           onIndexChange={handleMediaIndexChange}
+          paused={rotationPaused}
+          // Remounts after a full page (e.g. back from /tech/...): resume on
+          // the item the viewer left from rather than restarting the reel.
+          initialIndex={mediaIndex}
         />
       ) : null}
       <Overlay>
@@ -83,6 +92,7 @@ function AppContent() {
           <Route path="/cvweb" element={<ContentArea />} />
           <Route path="/cvgraphics" element={<ContentArea />} />
           <Route path="/cv3d" element={<ContentArea />} />
+          <Route path="/tech/:slug" element={<TechBreakdownPage />} />
         </Routes>
         <FooterArea isDisabled={isFullPage}>
           <BottomChrome>
@@ -92,6 +102,7 @@ function AppContent() {
                   item={activeMediaItem}
                   isVisible={isUIVisible}
                   isDisabled={isFullPage}
+                  onCalloutEngage={setCalloutEngaged}
                 >
                   <MediaProgressBar
                     labels={mediaItems.map((item) => item.title)}
