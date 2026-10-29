@@ -390,8 +390,8 @@ function Breakdown({ data }: { data: TechBreakdown }) {
                 <BlockLabel>Problem</BlockLabel>
                 <Para>{stage.problem}</Para>
 
-                <BlockLabel>What it does</BlockLabel>
-                {stage.whatItDoes.map((paragraph) => (
+                <BlockLabel>Solution</BlockLabel>
+                {stage.solution.map((paragraph) => (
                   <Para key={paragraph.slice(0, 32)}>{paragraph}</Para>
                 ))}
 

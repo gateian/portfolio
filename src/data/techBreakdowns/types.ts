@@ -50,7 +50,7 @@ export type BreakdownStage = {
   tools: string[];
   problem: string;
   /** What the tool or step does. One paragraph per entry. */
-  whatItDoes: string[];
+  solution: string[];
   result: string;
   /** Key numbers for this stage. */
   facts?: BreakdownFact[];

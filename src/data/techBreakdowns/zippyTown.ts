@@ -95,22 +95,17 @@ export const zippyTownBreakdown: TechBreakdown = {
       id: 'authoring',
       title: 'Authoring & validation: Toon Town Tools add-on',
       tools: ['Blender 5.1', 'Python', 'bpy'],
-      problem:
-        'The town started life as a Unity Android wallpaper. Porting it meant export rules that are easy to break silently: the engine wants triangulated meshes, one material per mesh, materials that are not shared between meshes, and Occlusion/Roughness/Metallic maps of matching size so glTF can pack them into one ORM texture.',
-      whatItDoes: [
+      problem: `As with most games/3d apps, when dealing with an interactive 3d environment, the assets need a specific setup
+        that the code expects. Any small error or change can break the app or cause visual errors and even behaviour that is
+        not intended. It's very easy to miss a setting that leads to a bad lightmap bake, or cause a problem or failed export.
+        `,
+      solution: [
         'A custom Blender add-on (~7,600 lines of Python in its main module) lists every export mesh and runs a table of checks on each one: missing Triangulate modifier, multiple materials, material shared with another mesh, WebP textures, ORM maps that will not pack. Each failing mesh shows the reason.',
         'Each check has a one-click fix where it can: Separate by Material, Make Material Unique, Fix Triangulation on Export Meshes, Rename Single Materials to Mesh. An Image Usage panel shows every image with its size and users, finds duplicate images and duplicate texture nodes, and merges them.',
         'New checks are one line: a (label, predicate) pair added to a CHECKS tuple automatically appears in the list highlighting and the detail panel.',
       ],
       result:
         'Export problems are caught in Blender, at the mesh that causes them, before anything reaches a device.',
-      facts: [
-        { label: 'Add-on version', value: '0.34.0', source: 'add-on panel' },
-        {
-          label: 'Export meshes in the city scene',
-          todo: 'Confirm the export mesh count for the full city (the screenshot shows 16 in one scene).',
-        },
-      ],
       media: {
         src: '/images/tech/zippy-town/blender-addon.png',
         alt: 'The Toon Town Tools panel in Blender showing the mesh list, lighting mode and bake settings',
@@ -122,24 +117,21 @@ export const zippyTownBreakdown: TechBreakdown = {
       id: 'bake',
       title: 'Baking light: Cycles to HDR lightmaps',
       tools: ['Cycles', 'OpenEXR', 'AgX'],
-      problem:
-        'A phone wallpaper cannot afford real-time global illumination, but the town has to look like the Blender render, by day, by night, at golden hour and in seasonal variants.',
-      whatItDoes: [
+      problem: `Getting cycles/Blender lighting solution into an android app that can't possibly calculate global illumination 
+        in real time on low end devices is a challenge.`,
+      solution: [
         'The add-on bakes per-mesh ambient occlusion and lightmaps in Cycles. Lightmaps are Diffuse with Direct + Indirect and Colour off, so they hold pure light, not albedo. Each bake writes a 32-bit float EXR master plus the shipped PNG.',
         'Five lighting modes (Day, Night, Halloween Day, Halloween Night, Golden Hour) each bake to their own images, so nothing overwrites another mode. Switching mode swaps the collections, the World and the view exposure to match the app. Bake All walks every mesh with a second UV channel for the active set.',
         'The shipped lightmap stores scene-linear light ÷ 8 through a plain sRGB curve. The shaders decode it, multiply by 8 and by the albedo, then apply Blender\'s own AgX "Punchy" view transform, exported from Blender as a 33³ LUT and shared by the web and Android shaders.',
       ],
       result:
-        'Measured against Cycles at the same camera, the bake through the LUT lands within about 1.5/255 of Blender on matte surfaces. Under 0.1% of any bake clips at the ×8 range (night lamp hotspots only).',
+        "I compared the real-time result with Cycles renders from the same camera. On matte surfaces the colours are within about 1.5/255 of Blender's. The three.js AgX tone mapping I used before, with AO on top, was about 8/255 darker. The lightmap stores light divided by 8, so anything brighter than 8 (scene-linear) clips, but that's under 0.1% of any bake and only in the hotspots right under the lamps at night.",
       facts: [
         { label: 'Lightmap encoding', value: 'linear ÷ 8, sRGB curve' },
         { label: 'Match to Cycles (matte)', value: '≈ 1.5 / 255' },
         { label: 'Lightmap size', value: '1024 × 1024 per mesh' },
         { label: 'Bake samples', value: '2048 (add-on panel)' },
-        {
-          label: 'Full-city bake time',
-          todo: 'How long Bake All takes for the whole town on the PC GPU.',
-        },
+        { label: 'Full-city bake time', value: '≈ 25 min', source: 'Bake All' },
       ],
       media: {
         alt: 'Placeholder: lightmap before and after',
@@ -151,11 +143,16 @@ export const zippyTownBreakdown: TechBreakdown = {
       id: 'export',
       title: 'Export server & Blender remote control',
       tools: ['Node.js', 'gltf-transform', 'KTX-Software'],
-      problem:
-        'Blender runs on the Windows PC with the GPU; the app repo and its build live on another machine. Copying GLBs and dozens of lightmaps by hand after every bake is slow and error-prone.',
-      whatItDoes: [
-        'An "Export to Server" button writes the GLB and POSTs it, with every lightmap belonging to the included meshes, to a small token-authenticated Node HTTP server on the build machine. The server compresses textures to UASTC with gltf-transform and encodes each lightmap PNG to KTX2.',
-        'Remote Control runs the other way: Blender long-polls the server for work, so scripts on the build machine can switch modes, bake a whole lightmap set or export, using a fixed command list with no way to run arbitrary Python. Progress is posted back per mesh.',
+      problem: `I work from different machines and wanted to store the main repo and phone deployment on my server. My server does
+        not have a powerful GPU for cycles and blender work and manually copying GLBs and lightmaps by hand after every
+         bake or scene edit is slow and error-prone.`,
+      solution: [
+        `An "Export to Server" button writes the GLB and POSTs it, with every lightmap belonging to the included 
+        meshes, to a small token-authenticated Node HTTP server on my home server. The server compresses 
+        textures to UASTC with gltf-transform and encodes each lightmap PNG to KTX2.`,
+        `Remote Control runs the other way: Blender long-polls the server for work, so scripts on the build 
+        machine can switch modes, bake a whole lightmap set or export, using a fixed command list with no way to 
+        run arbitrary Python. Progress is posted back per mesh.`,
       ],
       result:
         "One click in Blender updates the shipped assets on the build machine, and bakes can be queued from there while running on the PC's GPU.",
@@ -172,9 +169,11 @@ export const zippyTownBreakdown: TechBreakdown = {
       id: 'native-textures',
       title: 'Android textures: UASTC → ASTC, without a decode',
       tools: ['KTX-Software', 'ASTC', 'ETC2'],
-      problem:
-        "Filament's glTF loader can only pick an uncompressed format for linear data like lightmaps, which landed every baked lightmap as full-size RGBA8: about 90 MB of GPU memory for the city alone.",
-      whatItDoes: [
+      problem: `Android's strict memory limits for a wallpaper means our textures and lightmaps were a challenge to pack
+        into the modest memory budget. I wanted the whole app to consume under 200 MB in total so that Android is unlikely
+        to kill the app, which then unsets the live wallpaper, leading to a poor user experience. Filament's glTF loader can only pick an uncompressed format for linear data like lightmaps, making this problematic`,
+
+      solution: [
         "A build script keeps the geometry going through Filament's glTF loader but swaps every image for a 4×4 placeholder (so the right shader variant is still chosen) and writes the real textures as ASTC sidecar files, uploaded by a custom KTX2 reader.",
         'Because the source images are already UASTC, it re-wraps them with ktx transcode instead of decoding and re-encoding. Lightmaps and AO use ASTC 6×6 (0.63 MB per 1024² map vs 1.40 MB at 4×4, indistinguishable on a phone); colour and normal maps stay 4×4.',
         'A parallel ETC2 set is built for GPUs without ASTC support.',
@@ -198,7 +197,7 @@ export const zippyTownBreakdown: TechBreakdown = {
       tools: ['Filament 1.71.6', 'Kotlin', 'GLSL'],
       problem:
         'The first wallpaper ran the three.js build in a WebView. It measured about 710 MB, and an empty WebView alone is 154 MB, so it could never meet a 200 MB budget.',
-      whatItDoes: [
+      solution: [
         'The wallpaper is a native Filament renderer. The city shader is a port of the three.js one, and both include the same view-transform GLSL file, so the web and the phone tone map identically. three.js stays the visual reference.',
         'It runs in its own Android process, separate from the app. The renderer is built on demand and released 15 s after the wallpaper is hidden (or at once on onTrimMemory); a warm rebuild takes about 260 ms while the surface keeps its last frame.',
         'Cars share one GLB, with extra copies created lazily as gltfio instances that share vertex and index buffers. Seasonal props are instanced, one renderable per 64 placements, with transforms and baked light in uniform arrays.',
@@ -223,7 +222,7 @@ export const zippyTownBreakdown: TechBreakdown = {
       tools: ['three.js', 'Vite', 'Draco', 'Cloudflare'],
       problem:
         'The APK and the website share the source GLBs, but desktop GPUs need Basis rather than ASTC, and the city GLB was 17 MB.',
-      whatItDoes: [
+      solution: [
         'At build time a Vite plugin rewrites only the copies in dist/: textures are halved (a quarter of the texels) and re-encoded to UASTC, and geometry is Draco-compressed with 16-bit position quantisation (the city is about 68 units across).',
         "Deploys go through a guard script that refuses unless the tree is clean and pushed, checks the live site's build-info is not newer, builds fresh, verifies the upload and tags the release. It exists because a two-month-old dist/ once went live by hand and broke the site.",
       ],
@@ -234,7 +233,8 @@ export const zippyTownBreakdown: TechBreakdown = {
         { label: 'After Draco', value: '≈ 8.4 MB' },
         {
           label: 'Final city GLB on zippy.town',
-          todo: 'Size of toontown_lightmap.glb in dist/ after the half-res pass.',
+          value: '≈ 3.6 MB',
+          source: 'live file, Oct 2026',
         },
       ],
       media: {
@@ -249,7 +249,7 @@ export const zippyTownBreakdown: TechBreakdown = {
       tools: ['Blender (headless)', 'Python', 'NumPy'],
       problem:
         'Adding detail usually means new materials, textures and draw calls, which is exactly what a wallpaper cannot spend.',
-      whatItDoes: [
+      solution: [
         'The painted road look is packed into an unused corner of the existing 2048×1024 RoadsAndSign atlas. A headless Blender script classifies road faces (straights and junction types) and rewrites only their colour UVs; lightmap UVs and topology are untouched, and the script asserts the vertex and face counts.',
         'Every region edge is a multiple of 16 px, so the web half-res pass and 4×4 block formats (UASTC, ASTC, ETC2) stay block-aligned, and the free block is edge-extended so mip levels never bleed.',
         'Water colour lives in its own 1024² map in lightmap UV space, generated by a headless Blender script that raycasts the terrain to find the coast.',
@@ -268,7 +268,7 @@ export const zippyTownBreakdown: TechBreakdown = {
       tools: ['Firebase Test Lab', 'Robo', 'Gradle'],
       problem:
         'A Play review rejected the app for crashing with no crash report anywhere: native aborts in Filament leave no Java stack trace, and it ran fine on the four in-house Samsung phones.',
-      whatItDoes: [
+      solution: [
         'A playtest build throws on a missing GPU capability (release degrades quietly instead), so Test Lab flags the device with a reason. Every run logs a capability dump: ABIs, SDK, heap, Filament feature level, ASTC support.',
         'To test below the shipping minimum, a probe APK is built with a Gradle -PminSdkOverride flag, since Android will not install an app below its own minSdk.',
       ],
