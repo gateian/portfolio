@@ -315,25 +315,32 @@
         opacity: 0;
       }
 
-      /* Loader: one SVG so every ring shares the same centre (50,50). */
+      /* Loader: one SVG so every ring shares the same centre (50,50).
+         Every row and the column have fixed sizes, so the block is the same
+         size from first paint to fade-out and the spinner never moves. Web
+         fonts swapping in, the percentage appearing and the app's CSS
+         arriving (it sets line-height) only change what's drawn inside a
+         row. */
       .loader {
-        display: flex;
-        flex-direction: column;
+        --mark-size: 76px;
+        display: grid;
+        grid-template-columns: 160px;
+        grid-template-rows: var(--mark-size) 1.3rem 1px 1rem;
+        row-gap: 1.1rem;
+        justify-items: center;
         align-items: center;
-        gap: 1.1rem;
       }
 
       .loader-mark {
         display: block;
-        width: 76px;
-        height: 76px;
+        width: var(--mark-size);
+        height: var(--mark-size);
         overflow: visible;
       }
 
       @media (max-width: 600px) {
-        .loader-mark {
-          width: 64px;
-          height: 64px;
+        .loader {
+          --mark-size: 64px;
         }
       }
 
@@ -397,6 +404,8 @@
         font-family: "Zuume", "Kanit", sans-serif;
         font-weight: 300;
         font-size: 0.85rem;
+        line-height: 1.3rem;
+        white-space: nowrap;
         letter-spacing: 0.4em;
         /* letter-spacing adds trailing space; offset it to stay centred */
         margin-right: -0.4em;
@@ -446,11 +455,12 @@
 
       .loader-percent {
         margin: 0;
-        min-height: 1em;
         color: rgba(255, 255, 255, 0.45);
         font-family: "Kanit", sans-serif;
         font-weight: 200;
         font-size: 0.65rem;
+        line-height: 1rem;
+        white-space: nowrap;
         letter-spacing: 0.2em;
         margin-right: -0.2em;
         font-variant-numeric: tabular-nums;
