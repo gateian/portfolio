@@ -161,9 +161,6 @@ export const zippyTownBreakdown: TechBreakdown = {
         caption:
           'Drop in: the Export to Server panel next to the server terminal showing the upload, KTX2 encode and inventory diff.',
       },
-      todos: [
-        'Add the before/after file sizes from a typical Export to Server run, if you want them on the page.',
-      ],
     },
     {
       id: 'native-textures',
@@ -322,10 +319,6 @@ export const zippyTownBreakdown: TechBreakdown = {
         facts: [
           { label: 'Target', value: '60 fps (16.7 ms)' },
           { label: 'Budget phone (Galaxy A10)', value: '59 fps median' },
-          {
-            label: 'GPU frame time',
-            todo: 'Measured GPU ms per frame on a reference device (e.g. the Note20).',
-          },
         ],
       },
       {
@@ -340,10 +333,8 @@ export const zippyTownBreakdown: TechBreakdown = {
         title: 'Geometry',
         facts: [
           { label: 'City vertex data', value: '9.42 MB (f32)' },
-          {
-            label: 'Triangles',
-            todo: 'Triangle count for the city and for the vehicle set.',
-          },
+          { label: 'City triangles', value: '≈ 123k' },
+          { label: 'Vehicle set triangles', value: '≈ 16k' },
         ],
       },
       {
