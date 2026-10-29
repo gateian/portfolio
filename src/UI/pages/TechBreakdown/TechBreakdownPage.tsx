@@ -461,28 +461,30 @@ function Breakdown({ data }: { data: TechBreakdown }) {
           </BudgetGrid>
         </Section>
 
-        <Section
-          id="closing"
-          aria-labelledby="closing-title"
-          data-track-section="closing"
-          data-track-title={data.closing.title}
-        >
-          <SectionTitle id="closing-title">{data.closing.title}</SectionTitle>
-          {data.closing.intro ? (
-            <SectionIntro>{data.closing.intro}</SectionIntro>
-          ) : null}
-          <PointList>
-            {data.closing.points.map((point) => (
-              <Point key={point.title}>
-                <h3>{point.title}</h3>
-                <p>{point.body}</p>
-              </Point>
+        {data.closing ? (
+          <Section
+            id="closing"
+            aria-labelledby="closing-title"
+            data-track-section="closing"
+            data-track-title={data.closing.title}
+          >
+            <SectionTitle id="closing-title">{data.closing.title}</SectionTitle>
+            {data.closing.intro ? (
+              <SectionIntro>{data.closing.intro}</SectionIntro>
+            ) : null}
+            <PointList>
+              {data.closing.points.map((point) => (
+                <Point key={point.title}>
+                  <h3>{point.title}</h3>
+                  <p>{point.body}</p>
+                </Point>
+              ))}
+            </PointList>
+            {data.closing.todos?.map((todo) => (
+              <Todo key={todo}>{todo}</Todo>
             ))}
-          </PointList>
-          {data.closing.todos?.map((todo) => (
-            <Todo key={todo}>{todo}</Todo>
-          ))}
-        </Section>
+          </Section>
+        ) : null}
 
         {data.playStore ? (
           <Section

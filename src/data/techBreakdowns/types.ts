@@ -97,7 +97,7 @@ export type TechBreakdown = {
     intro: string;
     groups: BudgetGroup[];
   };
-  closing: {
+  closing?: {
     title: string;
     intro?: string;
     points: { title: string; body: string }[];

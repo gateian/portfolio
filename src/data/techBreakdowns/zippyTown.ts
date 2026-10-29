@@ -360,33 +360,4 @@ export const zippyTownBreakdown: TechBreakdown = {
       },
     ],
   },
-
-  closing: {
-    title: "What I'd bring to console work",
-    points: [
-      {
-        title: 'Tools that keep artists in their DCC',
-        body: 'Validation, one-click fixes, baking and export live in Blender, where the problem is, rather than in a wiki page or a build log.',
-      },
-      {
-        title: 'Working to a fixed memory and frame budget',
-        body: 'Measuring first, then choosing formats and process boundaries to fit: ASTC sidecars, block sizes per map type, a renderer released while hidden.',
-      },
-      {
-        title: 'Offline quality, real-time cost',
-        body: 'Baked lighting matched to the offline renderer within a couple of 8-bit levels, with one view transform shared across two engines.',
-      },
-      {
-        title: 'Testing on the hardware that ships',
-        body: 'Device farms, capability dumps and probe builds instead of trusting the spec sheet.',
-      },
-      {
-        title: 'Guard rails in the pipeline',
-        body: 'Build and deploy steps that refuse to ship stale or unpushed output, written after learning that lesson once.',
-      },
-    ],
-    todos: [
-      'Review this section and make it your own voice; it is a first draft from the project notes.',
-    ],
-  },
 };
