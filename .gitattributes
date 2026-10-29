@@ -2,3 +2,5 @@
 art-source/**/*.blend filter=lfs diff=lfs merge=lfs -text
 art-source/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
 art-source/**/*.mp3 filter=lfs diff=lfs merge=lfs -text
+art-source/**/*.glb filter=lfs diff=lfs merge=lfs -text
+art-source/**/*.fbx filter=lfs diff=lfs merge=lfs -text

@@ -7,13 +7,19 @@ Run (Windows):
 Run (Linux/macOS):
   blender -b --python build_blockout_v06.py -- /path/to/outdir [--name blockout_v06.blend] [--render-previews dir "t,..."]
 
-v06 (Oct 2026), from Ian's notes:
-  0 -> shunt 1   black screen (FX_Blackout card in front of CAM_OPENER), reveal exactly on shunt 1.
-  shunt 1 -> 2   CAM_OPENER: front-on chest-up close-up, then a LINEAR dolly back; he settles + crouches.
-  shunt 2        jump + backflip off the roof edge (back to the void). Time ramps into slow motion
-                 near the apex (cues.json -> "apex_slowmo"), he slowly balls up and half-twists;
-                 CAM_MAIN follows him up then orbits round him as he tips over into the fall.
-  shunt 3        normal-speed descent. Roof is ~470 m up (v05 ~930 m).
+v06 / v06b (Oct 2026), from Ian's notes. Shunts (cues.json -> "shunts"): 1 = 0.60 s opening hit,
+2 = 5.40 s, 3 = 10.20 s (v06 had mislabelled them 5.40 / 7.80 / 10.10 - kept as "shunts_v06_old").
+  0 -> shunt 1   short black (FX_Blackout card in front of CAM_OPENER), cut to his face on shunt 1.
+  shunt 1 -> 2   He faces OUT over the void (-Y). CAM_OPENER hangs in front of him over the drop looking
+                 back at his face/chest; he barely moves (a breath) until halfway (T_MID), then looks
+                 down, readies and crouches while the camera moves straight back (LINEAR, rising).
+  shunt 2        jump out + backflip into a tuck; time ramps into slow motion through the apex
+                 (cues.json -> "v06" -> "apex_slowmo"); CAM_MAIN simply follows him up the arc.
+  shunt 3        he opens into a head-first dive; CAM_MAIN dives after him, follows, then twists round
+                 (one full roll) into the normal-speed falling follow.
+  Character      Ian's Meshy model (character/*.glb, collection Character_Model) rides CHAR_PIVOT; its
+                 armature is keyed from the stand-in poses (Action ACT_Meshy_Poses). The stand-in boxes
+                 are in Character_StandIn (hidden in render; un-hide to see/edit them).
   Upper level    a skyscraper city with emissive window strips; the breakthrough point is a pipe
                  access hatch (crust chunks kept) that several pipes converge on from random-looking
                  directions; the pipes dive into the ground and run down the shaft walls.
@@ -110,10 +116,12 @@ _SH = CUES.get("shunts", {})
 def _sh(name, dflt):
     v = _SH.get(name, dflt)
     return float(v["t"] if isinstance(v, dict) else v)
-S1 = _sh("shunt_1_jump", T_LEAP)          # jump up/out + backflip + pirouette into a tuck
-S2 = _sh("shunt_2_descent", 7.80)         # descent proper (still tucked), camera -> bird's-eye
-S3 = _sh("shunt_3_spread", T_REENTRY)     # spread into skydive, fall speeds up
-T_LEAP = S1                               # everything that keyed off the old leap now follows shunt 1
+# v06b: shunts re-identified from the audio: 1 = the opening hit, 2 = the jump hit, 3 = the dive hit
+S1 = _sh("shunt_1_open", 0.60)            # black -> close-up on his face (he faces out over the void)
+S2 = _sh("shunt_2_jump", T_LEAP)          # jump out + backflip into the tuck, apex slow motion
+S3 = _sh("shunt_3_dive", 10.20)           # he opens into the dive; normal-speed descent
+T_LEAP = S2                               # everything that keyed off the old leap now follows the jump
+T_MID = 0.5 * (S1 + S2)                   # halfway: he starts to prepare, the camera starts to move back
 # v05: bullet time on the wind-down (editable in cues.json -> "bullet_time")
 _BT = CUES.get("bullet_time", {})
 BT_START = float(_BT.get("start", T_FREEZE))
@@ -127,9 +135,9 @@ BT_END = float(_BT.get("end", T_DROP))
 # v06: apex slow motion between shunt 2 and shunt 3 (cues.json -> "v06" -> "apex_slowmo")
 _V6 = CUES.get("v06", {})
 _AP = _V6.get("apex_slowmo", {})
-AP_START = float(_AP.get("start", 8.15))      # real-time rate starts easing down
-AP_SETTLE = float(_AP.get("settle", 8.6))     # fully slow
-AP_RATE = float(_AP.get("rate", 0.2))         # 5x slow motion at the apex
+AP_START = float(_AP.get("start", S2 + 0.3))      # real-time rate starts easing down
+AP_SETTLE = float(_AP.get("settle", S2 + 0.8))     # fully slow
+AP_RATE = float(_AP.get("rate", 0.1))         # 10x slow motion through the apex
 AP_RELEASE = float(_AP.get("release", 9.6))   # starts speeding back up...
 AP_END = float(_AP.get("end", S3))            # ...normal speed on shunt 3
 # v06 ending (cues.json -> "v06" -> "ending")
@@ -277,7 +285,7 @@ def zc(t):
     return Z_ROOF - depth(t)
 
 
-Y_START = EDGE_Y + 0.6           # he stands with his heels near the edge, back to the void, facing +Y
+Y_START = EDGE_Y + 0.6           # v06b: he stands near the edge facing OUT over the void (-Y), as in v05
 Y_S3 = Y_START - JUMP_VY * (world_t(S3) - W_S2)
 T_ON_LINE = S3 + 1.4
 
@@ -646,7 +654,7 @@ def key_scale(ob, t, s, interp="BEZIER", frame=None):
 # Timeline markers
 # ----------------------------------------------------------------------------------------------
 MARKER_NAMES = {
-    "opening_impact": "OPENING_BOOM", "intro_impact_2": "REVEAL", "riser_start": "RISER",
+    "opening_impact": "OPENING_BOOM", "intro_impact_2": "JUMP_HIT", "riser_start": "RISER",
     "pre_pause_hit": "HIT_PRE_PAUSE", "pause_start": "PAUSE", "reentry_impact": "REENTRY",
     "freeze_start": "FREEZE", "freeze_lowest_filter": "FREEZE_LOW", "drop": "DROP_SMASH",
     "biggest_accent_in_drop": "SETPIECE_%.1f" % T_SETPIECE, "final_slowdown_start": "SLOWDOWN",
@@ -683,9 +691,9 @@ def add_marker(name, t):
     scene.timeline_markers.new(name, frame=f)
 
 
-for _nm, _t in (("SHUNT1_REVEAL_DOLLY", S1), ("CROUCH", S2 - 0.55), ("SHUNT2_JUMP_BACKFLIP", S2),
-                ("SLOWMO_IN", AP_START), ("SLOWMO_HOLD", AP_SETTLE), ("APEX", APEX_T), ("TUCK_BALL", 9.3),
-                ("HALF_TWIST", 9.0), ("SLOWMO_OUT", AP_RELEASE), ("SHUNT3_FALL", S3), ("ON_FALL_LINE", T_ON_LINE),
+for _nm, _t in (("SHUNT1_OPEN_FACE", S1), ("PREP_CAM_BACK", T_MID), ("CROUCH", S2 - 0.55), ("SHUNT2_JUMP_BACKFLIP", S2),
+                ("SLOWMO_IN", AP_START), ("SLOWMO_HOLD", AP_SETTLE), ("APEX", APEX_T), ("TUCK_BALL", real_t(W_S2 + 0.45)),
+                ("SLOWMO_OUT", AP_RELEASE), ("SHUNT3_DIVE", S3), ("CAM_TWIST", S3 + 0.6), ("ON_FALL_LINE", T_ON_LINE),
                 ("BULLET_IN", BT_START), ("CURL_SIDEWAYS", BT_CURL0), ("CAM_PUSH_IN", BT_SETTLE),
                 ("BALL_SIDEWAYS", BT_CURL1), ("BULLET_DEEPEST", BT_DEEP), ("BULLET_OUT_SMASH", BT_END),
                 ("BEND_1", BENDS[1][0]), ("BEND_2", BENDS[2][0]), ("BEND_3", BENDS[3][0]), ("BENDS_END", BENDS[4][0]),
@@ -928,9 +936,9 @@ for i in range(int(Z_ROOF / 2.0)):
     dust.append(((x - sz, y - sz, zz), (x + sz, y + sz, zz + ln)))
 batch_boxes("SPEED_City_DustStreaks", dust, M_DUST, C1)
 
-# v06: low sun behind him in the front-on opener (camera looks -Y), far ground flush with the plaza
+# v06b: low sun behind him in the front-on opener (camera looks +Y at his face), far ground flush with the plaza
 M_SUN = mat("M_Sky_SunDisc", (1.0, 0.62, 0.28), emit=8.0)
-SUN_POS = Vector((700.0, -4300.0, Z_ROOF + 110.0))
+SUN_POS = Vector((-520.0, 4300.0, Z_ROOF + 330.0))
 sund = sphere("SKY_SunDisc", 230.0, SUN_POS[:], M_SUN, C1, segs=32, rings=16)
 M_FARGROUND = mat("M_Far_Ground", (0.25, 0.23, 0.23))
 for _i, (_mn, _mx) in enumerate((((-20000, -20000), (-400, 20000)), ((400, -20000), (20000, 20000)),
@@ -1008,7 +1016,11 @@ POSES = {
 PIVOT_Z = {"STAND": PIVOT_STAND_Z, "READY": 0.9, "CROUCH": 0.62, "LAND_KNEEL": 0.5, "KNEEL_IDLE": 0.5}
 
 
+POSE_LOG = []      # v06b: (t, pose) - replayed onto the Meshy armature
+
+
 def key_pose(t, pose):
+    POSE_LOG.append((t, pose))
     spec = POSES[pose]
     for part, ob in P.items():
         r = spec.get(part, (0, 0, 0))
@@ -1072,11 +1084,16 @@ key(CHAR_ROOT, "location", 0, FALL_X, index=0)
 key_dodges(PLAN_A, DODGE_A, T_FREEZE, lambda t: 0.15)
 key_dodges(PLAN_B, DODGE_B, T_SLOW - 0.4, lambda t: 0.3 if abs(t - T_SETPIECE) < 0.01 else 0.12)
 
-# -- body orientation & poses (v06)
-# He faces +Y (rz = 180, back to the void) on the roof. Shunt 2: backflip (+rx tips him backwards
-# when facing +Y), slow tuck + half twist (rz 180 -> 0) in the apex slow motion, then belly-down
-# skydive by S3 + 0.35. The flip adds +360 of pitch, so later rx keys are offset by RX_OFF.
-RX_OFF = 360
+# -- body orientation & poses (v06b)
+# He faces OUT over the void (-Y, rz = 0) as in v05. Shunt 1: still, breathing. Halfway to shunt 2 he
+# readies and crouches. Shunt 2: jump out with a backflip (backflip = negative rx when facing -Y) into a
+# slow tuck through the apex slow motion. Shunt 3: opens into a head-down dive, then belly-down skydive
+# (rx -270 == +90). The flip adds -360 of pitch, so later rx keys are offset by RX_OFF.
+RX_OFF = -360
+POSES["BREATH"] = {"torso": (-2.5, 0, 0), "head": (-3, 0, 0), "arm_upper_L": (2, -8, 0), "arm_upper_R": (2, 8, 0),
+                   "arm_lower_L": (-10, 0, 0), "arm_lower_R": (-10, 0, 0)}
+POSES["LOOK_DOWN"] = {"torso": (4, 0, 0), "head": (14, 0, 0), "arm_upper_L": (0, -6, 0), "arm_upper_R": (0, 6, 0),
+                      "arm_lower_L": (-8, 0, 0), "arm_lower_R": (-8, 0, 0)}
 
 
 def rt(w):
@@ -1084,31 +1101,32 @@ def rt(w):
     return real_t(W_S2 + w)
 
 
-key_pivot_rot(0, rx=0, ry=0, rz=180)
+key_pivot_rot(0, rx=0, ry=0, rz=0)
 key_pose(0, "STAND")
 key_pose(S1, "STAND")
-key_pivot_rot(S1, ry=0)
-key_pivot_rot(S1 + 1.1, ry=1.5)
-key_pose(S1 + 1.1, "READY")                     # weight settles, arms drift back as the camera pulls out
+key_pose(S1 + 0.55 * (T_MID - S1), "BREATH")      # mostly still: one slow breath on the close-up
+key_pose(T_MID - 0.15, "STAND")
+key_pivot_rot(T_MID, ry=0)
+key_pose(T_MID + 0.5, "LOOK_DOWN")                # halfway: glances down at the drop...
+key_pose(T_MID + 1.3, "READY")                    # ...and loads up while the camera moves back
+key_pivot_rot(T_MID + 1.3, ry=1.5)
 key_pivot_rot(S2 - 0.55, ry=0)
 key_pose(S2 - 0.55, "READY")
-key_pose(S2 - 0.1, "CROUCH")                    # load...
+key_pose(S2 - 0.1, "CROUCH")                      # load...
 key_pivot_rot(S2 - 0.1, rx=0)
-key_pose(S2 + 0.1, "LEAP")                      # shunt 2: arms up, launch
+key_pose(S2 + 0.1, "LEAP")                        # shunt 2: arms up, launch out over the void
 key(CHAR_PIVOT, "location", S2 + 0.1, PIVOT_STAND_Z, index=2)
-key_pivot_rot(rt(0.30), rx=150)
-key_pose(rt(0.30), "SPREAD")                    # open layout over the top of the arc
-key_pivot_rot(9.0, rx=268, rz=180)
-key_pose(8.75, "SPREAD")
-key_pose(9.3, "TUCK")                           # slowly balls up in the slow motion
-key_pivot_rot(9.3, rx=300)
-key_pivot_rot(9.85, rz=0)                       # half twist inside the ball
+key_pivot_rot(rt(0.25), rx=-95)
+key_pose(rt(0.25), "SPREAD")                      # open layout backflip...
+key_pose(rt(0.45), "TUCK")                        # ...balls up as the slow motion settles
+key_pivot_rot(rt(0.45), rx=-150)
+key_pivot_rot(AP_RELEASE, rx=-190)                # slow tumble in the ball through the riser
 key_pose(S3 - 0.05, "TUCK")
-key_pivot_rot(S3, rx=395)
-key_pose(S3 + 0.3, "SPREAD")                    # shunt 3: open into the fall
-key_pivot_rot(S3 + 0.35, rx=90 + RX_OFF)
-key_pose(S3 + 0.9, "SKYDIVE")
-key_pivot_rot(S3 + 0.9, rx=90 + RX_OFF)
+key_pivot_rot(S3, rx=-205)
+key_pose(S3 + 0.3, "DIVE")                        # shunt 3: opens head-first into the dive...
+key_pivot_rot(S3 + 0.35, rx=-225)
+key_pose(S3 + 1.3, "SKYDIVE")                     # ...then flattens into the skydive
+key_pivot_rot(S3 + 1.3, rx=90 + RX_OFF)
 key_pivot_rot(BT_START, rx=90 + RX_OFF)
 key_pose(BT_START, "SKYDIVE")
 # bullet time (as v05)
@@ -1141,6 +1159,154 @@ key_pose(T_TAIL, "KNEEL_IDLE")
 key_pose(T_END, "KNEEL_IDLE")
 
 # ----------------------------------------------------------------------------------------------
+# v06b: Ian's Meshy character (character/SciFi_Void_Walker_Rig_Idle_3.glb) under CHAR_PIVOT. Its armature
+# gets sparse quaternion keys on the same frames as the stand-in poses (one key per pose change), each
+# computed by aiming the bones along the stand-in limbs. Hand-edit the Action "ACT_Meshy_Poses" (or the
+# stand-in limbs + re-run). The stand-in boxes live in collection "Character_StandIn" (hidden in renders
+# when the model is found; toggle the collection to bring them back).
+# ----------------------------------------------------------------------------------------------
+from mathutils import Euler, Quaternion
+CSI = bpy.data.collections.new("Character_StandIn")
+CC.children.link(CSI)
+for _o in [o for o in CHAR_PIVOT.children_recursive if o.type == "MESH"]:
+    for _c in list(_o.users_collection):
+        _c.objects.unlink(_o)
+    CSI.objects.link(_o)
+CHAR_GLB = find_input(os.path.join("character", "SciFi_Void_Walker_Rig_Idle_3.glb"))
+CHAR_HEIGHT = 1.85
+MESHY = None
+
+
+def _find_lc(lc, coll):
+    if lc.collection == coll:
+        return lc
+    for ch in lc.children:
+        r = _find_lc(ch, coll)
+        if r:
+            return r
+    return None
+
+
+if CHAR_GLB:
+    CM = bpy.data.collections.new("Character_Model")
+    CC.children.link(CM)
+    bpy.context.view_layer.active_layer_collection = _find_lc(bpy.context.view_layer.layer_collection, CM)
+    _before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=CHAR_GLB)
+    _new = [o for o in bpy.data.objects if o not in _before]
+    bpy.context.view_layer.active_layer_collection = bpy.context.view_layer.layer_collection
+    arm = next(o for o in _new if o.type == "ARMATURE")
+    body = [o for o in _new if o.type == "MESH" and o.parent == arm]
+    for o in _new:                                  # stray helper meshes (Meshy exports an unparented icosphere)
+        if o.type == "MESH" and o.parent is None:
+            bpy.data.objects.remove(o)
+    arm.name, arm.data.name = "MESHY_Armature", "MESHY_Armature"
+    for i, o in enumerate(body):
+        o.name = "MESHY_Body" if i == 0 else "MESHY_Body_%d" % i
+    # Meshy's own clip: kept (fake user) but not used
+    if arm.animation_data and arm.animation_data.action:
+        _ia = arm.animation_data.action
+        _ia.name, _ia.use_fake_user = "MESHY_Idle_3_unused", True
+        arm.animation_data.action = None
+    for pb in arm.pose.bones:
+        pb.rotation_mode = "QUATERNION"
+        pb.rotation_quaternion = (1, 0, 0, 0)
+        pb.location = (0, 0, 0)
+        pb.scale = (1, 1, 1)
+    bpy.context.view_layer.update()
+    _mn, _mx = Vector((1e9,) * 3), Vector((-1e9,) * 3)
+    for o in body:
+        for c in o.bound_box:
+            w = o.matrix_world @ Vector(c)
+            _mn = Vector(map(min, _mn, w)); _mx = Vector(map(max, _mx, w))
+    _k = CHAR_HEIGHT / (_mx.z - _mn.z)
+    MESHY_RAW_HEIGHT = _mx.z - _mn.z
+    arm.scale = arm.scale * _k
+    arm.parent = CHAR_PIVOT
+    arm.matrix_parent_inverse.identity()
+    arm.location = (-0.5 * (_mn.x + _mx.x) * _k, -0.5 * (_mn.y + _mx.y) * _k, -PIVOT_STAND_Z - _mn.z * _k)
+    for o in body:
+        o["note"] = "Ian's Meshy model, scaled x%.3f to %.2f m; deformed by MESHY_Armature" % (_k, CHAR_HEIGHT)
+        for m_ in o.data.materials:
+            if m_:
+                m_.diffuse_color = (0.09, 0.095, 0.11, 1.0)   # Workbench (material colour) look: gloss black armour
+                m_.metallic, m_.roughness = 0.8, 0.2
+    # stand-in -> bone mapping (armature space; both face -Y, +X = his left)
+    B_ = arm.data.bones
+    HL = {b.name: b.head_local.copy() for b in B_}
+    RQ = {b.name: b.matrix_local.to_quaternion() for b in B_}
+    DOWN = Vector((0, 0, -1))
+
+    def _swing(frm, to):
+        return (HL[to] - HL[frm]).normalized().rotation_difference(DOWN)
+
+    def _swing_to(frm, to, target):
+        return (HL[to] - HL[frm]).normalized().rotation_difference(target)
+
+    ABD = math.radians(8.0)          # rig arms rest slightly away from the body in the stand-in's 'straight down'
+    SW = {}
+    for sd, sx in (("L", 1), ("R", -1)):
+        SW["ua" + sd] = _swing_to("upper_arm." + sd, "forearm." + sd, Vector((sx * math.sin(ABD), 0, -math.cos(ABD))))
+        SW["fa" + sd] = _swing("forearm." + sd, "hand." + sd)
+        SW["th" + sd] = _swing("thigh." + sd, "shin." + sd)
+        SW["sh" + sd] = _swing("shin." + sd, "foot." + sd)
+
+    def _E(spec, part):
+        return Euler(tuple(math.radians(a) for a in spec.get(part, (0, 0, 0))), "XYZ").to_quaternion()
+
+    def bone_deltas(pose):
+        sp = POSES[pose]
+        I = Quaternion()
+        Qt = _E(sp, "torso"); Qh = Qt @ _E(sp, "head")
+        D = {"spine": I.slerp(Qt, 1 / 3), "spine.001": I.slerp(Qt, 2 / 3)}
+        for n in ("spine.002", "spine.003", "spine.004", "shoulder.L", "shoulder.R"):
+            D[n] = Qt
+        for n in ("spine.005", "head_end", "headfront"):
+            D[n] = Qh
+        for sd in ("L", "R"):
+            Qua = Qt @ _E(sp, "arm_upper_" + sd); Qla = Qua @ _E(sp, "arm_lower_" + sd)
+            Qth = _E(sp, "leg_upper_" + sd); Qsh = Qth @ _E(sp, "leg_lower_" + sd)
+            D["upper_arm." + sd] = Qua @ SW["ua" + sd]
+            D["forearm." + sd] = D["hand." + sd] = Qla @ SW["fa" + sd]
+            D["thigh." + sd] = Qth @ SW["th" + sd]
+            D["shin." + sd] = D["foot." + sd] = D["toe." + sd] = Qsh @ SW["sh" + sd]
+        out = {}
+        for b in B_:
+            Db = D.get(b.name, None)
+            if Db is None:
+                continue
+            Dp = D.get(b.parent.name, Quaternion()) if b.parent else Quaternion()
+            out[b.name] = RQ[b.name].inverted() @ Dp.inverted() @ Db @ RQ[b.name]
+        return out
+
+    POSE_Q = {}
+    _last = {}
+    act = bpy.data.actions.new("ACT_Meshy_Poses")
+    arm.animation_data_create()
+    arm.animation_data.action = act
+    prefs_edit.keyframe_new_interpolation_type = "BEZIER"
+    for t, pose in sorted(POSE_LOG, key=lambda x: x[0]):
+        if pose not in POSE_Q:
+            POSE_Q[pose] = bone_deltas(pose)
+        for bn, q in POSE_Q[pose].items():
+            q = q.copy()
+            if bn in _last and _last[bn].dot(q) < 0:
+                q.negate()
+            _last[bn] = q
+            pb = arm.pose.bones[bn]
+            pb.rotation_quaternion = q
+            pb.keyframe_insert("rotation_quaternion", frame=F(t), group=bn)
+    MESHY = arm
+    CSI.hide_render = True
+    _lc = _find_lc(bpy.context.view_layer.layer_collection, CSI)
+    if _lc:
+        _lc.hide_viewport = True
+    print("[blockout] Meshy model: %s, %d bones, raw height %.3f m -> %.2f m, %d pose keys on %d bones"
+          % (os.path.basename(CHAR_GLB), len(B_), MESHY_RAW_HEIGHT, CHAR_HEIGHT, len(POSE_LOG), len(POSE_Q[next(iter(POSE_Q))])))
+else:
+    print("[blockout] Meshy model not found - stand-in only")
+
+# ----------------------------------------------------------------------------------------------
 # 02 Fall monoliths (one per groove hit, crossing the fall line at the character's height)
 # ----------------------------------------------------------------------------------------------
 C2 = COLL["02_Fall_Monoliths"]
@@ -1149,7 +1315,7 @@ for i, (t, s) in enumerate(PLAN_A):
     idx = HITS_A.index(t) + 1
     sc = rng.uniform(0.85, 1.3)
     w, d, h = 2.4 * sc, 1.2 * sc, 10.0 * sc
-    cx = FALL_X + s * (MONO_GAP + w / 2)   # v05: MONO_GAP 0.4 -> 0.65 (camera passed 0.39 m from hitA_17)
+    cx = FALL_X + s * (MONO_GAP + (0.6 if idx == 17 else 0.0) + w / 2)   # v05: gap 0.4 -> 0.65; v06b: hitA_17 +0.6 (camera passed 0.58 m)
     ob = box("MONO_hitA_%02d_t%.2f" % (idx, t), (w, d, h), (cx, FALL_Y, zc(t)), M_MONO, C2)
     box("MONO_hitA_%02d_glyph" % idx, (w * 0.3, d * 1.05, h * 0.6), (0, 0, 0), M_MONO_EDGE, C2, parent=ob)
     tilt = math.radians(rng.uniform(-18, 18))
@@ -1584,36 +1750,39 @@ def BIRD(height, h_off, pitch, depth=28.0):
     b = (hx - h_off) / math.sqrt(2)
     return (-a, a, height), (b, -b, -depth)
 FALL_OFF, FALL_LOOK = BIRD(12.0, 2.7, 85)
-# v06 opener (CAM_OPENER, free camera): front-on chest-up, then a LINEAR dolly back shunt 1 -> shunt 2.
+# v06b opener (CAM_OPENER, free camera): in front of him over the void, looking back (+Y) at his face; still
+# until halfway to shunt 2, then a LINEAR move straight back (and up, out of his jump path) to shunt 2.
 OPEN_LENS = 50
-OPEN_D0, OPEN_H0, OPEN_L0 = 2.7, 1.62, 1.56      # distance in front of him, lens height, look height
-OPEN_D1, OPEN_H1, OPEN_L1 = 8.0, 1.9, 1.05
-# CAM_MAIN takes over on shunt 2 from exactly the opener's end pose, follows him up, orbits round him
-# through the apex slow motion and rises over him as he tips into the fall.
+OPEN_D0, OPEN_H0, OPEN_L0 = 2.2, 1.72, 1.62      # distance in front of him, lens height, look height
+OPEN_D1, OPEN_H1, OPEN_L1 = 8.0, 2.3, 1.15
+# CAM_MAIN takes over on shunt 2 from exactly the opener's end pose and simply follows him up through the
+# slow-motion arc (it backs off as he comes towards it). Shunt 3: it dives after him, following first,
+# then twists round (one full roll) into the falling follow. Later roll keys carry the +360.
+TW = 360
 CAM_KEYS = [
-    (S2, (0.0, OPEN_D1, OPEN_H1), (0.0, 0.0, OPEN_L1), OPEN_LENS, 0),
-    (S2 + 0.25, (0.0, 7.4, 1.5), (0.0, 0.0, 1.0), 46, 0),
-    (8.3, (0.0, 6.2, 0.9), (0.0, 0.0, 0.9), 40, 0),          # following him up
-    (8.85, (-4.0, 4.4, 0.7), (0.0, 0.0, 0.6), 35, -4),        # orbit round his side in the slow motion
-    (9.4, (-5.8, 0.4, 1.8), (0.0, 0.0, 0.4), 32, -6),
-    (9.85, (-4.4, 1.6, 6.0), (0.3, -0.3, -1.5), 28, -3),     # rising over him as he tips into the fall
-    (S3 + 0.4, FALL_OFF, FALL_LOOK, 24, -4),
-    (15.0, FALL_OFF, FALL_LOOK, 24, 5),
-    (BT_START, FALL_OFF, FALL_LOOK, 24, -3),
-    (BT_SETTLE, (-2.4, 2.4, 4.2), (0.0, 0.0, -0.8), 28, 0),
-    (BT_CURL1, (-3.2, 2.4, 2.0), (0.0, -0.1, 0.75), 38, 3),
-    (BT_END - 0.25, (-2.45, 1.85, 1.5), (0.3, -0.35, 0.95), 48, 6),
-    (BT_END - 1.0 / FPS, (-2.35, 1.78, 1.45), (0.35, -0.4, 1.0), 50, 6),
-    (T_DROP, *BIRD(14.0, 2.4, 88), 22, 0),
-    (T_DROP + 1.2, FALL_OFF, FALL_LOOK, 24, -5),
-    (T_SETPIECE - 0.4, *BIRD(8.5, 2.4, 82), 22, 4),
-    (T_SETPIECE + 0.6, *BIRD(8.5, 2.4, 82), 22, -3),
-    (T_SETPIECE + 2.0, FALL_OFF, FALL_LOOK, 24, 3),
-    (30.6, FALL_OFF, FALL_LOOK, 24, -7),                     # v06: dutch leans into the bends
-    (33.0, FALL_OFF, FALL_LOOK, 24, 9),
-    (35.4, FALL_OFF, FALL_LOOK, 24, -8),
-    (37.8, FALL_OFF, FALL_LOOK, 24, 6),
-    (T_CAM_DIVE, FALL_OFF, FALL_LOOK, 24, 0),
+    (S2, (0.0, -OPEN_D1, OPEN_H1), (0.0, 0.0, OPEN_L1), OPEN_LENS, 0),
+    (rt(0.3), (0.3, -7.0, 1.5), (0.0, 0.0, 0.8), 46, 0),           # following him up...
+    (APEX_T, (0.8, -4.8, 0.3), (0.0, 0.0, 0.4), 40, -2),            # ...slightly below him at the apex
+    (AP_RELEASE, (1.0, -4.5, 0.5), (0.0, 0.0, 0.3), 38, -3),
+    (S3, (1.0, -4.4, 1.4), (0.0, 0.0, 0.1), 34, 0),
+    (S3 + 0.6, (1.2, -2.6, 6.5), (0.0, -1.5, -1.8), 28, 70),       # diving after him, rolling...
+    (S3 + 1.6, FALL_OFF, FALL_LOOK, 24, TW - 4),                     # ...round into the falling follow
+    (15.0, FALL_OFF, FALL_LOOK, 24, TW + 5),
+    (BT_START, FALL_OFF, FALL_LOOK, 24, TW + -3),
+    (BT_SETTLE, (-2.4, 2.4, 4.2), (0.0, 0.0, -0.8), 28, TW + 0),
+    (BT_CURL1, (-3.2, 2.4, 2.0), (0.0, -0.1, 0.75), 38, TW + 3),
+    (BT_END - 0.25, (-2.45, 1.85, 1.5), (0.3, -0.35, 0.95), 48, TW + 6),
+    (BT_END - 1.0 / FPS, (-2.35, 1.78, 1.45), (0.35, -0.4, 1.0), 50, TW + 6),
+    (T_DROP, *BIRD(14.0, 2.4, 88), 22, TW + 0),
+    (T_DROP + 1.2, FALL_OFF, FALL_LOOK, 24, TW + -5),
+    (T_SETPIECE - 0.4, *BIRD(8.5, 2.4, 82), 22, TW + 4),
+    (T_SETPIECE + 0.6, *BIRD(8.5, 2.4, 82), 22, TW + -3),
+    (T_SETPIECE + 2.0, FALL_OFF, FALL_LOOK, 24, TW + 3),
+    (30.6, FALL_OFF, FALL_LOOK, 24, TW + -7),                     # v06: dutch leans into the bends
+    (33.0, FALL_OFF, FALL_LOOK, 24, TW + 9),
+    (35.4, FALL_OFF, FALL_LOOK, 24, TW + -8),
+    (37.8, FALL_OFF, FALL_LOOK, 24, TW + 6),
+    (T_CAM_DIVE, FALL_OFF, FALL_LOOK, 24, TW + 0),
 ]
 CONST_BEFORE = {F(BT_END - 1.0 / FPS)}
 for t, off, look, lens, roll in CAM_KEYS:
@@ -1624,7 +1793,7 @@ for t, off, look, lens, roll in CAM_KEYS:
     cam_d.lens = lens
     prefs_edit.keyframe_new_interpolation_type = ip
     cam_d.keyframe_insert("lens", frame=F(t))
-for t0, base, wide in ((S3 + 0.6, 24, 19), (T_DROP + 0.6, 24, 18)):     # FOV punches
+for t0, base, wide in ((T_DROP + 0.6, 24, 18),):     # FOV punch
     for dt, mm in ((-0.2, base), (0.0, wide), (0.9, base)):
         cam_d.lens = mm
         prefs_edit.keyframe_new_interpolation_type = "BEZIER"
@@ -1687,8 +1856,9 @@ def key_free(ob, d, frame, pos, look, lens, interp="BEZIER"):
 cam_o, cam_od = free_cam("CAM_OPENER", OPEN_LENS, clip_start=0.05)
 _cz = Vector((0.0, Y_START, Z_ROOF))
 for f, (dd, hh, ll), ip in ((1, (OPEN_D0, OPEN_H0, OPEN_L0), "LINEAR"), (F(S1), (OPEN_D0, OPEN_H0, OPEN_L0), "LINEAR"),
+                           (F(T_MID), (OPEN_D0, OPEN_H0, OPEN_L0), "LINEAR"),
                            (F(S2), (OPEN_D1, OPEN_H1, OPEN_L1), "LINEAR")):
-    key_free(cam_o, cam_od, f, _cz + Vector((0, dd, hh)), _cz + Vector((0, 0, ll)), OPEN_LENS, interp=ip)
+    key_free(cam_o, cam_od, f, _cz + Vector((0, -dd, hh)), _cz + Vector((0, 0, ll)), OPEN_LENS, interp=ip)
 bm = bmesh.new()
 bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5)
 blk = _new_obj("FX_Blackout", bm, M_BLACK, CCam, (0, 0, -0.12), parent=cam_o)
@@ -1932,12 +2102,12 @@ notes = bpy.data.texts.new("BLOCKOUT_NOTES")
 notes.write(__doc__ or "")
 notes.write("\nZ_ROOF = %.1f m, ground crust top = 0 m, core platform top = %.1f m\n" % (Z_ROOF, Z_CORE))
 notes.write("Phase-2 monolith hits: %s\nPhase-3 hits: %s\n" % ([t for t, _ in PLAN_A], [t for t, _ in PLAN_B]))
-notes.write("v06 shunts: %.2f reveal + dolly / %.2f jump + backflip (apex slow-mo %.2f-%.2f at %.2fx) / %.2f fall. "
+notes.write("v06b shunts: %.2f open on his face (prep + camera back from %.2f) / %.2f jump + backflip (apex slow-mo %.2f-%.2f at %.2fx) / %.2f dive + camera twist. "
             "Bullet time %.2f-%.2f. Camera overtakes him %.2f, side view %.2f, plunge %.2f, impact %.0f m/s from %.1f m.\n"
-            % (S1, S2, AP_START, AP_END, AP_RATE, S3, BT_START, BT_END, T_SLOW + 0.35, T_SIDE, T_PLUNGE, PLUNGE_V,
+            % (S1, T_MID, S2, AP_START, AP_END, AP_RATE, S3, BT_START, BT_END, T_SLOW + 0.35, T_SIDE, T_PLUNGE, PLUNGE_V,
                zc(T_PLUNGE) - Z_CORE))
 notes.write("Cameras switch on markers: OPENER (frame 1) -> CAM_OPENER, MAIN (shunt 2) -> CAM_MAIN, ENDING -> CAM_ENDING.\n")
-notes.write("Swap character: parent your armature to CHAR_ROOT (keep its origin at the feet), delete CHAR_PIVOT and its children.\n")
+notes.write("Character: MESHY_Armature is parented to CHAR_PIVOT (movement/flips stay on CHAR_ROOT/CHAR_PIVOT); its limb poses are sparse quaternion keys in Action ACT_Meshy_Poses - edit them in the Dope Sheet/Pose Mode. Stand-in boxes: collection Character_StandIn (hidden in render). Meshy idle clip kept unused as MESHY_Idle_3_unused.\n")
 
 scene.camera = cam_o
 scene.frame_set(1)

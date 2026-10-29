@@ -539,9 +539,24 @@
   41.17,
   41.31
  ],
- "cues_version": "v06",
+ "cues_version": "v06b",
  "shunts": {
-  "note": "v05: the three opening 'shunts' (Ian's numbering). Edit the t values and re-run build_blockout.py to retime the jump, descent and skydive spread. shunt_3 is the same hit as reentry_impact (the existing 'fall speeds up' shunt). Analysis (librosa, sub<120 Hz peak / rise vs 0.3 s before): 5.40 = 58 dB (+35), 7.80 = 48 dB (+10), 9.50 = 31 dB sub but strongest broadband onset (snare-like), 10.10-10.24 = 58 dB (+38). Alternatives for shunt_2 are listed.",
+  "note": "v06b (Oct 2026): re-identified from the audio (20 ms energy envelope + low-band / broadband rise detection on the mp3). The three big hits are the opening impact and the next two full-level impacts; everything in between (pulse, riser 7.0-9.5, snare at 9.5) is much weaker. Times are the attack (level within 10 dB of the hit's peak); all three sit on the 100 bpm downbeat grid (bars 0, 2, 4). shunt 1 = 0.59 s attack (peak -3 dBFS, up from silence), shunt 2 = 5.40 s (peak -2.7 dBFS, +21 dB over the bar before), shunt 3 = 10.19 s (peak -1.0 dBFS, out of the -36 dB pause). The old 7.80 'shunt' is only a pulse/riser accent (peak -9.5 dBFS, no transient). Edit the t values and re-run build_blockout_v06.py.",
+  "shunt_1_open": {
+   "t": 0.6,
+   "use": "Black screen cuts to the close-up on his face (he faces out over the void, camera in front of him). He stays mostly still (breathing) until halfway to shunt 2, then prepares to jump while the camera moves straight back."
+  },
+  "shunt_2_jump": {
+   "t": 5.4,
+   "use": "Jump out over the void into a backflip and tuck; apex slow motion (v06.apex_slowmo). The camera follows him up through the arc."
+  },
+  "shunt_3_dive": {
+   "t": 10.2,
+   "use": "He opens into the dive; the camera dives after him, then twists round into the falling follow. Normal speed (same hit as reentry_impact)."
+  }
+ },
+ "shunts_v06_old": {
+  "note": "SUPERSEDED (v05/v06 numbering, 5.40 / 7.80 / 10.10). Kept for reference only; the build reads 'shunts'. v05: the three opening 'shunts' (Ian's numbering). Edit the t values and re-run build_blockout.py to retime the jump, descent and skydive spread. shunt_3 is the same hit as reentry_impact (the existing 'fall speeds up' shunt). Analysis (librosa, sub<120 Hz peak / rise vs 0.3 s before): 5.40 = 58 dB (+35), 7.80 = 48 dB (+10), 9.50 = 31 dB sub but strongest broadband onset (snare-like), 10.10-10.24 = 58 dB (+38). Alternatives for shunt_2 are listed.",
   "shunt_1_jump": {
    "t": 5.4,
    "use": "Jump up/out in an arc (diving board), backflip + pirouette into a tuck. Camera side-on (horizon/sun behind him)."
@@ -573,12 +588,12 @@
  "v06": {
   "note": "v06 (Oct 2026): black until shunt 1, linear dolly back S1->S2, backflip with apex slow motion, camera-overtakes ending. Edit and re-run build_blockout_v06.py.",
   "apex_slowmo": {
-   "start": 8.15,
-   "settle": 8.6,
-   "rate": 0.2,
+   "start": 5.7,
+   "settle": 6.2,
+   "rate": 0.1,
    "release": 9.6,
-   "end": 10.1,
-   "note": "world + character clock slows from start, holds `rate` from settle, eases back to 1 from release to end (shunt 3). The camera stays real-time."
+   "end": 10.2,
+   "note": "v06b: world + character clock eases down from start (0.3 s after the jump), holds `rate` (10x slow motion) through the riser, eases back to 1 from release (pause) to end (shunt 3). The camera stays real-time. v06 values were 8.15 / 8.6 / 0.2 / 9.6 / 10.1."
   },
   "ending": {
    "camera_dive": 41.2,

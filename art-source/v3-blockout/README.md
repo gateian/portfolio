@@ -1,4 +1,4 @@
-# Portfolio v3 - Blender grey-box blockout (current: v06)
+# Portfolio v3 - Blender grey-box blockout (current: v06b)
 
 ## Working copy in this repo (`art-source/v3-blockout/`)
 
@@ -216,6 +216,19 @@ Build: `blender -b --python build_blockout_v06.py -- <outdir> --name blockout_v0
 * **Retiming:** edit `cues.json` → `v06.apex_slowmo` (start, settle, rate, release, end) and `v06.ending` (camera_dive, side_view, plunge_start, slam_speed), then rebuild.
 * `check_clear.py` over f164–1561: the camera never comes within 0.3 m of a mesh. The only occlusions are 2 frames behind CLIFF_hitB_18 and the landing shockwave flash. He is outside the 9:16 strip only in the close-up and during the designed off-screen ending (f1250–1313).
 * Outputs: `render/blockout_v06_preview.mp4` (960x540, 30 fps, Workbench, with the music); the contact sheet is on Beast in `Z:\files\portfolio-v3\`.
+
+## v06b (shunts re-timed, open on his face, Meshy character)
+
+Same file and script (`blockout_v06.blend`, `build_blockout_v06.py`); v05 untouched.
+
+* **Shunts re-identified from the audio** (`cues.json` → `shunts`; the v06 numbering is kept as `shunts_v06_old`): shunt 1 = **0.60 s (f19)**, the opening hit; shunt 2 = **5.40 s (f163)**; shunt 3 = **10.20 s (f307)**. All three are the only full-level transients in the intro (peaks -3.0 / -2.7 / -1.0 dBFS, rising out of -67 / -24 / -36 dB) and sit on the 100 bpm downbeats of bars 0, 2 and 4. v06's 7.80 s "shunt" was only a riser pulse (-9.5 dBFS, no transient).
+* **0 → f19:** short black (`FX_Blackout` + exposure), then a cut to a face/chest close-up. He faces **out over the void (-Y)** as in v05; CAM_OPENER hangs in front of him over the drop (2.2 m, 50 mm) looking back at his face, with the low sun behind him.
+* **f19 → f91 (T_MID, halfway):** still, one slow breath. **f91 → f163:** he looks down at the drop (f106), readies (f130) and crouches (f147 → f160) while CAM_OPENER moves straight back (LINEAR) to 8 m and up 0.6 m, clear of his jump path.
+* **Shunt 2 (f163):** jump out + backflip (layout, then tuck at f179). The world/character clock eases into 10× slow motion (`v06.apex_slowmo`: 5.7 → 6.2 s, rate 0.1, release 9.6 → 10.2 s), apex at 8.34 s (f251, +2.5 m). CAM_MAIN starts on the opener's last frame and simply follows him up and through the arc (no orbit), closing to ~5 m below/in front of him.
+* **Shunt 3 (f307):** he opens head-first into the dive (f316) and flattens into the skydive by f346. CAM_MAIN dives after him over his shoulder, then twists round (one full 360 roll, f325 → f355) into the falling follow. Later camera roll keys carry +360 (`TW`).
+* **Retime choice:** shunt 3 moved only +0.1 s, so everything after it stays on its music cues unchanged (bullet time f595–667, smash f667, bends, ending, slam f1315). The longer apex slow motion means the world clock now trails real time by 3.7 s after shunt 3 (v06: 1.3 s); world-clock objects account for it. Z_ROOF stays 427.4 m.
+* **Character:** Ian's Meshy model (`character/SciFi_Void_Walker_Rig_Idle_3.glb`, LFS) is imported by the build into collection `Character_Model`: `MESHY_Armature` (Meshy auto-rig, Rigify-style names, 24 bones) parented to CHAR_PIVOT and scaled from 1.65 m to 1.85 m, feet on CHAR_ROOT. Movement and flips stay on CHAR_ROOT / CHAR_PIVOT. Limb poses are sparse quaternion keys in Action `ACT_Meshy_Poses` (one key per pose change, 29 keys), computed from the stand-in poses (`POSES`) by aiming each bone along the matching stand-in limb; spine bones share the torso bend. Edit them in Pose Mode / Dope Sheet. Meshy's own `Idle_3` clip is kept (fake user) as `MESHY_Idle_3_unused`. The stand-in boxes are in `Character_StandIn` (hidden in render and viewport; still animated). Un-hide it to compare.
+* `check_clear` (f1–1561): no camera within 1 m of a mesh (hitA_17 was nudged out 0.6 m), never within 0.8 m of him. Occlusions are the same as v06 (2 frames behind CLIFF_hitB_18, landing shockwave flash). He leaves the 9:16 strip only in the face close-up (pivot below frame), during the dive twist (f318–328), at the smash (f662–666) and in the designed off-screen ending.
 
 ## Mobile 9:16 guide
 
