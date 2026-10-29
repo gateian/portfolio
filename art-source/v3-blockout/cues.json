@@ -539,7 +539,7 @@
   41.17,
   41.31
  ],
- "cues_version": "v05",
+ "cues_version": "v06",
  "shunts": {
   "note": "v05: the three opening 'shunts' (Ian's numbering). Edit the t values and re-run build_blockout.py to retime the jump, descent and skydive spread. shunt_3 is the same hit as reentry_impact (the existing 'fall speeds up' shunt). Analysis (librosa, sub<120 Hz peak / rise vs 0.3 s before): 5.40 = 58 dB (+35), 7.80 = 48 dB (+10), 9.50 = 31 dB sub but strongest broadband onset (snare-like), 10.10-10.24 = 58 dB (+38). Alternatives for shunt_2 are listed.",
   "shunt_1_jump": {
@@ -569,5 +569,23 @@
   "curl_start": 20.1,
   "curl_done": 21.1,
   "end": 22.2
+ },
+ "v06": {
+  "note": "v06 (Oct 2026): black until shunt 1, linear dolly back S1->S2, backflip with apex slow motion, camera-overtakes ending. Edit and re-run build_blockout_v06.py.",
+  "apex_slowmo": {
+   "start": 8.15,
+   "settle": 8.6,
+   "rate": 0.2,
+   "release": 9.6,
+   "end": 10.1,
+   "note": "world + character clock slows from start, holds `rate` from settle, eases back to 1 from release to end (shunt 3). The camera stays real-time."
+  },
+  "ending": {
+   "camera_dive": 41.2,
+   "side_view": 42.3,
+   "plunge_start": 42.95,
+   "slam_speed": 70.0,
+   "note": "camera_dive: CAM_ENDING takes over and dives past him as he brakes (slowdown 41.4). side_view: camera settled side-on at ground level, he is off-screen above. plunge_start: he drops from ~30 m, hitting the platform at slam_speed m/s on the thump (43.8)."
+  }
  }
 }

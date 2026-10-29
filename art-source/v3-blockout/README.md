@@ -1,4 +1,4 @@
-# Portfolio v3 - Blender grey-box blockout (current: v05)
+# Portfolio v3 - Blender grey-box blockout (current: v06)
 
 ## Working copy in this repo (`art-source/v3-blockout/`)
 
@@ -200,6 +200,22 @@ Build: `blender -b --python build_blockout.py -- <outdir> --name blockout_v05.bl
   * Set those constants back to undo any of these changes.
 * `check_clear.py`: `blender -b X.blend --python check_clear.py -- f0 f1 [step] [metres]` reports the camera's distance to meshes and to the character, occlusion, and whether he's inside the 9:16 strip.
 * Outputs: `contact_sheet_v05.png`, `previews_v05/`, `render/blockout_v05_preview.mp4`.
+
+## v06 (black open, apex slow motion, city + pipe shaft, camera-overtakes ending)
+
+Build: `blender -b --python build_blockout_v06.py -- <outdir> --name blockout_v06.blend`. `blockout_v05.blend` and `build_blockout.py` are untouched; v06 is a new file built by its own script. Timing comes from `cues.json` (shunts, `bullet_time` and the new `v06` block). Frames are `F(t) = round(30 t) + 1`.
+
+* **Structure (unchanged so it stays hand-editable):** CHAR_ROOT translates only, CHAR_PIVOT rotates (ZXY), box limbs, free cameras switched by timeline markers (`OPENER` f1 → CAM_OPENER, `MAIN` f235 → CAM_MAIN, `ENDING` f1237 → CAM_ENDING). Character and debris keys are sparse Bezier (AUTO_CLAMPED, thinned to within 1–25 cm of the generated path; about 1,500 keys in total instead of about 16,500).
+* **0 → shunt 1 (5.40 s, f163):** black. `FX_Blackout` is a black card in front of CAM_OPENER (hidden from f163), and the scene exposure is keyed to -10 until f163, because Workbench specular lifts a black card to dark grey.
+* **Shunt 1 → shunt 2 (f163 → f235):** front-on, chest-up close-up (50 mm, 2.7 m) with a LINEAR dolly back to 8 m. He gets READY (f196) and crouches (f219).
+* **Shunt 2 (7.80 s, f235):** jump and backflip. The world and character clock slows from 8.15 s to 0.2× by 8.6 s, he tucks into a ball (9.3 s, f280) at the apex (9.37 s, +2.5 m), half-twists, then eases back to real time by shunt 3. CAM_MAIN follows him up, then orbits round his side and rises over him as he tips over to fall. Because of the slow motion the world clock runs 1.3 s behind real time after shunt 3; everything keyed on the world clock accounts for that.
+* **Shunt 3 (10.10 s, f304):** normal-speed descent. The upper section is now about 428 m (Z_ROOF), set by the speed profile.
+* **City:** about 170 batched skyscrapers (`CITY_Towers_*`) with warm/cyan emissive window strips (`CITY_Windows_*`). The breakthrough point is a pipe access hatch (hazard frame, crust chunks kept). Seven pipes (`PIPE_*`, Bezier curves with bevel, so you can edit the points) converge on the hatch from scattered directions, dive into the ground and run down the shaft walls. The lava rings are kept.
+* **Tunnel:** gentle bends 29.4–39.0 s (`BENDS`, markers BEND_1..3). A wider teal machinery zone from 31.8 to 36.6 s (`03c_Machinery_Zone`, cyan rings, turbines, struts). Obstacles follow the bent centreline. `PATH_CENTRE` carries the bend X so the camera rig follows the tunnel.
+* **Ending (Ian's correction):** the *camera* flies past *him*. From 41.2 s (f1237) CAM_ENDING dives down; as he brakes into the slow-down (41.4 s) it catches him, passes him level at f1247 (`CAM_OVERTAKES`) and leaves him above, off-screen. It settles side-on at ground level, 11 m from the landing point, by 42.3 s (f1270), with him still off-screen. At 42.95 s (f1289) he drops from about 30 m and slams into the platform at 70 m/s on the thump (43.8 s, f1315). v05 dropped about 10 m and landed at about 34 m/s. After the landing the camera drifts round behind him.
+* **Retiming:** edit `cues.json` → `v06.apex_slowmo` (start, settle, rate, release, end) and `v06.ending` (camera_dive, side_view, plunge_start, slam_speed), then rebuild.
+* `check_clear.py` over f164–1561: the camera never comes within 0.3 m of a mesh. The only occlusions are 2 frames behind CLIFF_hitB_18 and the landing shockwave flash. He is outside the 9:16 strip only in the close-up and during the designed off-screen ending (f1250–1313).
+* Outputs: `render/blockout_v06_preview.mp4` (960x540, 30 fps, Workbench, with the music); the contact sheet is on Beast in `Z:\files\portfolio-v3\`.
 
 ## Mobile 9:16 guide
 
