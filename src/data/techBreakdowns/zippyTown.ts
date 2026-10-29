@@ -351,9 +351,11 @@ export const zippyTownBreakdown: TechBreakdown = {
           { label: 'Seasonal props', value: '1 per 64 placements' },
           { label: 'Road restyle', value: '0 added' },
           {
-            label: 'Typical frame',
-            todo: 'Draw calls per frame for the city at day (native).',
+            label: 'Per frame (Note20)',
+            value: '≈ 142',
+            source: 'Halloween night, app view',
           },
+          { label: 'Car shadows', value: '64 (≈ 45%)', source: 'same frame' },
         ],
       },
     ],
