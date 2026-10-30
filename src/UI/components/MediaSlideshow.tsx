@@ -8,11 +8,21 @@ import {
 } from 'react';
 import styled from '@emotion/styled';
 import type { MediaItem } from '../../data/mediaItems';
+import { videoCropStyle } from '../../data/videoCrop';
 
 interface MediaSlideshowProps {
   items: MediaItem[];
   onReady?: () => void;
   onIndexChange?: (index: number) => void;
+  /**
+   * Extend the current item while true (e.g. the callout is hovered). If it
+   * finishes meanwhile, a video replays and a still stays up; the reel moves
+   * on HOLD_GRACE_MS after this goes false, or after HOLD_MAX_MS regardless,
+   * so it can never sit on one item indefinitely. Manual selection still works.
+   */
+  paused?: boolean;
+  /** Item to start on, e.g. when coming back from a page that hid the reel. */
+  initialIndex?: number;
 }
 
 export interface MediaSlideshowHandle {
@@ -35,6 +45,7 @@ const SlideshowContainer = styled.div({
 
 const MediaElement = styled.div({
   position: 'absolute',
+  overflow: 'hidden',
   top: 0,
   left: 0,
   width: '100%',
@@ -76,10 +87,15 @@ const Image = styled.div<{ src: string }>(({ src }) => ({
   },
 }));
 
-// Safety net only. The hero normally becomes ready via `canplay`, which fires
-// in a fraction of a second; this just stops a media error or a stalled fetch
-// from leaving the loading overlay up indefinitely.
-const HERO_READY_TIMEOUT_MS = 8000;
+// Safety net for when the bootstrap script in index.html is missing. When it
+// is present it alone decides when the hero is ready (fully downloaded, or a
+// real network failure), with no time limit, so slow connections still get
+// the whole clip before the reel starts.
+const HERO_READY_TIMEOUT_MS = 30000;
+
+// A video counts as fully buffered once its buffered range reaches this close
+// to the end of what will actually be played.
+const BUFFERED_END_TOLERANCE_S = 0.25;
 
 // How long a still image stays on screen before advancing.
 const IMAGE_DURATION_MS = 8000;
@@ -87,9 +103,23 @@ const IMAGE_DURATION_MS = 8000;
 // Hard cap on video playback. Clips shorter than this still end naturally.
 const VIDEO_MAX_DURATION_S = 10;
 
+/** Playback cap for an item, in seconds. */
+const videoCapFor = (item: MediaItem | undefined) =>
+  item?.playFullClip ? Number.POSITIVE_INFINITY : VIDEO_MAX_DURATION_S;
+
+// After an item has run out during a hold: pause before moving on once the
+// pointer/focus leaves, and the longest it is held even if it never does.
+const HOLD_GRACE_MS = 2500;
+const HOLD_MAX_MS = 15000;
+
 const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
-  function MediaSlideshow({ items, onReady, onIndexChange }, ref) {
-    const [currentIndex, setCurrentIndex] = useState(0);
+  function MediaSlideshow(
+    { items, onReady, onIndexChange, paused = false, initialIndex = 0 },
+    ref
+  ) {
+    const [currentIndex, setCurrentIndex] = useState(() =>
+      initialIndex >= 0 && initialIndex < items.length ? initialIndex : 0
+    );
     const [heroReady, setHeroReady] = useState(false);
     const [hasStartedPlayback, setHasStartedPlayback] = useState(false);
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -99,8 +129,14 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
     // Wall-clock start of the current still image, for progress reporting.
     const imageStartRef = useRef(0);
     // Mirrors currentIndex so the imperative handle below doesn't go stale.
-    const currentIndexRef = useRef(0);
+    const currentIndexRef = useRef(currentIndex);
     currentIndexRef.current = currentIndex;
+    // Read inside the end-of-media handler, so it can't go stale.
+    const pausedRef = useRef(paused);
+    pausedRef.current = paused;
+    // Set when an item finished while paused, so unpausing moves on.
+    const heldRef = useRef(false);
+    const holdMaxTimerRef = useRef<number | undefined>(undefined);
 
     useEffect(() => {
       onIndexChange?.(currentIndex);
@@ -129,23 +165,102 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
     // which would skip the next item (functional setState updaters chain).
     const advancingRef = useRef(false);
 
-    const handleMediaEnd = useCallback(() => {
+    const advance = useCallback(() => {
       if (advancingRef.current) {
         return;
       }
       advancingRef.current = true;
+      heldRef.current = false;
+      window.clearTimeout(holdMaxTimerRef.current);
       setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-    }, [items.length]);
+    }, [items]);
+
+    const handleMediaEnd = useCallback(() => {
+      if (advancingRef.current) {
+        return;
+      }
+      if (!pausedRef.current) {
+        advance();
+        return;
+      }
+      const index = currentIndexRef.current;
+      const element =
+        items[index]?.type === 'video' ? videoRefs.current[index] : null;
+      if (element) {
+        // Replay rather than leaving a frozen last frame while held.
+        element.currentTime = 0;
+        void element.play().catch(() => undefined);
+      }
+      if (!heldRef.current) {
+        heldRef.current = true;
+        holdMaxTimerRef.current = window.setTimeout(advance, HOLD_MAX_MS);
+      }
+    }, [items, advance]);
+
+    // An item that ran out during the hold moves on shortly after the hold
+    // ends; re-engaging within the grace period cancels the pending advance.
+    useEffect(() => {
+      if (paused || !heldRef.current) {
+        return undefined;
+      }
+      const timer = window.setTimeout(advance, HOLD_GRACE_MS);
+      return () => window.clearTimeout(timer);
+    }, [paused, advance]);
+
+    useEffect(() => () => window.clearTimeout(holdMaxTimerRef.current), []);
+
+    // Index of the item whose media is fully buffered. Only then does the next
+    // item start downloading, so it never competes with the clip on screen
+    // (with no range support, a preloading clip pulls its entire file).
+    const [bufferedIndex, setBufferedIndex] = useState<number | null>(null);
 
     const shouldLoad = (index: number) => {
       if (index === currentIndex) {
         return true;
       }
-      if (!hasStartedPlayback) {
+      if (!hasStartedPlayback || bufferedIndex !== currentIndex) {
         return false;
       }
       return index === nextIndex;
     };
+
+    useEffect(() => {
+      if (!hasStartedPlayback) {
+        return undefined;
+      }
+      if (items[currentIndex]?.type !== 'video') {
+        setBufferedIndex(currentIndex);
+        return undefined;
+      }
+      const element = videoRefs.current[currentIndex];
+      if (!element) {
+        return undefined;
+      }
+
+      const events = ['progress', 'loadedmetadata', 'canplaythrough'];
+      const check = () => {
+        const { duration, buffered } = element;
+        if (!duration || Number.isNaN(duration)) {
+          return;
+        }
+        const needed =
+          Math.min(duration, videoCapFor(items[currentIndex])) -
+          BUFFERED_END_TOLERANCE_S;
+        for (let i = 0; i < buffered.length; i += 1) {
+          if (buffered.end(i) >= needed) {
+            setBufferedIndex(currentIndex);
+            events.forEach((name) => element.removeEventListener(name, check));
+            return;
+          }
+        }
+      };
+
+      events.forEach((name) => element.addEventListener(name, check));
+      check();
+      return () => {
+        events.forEach((name) => element.removeEventListener(name, check));
+      };
+    }, [currentIndex, hasStartedPlayback, items, heroVideo]);
 
     useEffect(() => {
       const preloaded = window.__heroVideoEl;
@@ -175,6 +290,9 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
     }, [handleMediaEnd, heroIndex]);
 
     useEffect(() => {
+      if (window.__hero) {
+        return undefined;
+      }
       const timeoutId = window.setTimeout(markReady, HERO_READY_TIMEOUT_MS);
       return () => window.clearTimeout(timeoutId);
     }, [markReady]);
@@ -194,42 +312,35 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
         return undefined;
       }
 
-      const video = heroVideo;
-      if (!video) {
+      if (!heroVideo) {
         return undefined;
       }
 
-      // Reveal as soon as playback can start, rather than waiting on buffered
-      // ranges. A paused video only buffers a few seconds ahead before firing
-      // `suspend` and halting the fetch, so any "mostly downloaded" test
-      // deadlocks against the playback gate below: it waits on buffering that
-      // only resumes once playback starts, which in turn waits on this flag.
-      //
-      // `canplay` rather than `canplaythrough`: the latter needs the browser to
-      // predict the *whole* clip will play without stalling, which can never be
-      // true when the connection is slower than the video's bitrate, so it falls
-      // through to HERO_READY_TIMEOUT_MS on exactly the connections that can
-      // least afford the wait. Measured reveal on a 3 Mbps link: 9.0s -> 1.0s.
-      //
-      // Check readyState synchronously first: the event usually fires before
-      // this component mounts, so the listener alone would miss it.
-      if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+      // Hold the loader until the bootstrap reports the first clip can play
+      // through: downloaded in full, or given up on after a network failure.
+      const hero = window.__hero;
+      if (!hero) {
         markReady();
         return undefined;
       }
-
-      video.addEventListener('canplay', markReady);
-      video.addEventListener('error', markReady);
-
+      let cancelled = false;
+      hero.start();
+      hero.onReady(() => {
+        if (!cancelled) {
+          markReady();
+        }
+      });
       return () => {
-        video.removeEventListener('canplay', markReady);
-        video.removeEventListener('error', markReady);
+        cancelled = true;
       };
     }, [items, markReady, heroVideo]);
 
     useEffect(() => {
       advancingRef.current = false;
+      heldRef.current = false;
+      window.clearTimeout(holdMaxTimerRef.current);
       const currentItem = items[currentIndex];
+      const videoCap = videoCapFor(currentItem);
 
       if (currentItem.type === 'image') {
         if (currentIndex === 0 && !heroReady) {
@@ -258,7 +369,7 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
       }
 
       const onTimeUpdate = () => {
-        if (videoElement.currentTime >= VIDEO_MAX_DURATION_S) {
+        if (videoElement.currentTime >= videoCap) {
           videoElement.pause();
           handleMediaEnd();
         }
@@ -339,7 +450,7 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
           }
           const cappedDuration = Math.min(
             element.duration,
-            VIDEO_MAX_DURATION_S
+            videoCapFor(items[index])
           );
           return Math.min(element.currentTime / cappedDuration, 1);
         },
@@ -379,6 +490,7 @@ const MediaSlideshow = forwardRef<MediaSlideshowHandle, MediaSlideshowProps>(
                   }}
                   src={item.src}
                   poster={item.poster}
+                  style={videoCropStyle(item.crop)}
                   muted
                   playsInline
                   preload="auto"

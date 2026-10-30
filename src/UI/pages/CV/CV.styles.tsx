@@ -224,8 +224,10 @@ export const DownloadButton = styled.button({
   marginBottom: '1rem',
   position: 'absolute',
   top: '0px',
-  right: '20px',
+  // Clear of the site menu toggle in the top-right corner.
+  right: '4.5rem',
   pointerEvents: 'auto',
+  '@media (max-width: 600px)': { right: '4rem' },
   '&:hover': {
     backgroundColor: '#444444',
   },

@@ -5,30 +5,251 @@
     <link rel="icon" type="image/svg+xml" href="/mountains.svg" />
     <!-- Hero src is injected from mediaItems[0] by vite.config.ts -->
     <script>
+      // Hero video bootstrap. Runs before the app bundle so the first reel clip
+      // starts downloading immediately.
+      //
+      // The whole clip is fetched into memory before the loader is dismissed,
+      // however long that takes: the reel never starts on a clip that can stall.
+      // Gating on `canplay` (or a paused <video>'s own buffering) revealed the
+      // reel after a second or so, and the 9 Mbps clip then stalled repeatedly
+      // on 4G. A blob also sidesteps the host ignoring Range requests (the
+      // Workers asset server answers every Range with a full 200), loops without
+      // re-downloading, and gives an exact progress figure for the loader.
+      //
+      // There is no overall time limit. Only a real failure falls back to
+      // streaming from the URL: a network error, or no bytes at all for
+      // STALL_MS. The fetch is retried once first, resuming from the bytes
+      // already held when the server honours Range.
       (function () {
         var src = "__HERO_MEDIA_SRC__";
         if (!src) {
           return;
         }
         var poster = "__HERO_POSTER_SRC__";
+        var STALL_MS = 30000;
+        var MAX_ATTEMPTS = 2;
+        var RETRY_DELAY_MS = 1000;
         var video = document.createElement("video");
         video.muted = true;
         video.defaultMuted = true;
         video.playsInline = true;
+        video.setAttribute("muted", "");
         video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
+        // No src yet: nothing downloads until start() decides how.
         video.preload = "auto";
-        video.setAttribute("fetchpriority", "high");
         if (poster) {
           video.poster = poster;
         }
-        video.src = src;
         video.style.width = "100%";
         video.style.height = "100%";
         video.style.objectFit = "cover";
         video.style.backgroundColor = "#000";
-        video.load();
+
+        var hero = {
+          el: video,
+          src: src,
+          // idle -> loading -> ready
+          status: "idle",
+          // How it became ready: blob | stall | error | decode | nofetch
+          mode: null,
+          readyAt: 0,
+          callbacks: [],
+          onReady: function (cb) {
+            if (hero.status === "ready") {
+              cb();
+            } else {
+              hero.callbacks.push(cb);
+            }
+          },
+          start: start,
+        };
+        window.__hero = hero;
         window.__heroVideoEl = video;
         window.__heroVideoSrc = src;
+
+        // Download state, kept across a retry so partial bytes survive it.
+        var chunks = [];
+        var received = 0;
+        var total = 0;
+        var type = "video/mp4";
+        var attempt = 0;
+
+        function setProgress(fraction) {
+          var bar = document.getElementById("loader-progress");
+          var label = document.getElementById("loader-percent");
+          if (bar) {
+            bar.classList.remove("is-indeterminate");
+            bar.classList.add("is-active");
+            bar.style.setProperty("--progress", String(fraction));
+          }
+          if (label) {
+            label.classList.add("is-active");
+            label.textContent = Math.floor(fraction * 100) + "%";
+          }
+        }
+
+        // No Content-Length: show activity without inventing a figure.
+        function setIndeterminate() {
+          var bar = document.getElementById("loader-progress");
+          if (bar) {
+            bar.classList.add("is-active", "is-indeterminate");
+          }
+        }
+
+        function finish(mode) {
+          if (hero.status === "ready") {
+            return;
+          }
+          hero.status = "ready";
+          hero.mode = mode;
+          hero.readyAt = performance.now();
+          var cbs = hero.callbacks;
+          hero.callbacks = [];
+          for (var i = 0; i < cbs.length; i++) {
+            cbs[i]();
+          }
+        }
+
+        function streamFromNetwork(mode) {
+          chunks = [];
+          video.src = src;
+          video.load();
+          finish(mode);
+        }
+
+        function playBlob(blob) {
+          // The URL stays live for the page's lifetime: the hero element keeps
+          // using it every time the reel loops back round.
+          var url = URL.createObjectURL(blob);
+          var done = false;
+          var onCanPlay = function () {
+            if (done) {
+              return;
+            }
+            done = true;
+            video.removeEventListener("error", onError);
+            finish("blob");
+          };
+          // e.g. a browser that won't play a blob URL: stream instead.
+          var onError = function () {
+            if (done) {
+              return;
+            }
+            done = true;
+            video.removeEventListener("canplay", onCanPlay);
+            URL.revokeObjectURL(url);
+            streamFromNetwork("decode");
+          };
+          video.addEventListener("canplay", onCanPlay);
+          video.addEventListener("error", onError);
+          video.src = url;
+          video.load();
+        }
+
+        function download() {
+          attempt++;
+          var controller = window.AbortController
+            ? new AbortController()
+            : null;
+          var stalled = false;
+          var stallTimer = 0;
+          // Re-armed on every chunk: only a silent connection trips it.
+          function armStall() {
+            clearTimeout(stallTimer);
+            stallTimer = setTimeout(function () {
+              stalled = true;
+              if (controller) {
+                controller.abort();
+              }
+            }, STALL_MS);
+          }
+          var resumeFrom = received;
+          var init = {};
+          if (controller) {
+            init.signal = controller.signal;
+          }
+          if (resumeFrom > 0) {
+            init.headers = { Range: "bytes=" + resumeFrom + "-" };
+          }
+          armStall();
+
+          fetch(src, init)
+            .then(function (res) {
+              if (!res.ok) {
+                throw new Error("HTTP " + res.status);
+              }
+              armStall();
+              if (resumeFrom > 0 && res.status !== 206) {
+                // Range ignored: the body is the whole file again.
+                chunks = [];
+                received = 0;
+              }
+              if (received === 0) {
+                type = res.headers.get("content-type") || type;
+                // Content-Length is only the body size when it isn't encoded.
+                total = res.headers.get("content-encoding")
+                  ? 0
+                  : Number(res.headers.get("content-length")) || 0;
+              }
+              if (total > 0) {
+                setProgress(Math.min(received / total, 1));
+              } else {
+                setIndeterminate();
+              }
+              if (!res.body || !res.body.getReader) {
+                // No streaming reads: no stall detection either, so just wait.
+                clearTimeout(stallTimer);
+                return res.blob();
+              }
+              var reader = res.body.getReader();
+              function pump() {
+                return reader.read().then(function (step) {
+                  if (step.done) {
+                    clearTimeout(stallTimer);
+                    var blob = new Blob(chunks, { type: type });
+                    chunks = [];
+                    return blob;
+                  }
+                  armStall();
+                  chunks.push(step.value);
+                  received += step.value.length;
+                  if (total > 0) {
+                    setProgress(Math.min(received / total, 1));
+                  }
+                  return pump();
+                });
+              }
+              return pump();
+            })
+            .then(playBlob)
+            .catch(function () {
+              clearTimeout(stallTimer);
+              if (attempt < MAX_ATTEMPTS) {
+                setTimeout(download, RETRY_DELAY_MS);
+              } else {
+                streamFromNetwork(stalled ? "stall" : "error");
+              }
+            });
+        }
+
+        function start() {
+          if (hero.status !== "idle") {
+            return;
+          }
+          hero.status = "loading";
+          if (!window.fetch || !window.URL || !URL.createObjectURL) {
+            streamFromNetwork("nofetch");
+            return;
+          }
+          download();
+        }
+
+        // Full pages such as /tech/... don't show the reel on arrival; the
+        // slideshow calls start() itself if the visitor goes back to it.
+        if (!/^\/tech\//.test(location.pathname)) {
+          start();
+        }
       })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -43,7 +264,9 @@
     />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- route-meta:start -->
     <title>Ian Hamblin Portfolio</title>
+    <!-- route-meta:end -->
 
     <style>
       @font-face {
@@ -92,52 +315,206 @@
         opacity: 0;
       }
 
-      .loader-title {
-        color: white;
-        font-size: 1rem;
-        margin-bottom: 1rem;
-        font-family: "kanit", sans-serif;
+      /* Loader: one SVG so every ring shares the same centre (50,50).
+         Every row and the column have fixed sizes, so the block is the same
+         size from first paint to fade-out and the spinner never moves. Web
+         fonts swapping in, the percentage appearing and the app's CSS
+         arriving (it sets line-height) only change what's drawn inside a
+         row. */
+      .loader {
+        --mark-size: 76px;
+        display: grid;
+        grid-template-columns: 160px;
+        grid-template-rows: var(--mark-size) 1.3rem 1px 1rem;
+        row-gap: 1.1rem;
+        justify-items: center;
+        align-items: center;
       }
 
-      .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid #f3f3f3;
-        border-top: 5px solid #1a1a1a00;
-        border-bottom: 5px solid #1a1a1a00;
-        border-radius: 50%;
-        animation: spin 2s linear infinite;
+      .loader-mark {
+        display: block;
+        width: var(--mark-size);
+        height: var(--mark-size);
+        overflow: visible;
       }
 
-      .loading-spinner2 {
-        width: 40px;
-        height: 40px;
-        border: 2px solid #f3f3f3;
-        border-top: 5px solid #1a1a1a00;
-        border-bottom: 5px solid #1a1a1a00;
-        border-radius: 50%;
-        animation: spin-reverse 1s linear infinite;
-        position: relative;
-        top: -55px;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
+      @media (max-width: 600px) {
+        .loader {
+          --mark-size: 64px;
         }
+      }
 
-        100% {
+      .loader-mark circle {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 1;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+      }
+
+      .loader-mark .ring {
+        transform-box: view-box;
+        transform-origin: 50px 50px;
+        animation: loader-spin linear infinite;
+      }
+
+      .loader-mark .track {
+        stroke-opacity: 0.12;
+      }
+
+      /* r=46: one long arc, slow, clockwise */
+      .loader-mark .ring-outer {
+        stroke-dasharray: 72 217;
+        animation-duration: 2.8s;
+      }
+
+      /* r=34: two arcs, counter-clockwise */
+      .loader-mark .ring-mid {
+        stroke-opacity: 0.75;
+        stroke-dasharray: 38 68.8;
+        animation-duration: 1.9s;
+        animation-direction: reverse;
+      }
+
+      /* r=22: short fast arc, clockwise */
+      .loader-mark .ring-inner {
+        stroke-opacity: 0.55;
+        stroke-dasharray: 22 116.2;
+        animation-duration: 1.2s;
+      }
+
+      .loader-mark .dot {
+        fill: #fff;
+        stroke: none;
+        transform-box: view-box;
+        transform-origin: 50px 50px;
+        animation: loader-dot 1.4s ease-in-out infinite;
+      }
+
+      .loader-mark .dot-halo {
+        stroke-opacity: 0.6;
+        transform-box: view-box;
+        transform-origin: 50px 50px;
+        animation: loader-halo 1.4s ease-out infinite;
+      }
+
+      .loader-title {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: "Zuume", "Kanit", sans-serif;
+        font-weight: 300;
+        font-size: 0.85rem;
+        line-height: 1.3rem;
+        white-space: nowrap;
+        letter-spacing: 0.4em;
+        /* letter-spacing adds trailing space; offset it to stay centred */
+        margin-right: -0.4em;
+        text-transform: uppercase;
+      }
+
+      /* Hero download progress: a hairline that fills as bytes arrive. Hidden
+         until the first real figure, so it never shows a guessed value. */
+      .loader-progress {
+        width: 88px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.12);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .loader-progress.is-active {
+        opacity: 1;
+      }
+
+      .loader-progress span {
+        display: block;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.85);
+        transform-origin: left center;
+        transform: scaleX(var(--progress, 0));
+        transition: transform 0.25s linear;
+      }
+
+      /* No Content-Length: a short segment drifts across instead. */
+      .loader-progress.is-indeterminate {
+        overflow: hidden;
+      }
+
+      .loader-progress.is-indeterminate span {
+        width: 30%;
+        transform: translateX(-100%);
+        transition: none;
+        animation: loader-indeterminate 1.4s ease-in-out infinite;
+      }
+
+      @keyframes loader-indeterminate {
+        to {
+          transform: translateX(340%);
+        }
+      }
+
+      .loader-percent {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: "Kanit", sans-serif;
+        font-weight: 200;
+        font-size: 0.65rem;
+        line-height: 1rem;
+        white-space: nowrap;
+        letter-spacing: 0.2em;
+        margin-right: -0.2em;
+        font-variant-numeric: tabular-nums;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .loader-percent.is-active {
+        opacity: 1;
+      }
+
+      @keyframes loader-spin {
+        to {
           transform: rotate(360deg);
         }
       }
 
-      @keyframes spin-reverse {
-        0% {
-          transform: rotate(0deg);
-        }
-
+      @keyframes loader-dot {
+        0%,
         100% {
-          transform: rotate(-360deg);
+          transform: scale(0.7);
+          opacity: 0.55;
+        }
+        50% {
+          transform: scale(1.15);
+          opacity: 1;
+        }
+      }
+
+      @keyframes loader-halo {
+        0% {
+          transform: scale(0.4);
+          opacity: 0.8;
+        }
+        70%,
+        100% {
+          transform: scale(1.6);
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .loader-mark .ring {
+          animation-duration: 8s;
+        }
+        .loader-mark .dot,
+        .loader-mark .dot-halo {
+          animation: none;
+        }
+        .loader-mark .dot-halo {
+          opacity: 0;
+        }
+        .loader-progress.is-indeterminate span {
+          animation-duration: 4s;
         }
       }
 
@@ -156,10 +533,27 @@
   </head>
 
   <body>
-    <div id="initial-loader">
-      <h1 class="loader-title">Loading</h1>
-      <div class="loading-spinner"></div>
-      <div class="loading-spinner2"></div>
+    <div id="initial-loader" role="status" aria-live="polite">
+      <div class="loader">
+        <svg
+          class="loader-mark"
+          viewBox="0 0 100 100"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <circle class="track" cx="50" cy="50" r="46" />
+          <circle class="ring ring-outer" cx="50" cy="50" r="46" />
+          <circle class="ring ring-mid" cx="50" cy="50" r="34" />
+          <circle class="ring ring-inner" cx="50" cy="50" r="22" />
+          <circle class="dot-halo" cx="50" cy="50" r="7" />
+          <circle class="dot" cx="50" cy="50" r="3.2" />
+        </svg>
+        <p class="loader-title">Loading</p>
+        <div class="loader-progress" id="loader-progress" aria-hidden="true">
+          <span></span>
+        </div>
+        <p class="loader-percent" id="loader-percent" aria-hidden="true"></p>
+      </div>
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
