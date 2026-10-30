@@ -108,9 +108,10 @@ export const fromTheCouchBreakdown: TechBreakdown = {
         { label: 'Reachable over', value: 'LAN or Tailscale' },
       ],
       media: {
-        alt: 'The couch setup',
+        src: '/images/tech/zippy-town/export-server.jpg',
+        alt: "Blender's Export to Server panel with Remote Control connected, next to the export server terminal log",
         caption:
-          'Photo: the couch setup, with whatever you work on and the phone showing the wallpaper.',
+          "The export server running on the Linux machine (right: Blender's Export to Server panel, connected over the LAN).",
       },
       todos: [
         'What do you use on the couch (laptop, tablet, phone), and how does it reach Claude Code on the Linux machine (SSH, Remote Control, the desktop app)? The page needs a sentence on this.',
@@ -140,9 +141,10 @@ export const fromTheCouchBreakdown: TechBreakdown = {
         { label: 'Inbound ports on the PC', value: '0' },
       ],
       media: {
-        alt: 'The Remote Control box in the Blender add-on panel',
+        src: '/images/tech/zippy-town/remote-control-log.jpg',
+        alt: 'Export server terminal showing Blender commands being queued, sent and completed',
         caption:
-          'Screenshot: the Export to Server box in the add-on with Remote Control running.',
+          'The export server log: each Remote Control command is queued, sent to Blender on the next poll, and reported done.',
       },
     },
     {

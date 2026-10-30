@@ -223,7 +223,8 @@ export const zippyTownBreakdown: TechBreakdown = {
       media: {
         src: '/images/tech/zippy-town/wallpaper-phone.jpg',
         alt: 'Zippy Town running on an Android phone: the 3D city with cars, the vehicle hunt button and the Take Photo and Settings buttons',
-        caption: 'Zippy Town running natively on a Samsung phone, rendered by Filament.',
+        caption:
+          'Zippy Town running natively on a Samsung phone, rendered by Filament.',
       },
     },
     {
