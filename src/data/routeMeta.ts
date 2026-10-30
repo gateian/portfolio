@@ -57,6 +57,19 @@ export const routeMeta: RouteMeta[] = [
       height: 630,
     },
   },
+  {
+    path: '/tech/from-the-couch',
+    title: 'Developing my Android app from the couch | Ian Hamblin',
+    description:
+      'A remote control in my Blender add-on, a small export server and adb over Wi-Fi let a coding agent bake, build and install my live wallpaper while I sit on the couch.',
+    type: 'article',
+    image: {
+      src: '/og/zippy-town.jpg',
+      alt: 'Zippy Town: a cartoon city at night with traffic and canals, rendered in real time',
+      width: 1200,
+      height: 630,
+    },
+  },
 ];
 
 function escapeHtml(value: string) {

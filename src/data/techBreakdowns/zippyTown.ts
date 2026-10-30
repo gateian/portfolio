@@ -31,64 +31,74 @@ export const zippyTownBreakdown: TechBreakdown = {
     body: 'Android developer? Install the live wallpaper to see the Filament renderer, ASTC textures and baked lighting from this page running on your own device.',
   },
 
-  pipeline: [
-    {
-      id: 'blender',
-      label: 'Author',
-      tool: 'Blender 5.1',
-      stageId: 'authoring',
-      lane: 'source',
-    },
-    {
-      id: 'bake',
-      label: 'Bake light',
-      tool: 'Cycles · EXR',
-      stageId: 'bake',
-      lane: 'source',
-    },
-    {
-      id: 'export',
-      label: 'Export server',
-      tool: 'Node · gltf-transform',
-      stageId: 'export',
-      lane: 'source',
-    },
-    {
-      id: 'web',
-      label: 'Web build',
-      tool: 'Draco · UASTC',
-      stageId: 'web',
-      lane: 'web',
-    },
-    {
-      id: 'three',
-      label: 'Browser',
-      tool: 'three.js',
-      stageId: 'web',
-      lane: 'web',
-    },
-    {
-      id: 'native',
-      label: 'Native textures',
-      tool: 'ASTC · ETC2',
-      stageId: 'native-textures',
-      lane: 'android',
-    },
-    {
-      id: 'filament',
-      label: 'Live wallpaper',
-      tool: 'Filament · Kotlin',
-      stageId: 'filament',
-      lane: 'android',
-    },
-    {
-      id: 'devices',
-      label: 'Device lab',
-      tool: 'Firebase Test Lab',
-      stageId: 'devices',
-      lane: 'android',
-    },
-  ],
+  pipeline: {
+    intro:
+      'Everything starts in one Blender scene. A build machine turns it into compressed assets, which feed two very different renderers.',
+    source: { id: 'source', label: 'Source · Blender + build machine' },
+    outputs: [
+      { id: 'web', label: 'Web · zippy.town' },
+      { id: 'android', label: 'Android · live wallpaper' },
+    ],
+    note: 'Both outputs read the same GLBs and lightmaps, and share one tone-mapping shader.',
+    nodes: [
+      {
+        id: 'blender',
+        label: 'Author',
+        tool: 'Blender 5.1',
+        stageId: 'authoring',
+        lane: 'source',
+      },
+      {
+        id: 'bake',
+        label: 'Bake light',
+        tool: 'Cycles · EXR',
+        stageId: 'bake',
+        lane: 'source',
+      },
+      {
+        id: 'export',
+        label: 'Export server',
+        tool: 'Node · gltf-transform',
+        stageId: 'export',
+        lane: 'source',
+      },
+      {
+        id: 'web',
+        label: 'Web build',
+        tool: 'Draco · UASTC',
+        stageId: 'web',
+        lane: 'web',
+      },
+      {
+        id: 'three',
+        label: 'Browser',
+        tool: 'three.js',
+        stageId: 'web',
+        lane: 'web',
+      },
+      {
+        id: 'native',
+        label: 'Native textures',
+        tool: 'ASTC · ETC2',
+        stageId: 'native-textures',
+        lane: 'android',
+      },
+      {
+        id: 'filament',
+        label: 'Live wallpaper',
+        tool: 'Filament · Kotlin',
+        stageId: 'filament',
+        lane: 'android',
+      },
+      {
+        id: 'devices',
+        label: 'Device lab',
+        tool: 'Firebase Test Lab',
+        stageId: 'devices',
+        lane: 'android',
+      },
+    ],
+  },
 
   stages: [
     {
@@ -134,9 +144,10 @@ export const zippyTownBreakdown: TechBreakdown = {
         { label: 'Full-city bake time', value: '≈ 25 min', source: 'Bake All' },
       ],
       media: {
-        alt: 'Placeholder: lightmap before and after',
+        src: '/images/tech/zippy-town/lightmap-comparison.jpg',
+        alt: 'The same city block shown three ways: albedo only, baked lightmap only, and the final lit result',
         caption:
-          'Drop in: one mesh shown three ways (albedo only, lightmap only, final), e.g. Buildings2Optimised with its day lightmap.',
+          'The same view three ways: albedo only (left), lightmap only (middle), and the final combined result (right).',
       },
     },
     {
@@ -157,9 +168,10 @@ export const zippyTownBreakdown: TechBreakdown = {
       result:
         "One click in Blender updates the shipped assets on the build machine, and bakes can be queued from there while running on the PC's GPU.",
       media: {
-        alt: 'Placeholder: export to server',
+        src: '/images/tech/zippy-town/export-server.jpg',
+        alt: "Blender's Export to Server panel with Remote Control connected, next to the export server terminal log encoding lightmaps to KTX2",
         caption:
-          'Drop in: the Export to Server panel next to the server terminal showing the upload, KTX2 encode and inventory diff.',
+          'The Export to Server panel in Blender (Remote Control connected) beside the Node server log: queued commands, firefly removal and KTX2 encoding of each lightmap.',
       },
     },
     {
@@ -183,9 +195,10 @@ export const zippyTownBreakdown: TechBreakdown = {
         { label: 'Lightmap block size', value: 'ASTC 6×6 (3.56 bpp)' },
       ],
       media: {
-        alt: 'Placeholder: ASTC 4×4 vs 6×6 lightmap',
+        src: '/images/tech/zippy-town/astc-comparison.jpg',
+        alt: 'A Buildings2Optimised lightmap crop shown as the original PNG, ASTC 4×4 and ASTC 6×6',
         caption:
-          'Drop in: a lightmap crop at ASTC 4×4 next to ASTC 6×6, showing the quality difference is invisible at phone size.',
+          'A 160 px crop of the Buildings2Optimised day lightmap at 3× zoom: original, ASTC 4×4 (8 bpp) and ASTC 6×6 (3.56 bpp).',
       },
     },
     {
@@ -208,9 +221,9 @@ export const zippyTownBreakdown: TechBreakdown = {
         { label: 'Warm rebuild', value: '≈ 260 ms' },
       ],
       media: {
-        alt: 'Placeholder: wallpaper on a phone',
-        caption:
-          'Drop in: the live wallpaper on a home screen (day and night), ideally next to an Android Studio memory profile.',
+        src: '/images/tech/zippy-town/wallpaper-phone.jpg',
+        alt: 'Zippy Town running on an Android phone: the 3D city with cars, the vehicle hunt button and the Take Photo and Settings buttons',
+        caption: 'Zippy Town running natively on a Samsung phone, rendered by Filament.',
       },
     },
     {
@@ -254,9 +267,10 @@ export const zippyTownBreakdown: TechBreakdown = {
       result:
         'A new road look and tropical shallows with no new material, image or draw call.',
       media: {
-        alt: 'Placeholder: road atlas',
+        src: '/images/tech/zippy-town/road-atlas.jpg',
+        alt: 'The RoadsAndSign atlas with the packed road sub-atlas outlined, next to the roads rendered in the city',
         caption:
-          'Drop in: the RoadsAndSign atlas with the packed road sub-atlas outlined, next to the roads in game.',
+          'The RoadsAndSign atlas with the packed road block outlined (bottom right), next to the same roads in the web build.',
       },
     },
     {
@@ -294,14 +308,16 @@ export const zippyTownBreakdown: TechBreakdown = {
         },
       ],
       media: {
-        alt: 'Placeholder: Test Lab results',
+        src: '/images/tech/zippy-town/test-lab-zippycaps.png',
+        alt: 'ZippyCaps capability logs from Firebase Test Lab for a Galaxy A56 and a Pixel 11, each reporting device, memory, Filament feature level and framerate',
         caption:
-          'Drop in: the Firebase Test Lab matrix or a ZippyCaps capability log from one run.',
+          'ZippyCaps output from a Firebase Test Lab run: device, memory, Filament feature level and a 30 s framerate window for a Galaxy A56 and a Pixel 11.',
       },
     },
   ],
 
   budgets: {
+    title: 'Constraints & budgets',
     intro:
       "The wallpaper has to run all day on someone else's phone. These are the targets and measured numbers it is held to.",
     groups: [

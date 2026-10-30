@@ -50,6 +50,7 @@ import {
   LegalNote,
   NodeButton,
   NodeLabel,
+  type NodeTone,
   NodeTool,
   OutlineButton,
   Outputs,
@@ -164,33 +165,33 @@ function prefersReducedMotion() {
   );
 }
 
+/** Border and fill per lane: white for the source, then warm, then cool. */
+const LANE_TONES: NodeTone[] = ['warm', 'cool'];
+
 function PipelineDiagram({
-  nodes,
+  pipeline,
   onSelect,
 }: {
-  nodes: PipelineNode[];
+  pipeline: TechBreakdown['pipeline'];
   onSelect: (node: PipelineNode) => void;
 }) {
-  const lanes: { id: PipelineNode['lane']; label: string }[] = [
-    { id: 'web', label: 'Web · zippy.town' },
-    { id: 'android', label: 'Android · live wallpaper' },
-  ];
-
-  const renderRow = (laneNodes: PipelineNode[]) => (
+  const renderRow = (laneId: string, tone: NodeTone) => (
     <LaneRow>
-      {laneNodes.map((node, i) => (
-        <Fragment key={node.id}>
-          {i > 0 ? <Arrow aria-hidden>→</Arrow> : null}
-          <NodeButton
-            type="button"
-            lane={node.lane}
-            onClick={() => onSelect(node)}
-          >
-            <NodeLabel>{node.label}</NodeLabel>
-            <NodeTool>{node.tool}</NodeTool>
-          </NodeButton>
-        </Fragment>
-      ))}
+      {pipeline.nodes
+        .filter((node) => node.lane === laneId)
+        .map((node, i) => (
+          <Fragment key={node.id}>
+            {i > 0 ? <Arrow aria-hidden>→</Arrow> : null}
+            <NodeButton
+              type="button"
+              tone={tone}
+              onClick={() => onSelect(node)}
+            >
+              <NodeLabel>{node.label}</NodeLabel>
+              <NodeTool>{node.tool}</NodeTool>
+            </NodeButton>
+          </Fragment>
+        ))}
     </LaneRow>
   );
 
@@ -198,23 +199,20 @@ function PipelineDiagram({
     <>
       <Diagram role="group" aria-label="Pipeline overview">
         <Lane grow={1.4}>
-          <LaneLabel>Source · Blender + build machine</LaneLabel>
-          {renderRow(nodes.filter((n) => n.lane === 'source'))}
+          <LaneLabel>{pipeline.source.label}</LaneLabel>
+          {renderRow(pipeline.source.id, 'source')}
         </Lane>
         <ForkArrow aria-hidden>⇉</ForkArrow>
         <Outputs>
-          {lanes.map((lane) => (
+          {pipeline.outputs.map((lane, i) => (
             <Lane key={lane.id}>
               <LaneLabel>{lane.label}</LaneLabel>
-              {renderRow(nodes.filter((n) => n.lane === lane.id))}
+              {renderRow(lane.id, LANE_TONES[i % LANE_TONES.length])}
             </Lane>
           ))}
         </Outputs>
       </Diagram>
-      <DiagramNote>
-        Select a step to jump to it. Both outputs read the same GLBs and
-        lightmaps, and share one tone-mapping shader.
-      </DiagramNote>
+      <DiagramNote>Select a step to jump to it. {pipeline.note}</DiagramNote>
     </>
   );
 }
@@ -359,11 +357,8 @@ function Breakdown({ data }: { data: TechBreakdown }) {
           data-track-title="The pipeline"
         >
           <SectionTitle id="pipeline-title">The pipeline</SectionTitle>
-          <SectionIntro>
-            Everything starts in one Blender scene. A build machine turns it
-            into compressed assets, which feed two very different renderers.
-          </SectionIntro>
-          <PipelineDiagram nodes={data.pipeline} onSelect={scrollToStage} />
+          <SectionIntro>{data.pipeline.intro}</SectionIntro>
+          <PipelineDiagram pipeline={data.pipeline} onSelect={scrollToStage} />
         </Section>
 
         {data.stages.map((stage, index) => (
@@ -431,9 +426,9 @@ function Breakdown({ data }: { data: TechBreakdown }) {
           id="budgets"
           aria-labelledby="budgets-title"
           data-track-section="budgets"
-          data-track-title="Constraints & budgets"
+          data-track-title={data.budgets.title}
         >
-          <SectionTitle id="budgets-title">Constraints & budgets</SectionTitle>
+          <SectionTitle id="budgets-title">{data.budgets.title}</SectionTitle>
           <SectionIntro>{data.budgets.intro}</SectionIntro>
           <BudgetGrid>
             {data.budgets.groups.map((group) => (

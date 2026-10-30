@@ -246,7 +246,9 @@ export const LaneLabel = styled.div({
   [`@media ${NARROW}`]: { marginTop: '0.75rem' },
 });
 
-export const NodeButton = styled.button<{ lane: string }>(({ lane }) => ({
+export type NodeTone = 'source' | 'warm' | 'cool';
+
+export const NodeButton = styled.button<{ tone: NodeTone }>(({ tone }) => ({
   position: 'relative',
   flex: '1 1 0',
   minWidth: 0,
@@ -262,16 +264,16 @@ export const NodeButton = styled.button<{ lane: string }>(({ lane }) => ({
   cursor: 'pointer',
   color: '#fff',
   border: `1px solid ${
-    lane === 'source'
+    tone === 'source'
       ? 'rgba(255,255,255,0.75)'
-      : lane === 'web'
+      : tone === 'warm'
         ? 'rgba(255, 200, 120, 0.8)'
         : 'rgba(140, 220, 255, 0.85)'
   }`,
   backgroundColor:
-    lane === 'source'
+    tone === 'source'
       ? 'rgba(255,255,255,0.05)'
-      : lane === 'web'
+      : tone === 'warm'
         ? 'rgba(255, 200, 120, 0.07)'
         : 'rgba(140, 220, 255, 0.07)',
   transition: 'background-color 0.2s ease, transform 0.2s ease',

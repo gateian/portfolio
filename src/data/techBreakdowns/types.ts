@@ -39,8 +39,14 @@ export type PipelineNode = {
   tool: string;
   /** Which stage section the node scrolls to. */
   stageId: string;
-  /** Lane the node sits in: shared source, web output or Android output. */
-  lane: 'source' | 'web' | 'android';
+  /** Id of the lane the node sits in: the source lane or one of the outputs. */
+  lane: string;
+};
+
+export type PipelineLane = {
+  id: string;
+  /** Shown above the lane, e.g. "Web · zippy.town". */
+  label: string;
 };
 
 export type BreakdownStage = {
@@ -91,9 +97,22 @@ export type TechBreakdown = {
     /** One or two lines aimed at the readers most likely to install it. */
     body: string;
   };
-  pipeline: PipelineNode[];
+  /**
+   * The diagram at the top of the page: one source lane that forks into the
+   * output lanes, drawn side by side (two read best).
+   */
+  pipeline: {
+    intro: string;
+    source: PipelineLane;
+    outputs: PipelineLane[];
+    nodes: PipelineNode[];
+    /** Line under the diagram. */
+    note: string;
+  };
   stages: BreakdownStage[];
   budgets: {
+    /** Section heading, e.g. "Constraints & budgets". */
+    title: string;
     intro: string;
     groups: BudgetGroup[];
   };
