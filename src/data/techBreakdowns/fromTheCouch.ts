@@ -168,9 +168,10 @@ export const fromTheCouchBreakdown: TechBreakdown = {
         { label: 'Seasonal prop change', value: '6 steps, 1 button' },
       ],
       media: {
-        alt: 'The seasonal editor’s Bake on beast panel during a job',
+        src: '/images/tech/zippy-town/blender-addon.png',
+        alt: 'The Toon Town Tools panel in Blender showing the mesh list, lighting mode and bake settings',
         caption:
-          'Screenshot: the seasonal editor’s bake panel mid-job, ideally on the couch device.',
+          'The add-on panel the agent drives through Remote Control: mesh list, lighting mode and Bake All.',
       },
       todos: [
         'One real example of something you asked the agent for from the couch, in your own words, would make this section.',
@@ -194,9 +195,9 @@ export const fromTheCouchBreakdown: TechBreakdown = {
         { label: 'Away from home', value: 'APK on a WebDAV share' },
       ],
       media: {
-        alt: 'build-and-install.sh output next to the phone',
-        caption:
-          'Screenshot: build-and-install.sh output, and the phone’s settings showing the new version.',
+        src: '/images/tech/zippy-town/wallpaper-phone.jpg',
+        alt: 'Zippy Town running on an Android phone after a wireless install',
+        caption: 'A build installed over Wi-Fi, running on the phone.',
       },
     },
     {
@@ -213,9 +214,10 @@ export const fromTheCouchBreakdown: TechBreakdown = {
       result:
         'The checks are the same whoever runs the deploy, me at the desk or the agent from the couch.',
       media: {
-        alt: 'npm run deploy:web refusing to deploy',
+        src: '/images/tech/zippy-town/deploy-web-refused.png',
+        alt: 'npm run deploy:web refusing to deploy: dirty working tree, wrong branch and an unpushed commit',
         caption:
-          'Screenshot: npm run deploy:web refusing a dirty tree or an unpushed commit.',
+          'A real dry run of npm run deploy:web refusing three times over: uncommitted files, the wrong branch, and a commit that isn’t on GitHub.',
       },
     },
   ],
